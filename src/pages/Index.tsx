@@ -6,10 +6,11 @@ import { HowItWorks } from '../components/HowItWorks';
 import { Portfolio } from '../components/Portfolio';
 import { JoinMovement } from '../components/JoinMovement';
 import { Footer } from '../components/Footer';
+import { Hero2 } from '../components/hero2';
 
 const Index = () => {
   const [currentSection, setCurrentSection] = useState(0);
-  const sections = ['hero', 'how-it-works', 'portfolio', 'join-movement'];
+  const sections = ['hero', 'how-it-works', 'portfolio', 'join-movement', 'hero2'];
   const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
@@ -42,7 +43,8 @@ const Index = () => {
       <>
         <JoinMovement />
         <Footer />
-      </>
+      </>,
+      <Hero2 />
     ];
 
     return (

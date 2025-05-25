@@ -36,7 +36,7 @@ export const HowItWorks = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full py-20">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-blue-50">
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-normal mb-4 text-blue-50 font-nersans-two">
             How Skulpting
             <br />
             <span className="text-blue-300/70">Works</span>

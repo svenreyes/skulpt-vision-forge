@@ -18,6 +18,12 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'nersans-two': ['"Nersans Two"', 'sans-serif'],
+				display: ['"Nersans Two"', 'sans-serif'],
+				subheading: ['"Sohne Kraftig"', 'sans-serif'],
+        		body: ['"Sohne Breit"', 'sans-serif'],
+			  },
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -92,5 +98,17 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require('@tailwindcss/typography'),
+		// base styles to apply font families globally
+		function ({ addBase, theme }) {
+			addBase({
+				'html, p': { fontFamily: theme('fontFamily.body') },
+				'h2, h3, h4, h5, h6, button': { fontFamily: theme('fontFamily.subheading') },
+				'.logo, .font-display, h1': { fontFamily: theme('fontFamily.display') },
+			});
+		}
+	],
+	
 } satisfies Config;

@@ -1,6 +1,31 @@
+@font-face {
+  font-family: "Nersans Two";
+  src: url("/fonts/Nersans Font.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sohne Kraftig";
+  src: url("/fonts/Sohne-Kraftig.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sohne Breit";
+  src: url("/fonts/Sohne-Breit.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 @layer base {
   :root {

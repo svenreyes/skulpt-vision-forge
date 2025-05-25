@@ -19,13 +19,13 @@ export const JoinMovement = () => {
         {/* Main Content */}
         <div className="text-center">
           {/* Headline */}
-          <h2 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
+          <h1 className="text-4xl lg:text-6xl font-bold tracking-normal mb-6">
             Join the
             <br />
             <span className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 bg-clip-text text-transparent">
               Movement
             </span>
-          </h2>
+          </h1>
 
           {/* Subheadline */}
           <p className="text-lg lg:text-xl text-blue-200/80 mb-8 max-w-4xl mx-auto leading-relaxed">

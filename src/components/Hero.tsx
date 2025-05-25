@@ -32,13 +32,13 @@ export const Hero = () => {
       <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 text-center">
         {/* Main Headline */}
         <div className="mb-8">
-          <h1 className="text-6xl lg:text-8xl font-bold tracking-tight mb-6 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 bg-clip-text text-transparent">
+          <h1 className="text-6xl lg:text-6xl font-bold tracking-normal mb-6 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 bg-clip-text text-transparent">
             We invest in your
           </h1>
-          <h1 className="text-6xl lg:text-8xl font-bold tracking-tight mb-6">
+          <h1 className="text-6xl lg:text-6xl font-bold tracking-normal mb-6">
             <span className="bg-gradient-to-r from-blue-50 to-blue-100 bg-clip-text text-transparent">brand,</span>
           </h1>
-          <h1 className="text-6xl lg:text-8xl font-bold tracking-tight">
+          <h1 className="text-6xl lg:text-6xl font-bold tracking-normal">
             <span className="text-blue-300/70">not your wallet</span>
           </h1>
         </div>
@@ -68,7 +68,7 @@ export const Hero = () => {
               Their equity partnership model made world-class branding accessible."
             </p>
             <div className="mt-4 text-sm text-blue-300/70">
-              — Sarah Chen, Founder of NeuralFlow
+              — Freya, Founder of SKULPT
             </div>
           </div>
         </div>
