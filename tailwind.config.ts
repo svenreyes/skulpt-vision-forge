@@ -21,8 +21,8 @@ export default {
 			fontFamily: {
 				'nersans-two': ['"Nersans Two"', 'sans-serif'],
 				display: ['"Nersans Two"', 'sans-serif'],
-				subheading: ['"Sohne Kraftig"', 'sans-serif'],
-        		body: ['"Sohne Breit"', 'sans-serif'],
+				subheading: ['"Sohne Buch"', 'sans-serif'],
+        		body: ['"Sohne Leicht"', 'sans-serif'],
 			  },
 			colors: {
 				border: 'hsl(var(--border))',

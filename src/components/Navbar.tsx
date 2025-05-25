@@ -13,7 +13,7 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = ['How it Works', 'Portfolio', 'About', 'Contact'];
+  const navItems = ['[ how it works ]', '[ portfolio ]', '[ about ]', '[ contact ]'];
 
   return (
     <nav
@@ -27,7 +27,7 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
             <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two flex items-center gap-2">
-            <img src="./skulptlogo.png" alt="Logo" className="h-6 lg:h-10 inline-block mr-2" />
+            <img src="./S.png" alt="Logo" className="h-6 lg:h-10 inline-block mr-2" />
             SKULPT
             </div>
 
@@ -37,7 +37,7 @@ export const Navbar = () => {
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="relative group text-sm font-medium text-blue-200/60 blur-sm opacity-90 hover:text-blue-50 hover:blur-none hover:opacity-100 transition-all duration-300 font-nersans-two"
+                className="relative group text-sm font-medium text-blue-200/60 blur-sm opacity-90 hover:text-blue-50 hover:blur-none hover:opacity-100 transition-all duration-300 font-subheading"
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full" />

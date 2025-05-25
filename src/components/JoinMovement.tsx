@@ -22,7 +22,7 @@ export const JoinMovement = () => {
           <h1 className="text-4xl lg:text-6xl font-bold tracking-normal mb-6">
             Join the
             <br />
-            <span className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 bg-clip-text text-transparent">
               Movement
             </span>
           </h1>

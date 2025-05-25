@@ -4,18 +4,18 @@ export const Hero2 = () => {
   return (
     <section
       id="stem"
-      className="px-6 py-16 flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#050D1F] via-[#0B1124] to-black"
+      className="px-6 py-16 flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#050D1F] via-[#E6EBEE] to-black"
     >
       {/* SVG-based soft-edge mask */}
-      <div className="relative w-64 h-64 lg:w-96 lg:h-96">
-        <svg
+      <div className="relative w-[36rem] h-[36rem] lg:w-[64rem] lg:h-[64rem] lg:pb-64">
+      <svg
           viewBox="0 0 320 320"
           xmlns="http://www.w3.org/2000/svg"
           className="w-full h-full"
         >
           <defs>
             <radialGradient id="softEdgeMask" cx="50%" cy="50%" r="50%">
-              <stop offset="93%" stopColor="white" />
+              <stop offset="75%" stopColor="white" />
               <stop offset="100%" stopColor="black" />
             </radialGradient>
 
@@ -32,7 +32,7 @@ export const Hero2 = () => {
             mask="url(#edgeFade)"
           >
             <video
-              src="/skulpt.webm"
+              src="/Coming.mp4"
               autoPlay
               muted
               loop

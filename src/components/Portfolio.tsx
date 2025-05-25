@@ -54,7 +54,7 @@ export const Portfolio = () => {
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-blue-50 font-display">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-normal mb-4 text-blue-50 font-display">
             Our<br />
             <span className="text-blue-300/70 font-display">Portfolio</span>
           </h2>

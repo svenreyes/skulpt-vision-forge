@@ -37,13 +37,13 @@ const Index = () => {
   const renderSection = (index: number) => {
     const isActive = index === currentSection;
     const sectionComponents = [
+      <Hero2 />,
       <Hero />,
       <HowItWorks />,
       <Portfolio />,
       <>
         <JoinMovement />
       </>,
-      <Hero2 />
     ];
 
     return (
