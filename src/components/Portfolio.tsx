@@ -37,22 +37,22 @@ export const Portfolio = () => {
   ];
 
   return (
-    <section id="portfolio" className="py-24 lg:py-32 relative">
+    <section className="py-24 lg:py-32 relative min-h-screen flex items-center">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 left-0 w-80 h-80 bg-gray-500/10 rounded-full blur-2xl" />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-200/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 left-0 w-80 h-80 bg-blue-300/10 rounded-full blur-2xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
         {/* Section Header */}
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+          <h2 className="text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-blue-50">
             Our
             <br />
-            <span className="text-gray-500">Portfolio</span>
+            <span className="text-blue-300/70">Portfolio</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-blue-200/80 max-w-3xl mx-auto">
             Brands we've sculpted from vision to venture-backed success stories.
           </p>
         </div>
@@ -81,27 +81,27 @@ export const Portfolio = () => {
               {/* Content Overlay */}
               <div className="absolute inset-0 p-8 flex flex-col justify-end">
                 {/* Category */}
-                <div className="text-sm font-medium text-gray-300 mb-2 opacity-80">
+                <div className="text-sm font-medium text-blue-200/80 mb-2 opacity-80">
                   {project.category}
                 </div>
 
                 {/* Project Name */}
-                <h3 className="text-3xl font-bold mb-3 group-hover:text-gray-200 transition-colors duration-300">
+                <h3 className="text-3xl font-bold mb-3 text-blue-50 group-hover:text-blue-100 transition-colors duration-300">
                   {project.name}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-400 mb-4 leading-relaxed">
+                <p className="text-blue-200/80 mb-4 leading-relaxed">
                   {project.description}
                 </p>
 
                 {/* Metrics */}
-                <div className="text-sm text-gray-500 mb-4">
+                <div className="text-sm text-blue-300/70 mb-4">
                   {project.metrics}
                 </div>
 
                 {/* View Project Link */}
-                <div className={`flex items-center gap-2 text-white font-medium transition-all duration-300 ${
+                <div className={`flex items-center gap-2 text-blue-100 font-medium transition-all duration-300 ${
                   hoveredProject === index ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
                 }`}>
                   View Case Study
@@ -110,7 +110,7 @@ export const Portfolio = () => {
               </div>
 
               {/* Glass Effect on Hover */}
-              <div className={`absolute inset-0 backdrop-blur-sm bg-white/5 transition-all duration-500 ${
+              <div className={`absolute inset-0 backdrop-blur-sm bg-blue-200/5 transition-all duration-500 ${
                 hoveredProject === index ? 'opacity-100' : 'opacity-0'
               }`} />
             </div>
@@ -119,7 +119,7 @@ export const Portfolio = () => {
 
         {/* View All Projects */}
         <div className="text-center mt-16">
-          <button className="group px-8 py-4 bg-transparent border border-white/30 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 mx-auto">
+          <button className="group px-8 py-4 bg-transparent border border-blue-200/30 rounded-full font-semibold text-lg text-blue-100 hover:bg-blue-200/10 transition-all duration-300 flex items-center gap-3 mx-auto">
             View All Projects
             <ArrowRight className="group-hover:translate-x-1 transition-transform duration-300" size={20} />
           </button>
