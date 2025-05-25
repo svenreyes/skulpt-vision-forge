@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+
+body {
+  padding-top: env(safe-area-inset-top);
+}
+
+.full-screen-fix {
+  min-height: 100dvh;
+}
