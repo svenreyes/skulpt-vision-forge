@@ -26,8 +26,8 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
-            <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two">
-            <img src="./skulptlogo.png" alt="Logo" className="h-8 lg:h-10 inline-block mr-2" />
+            <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two flex items-center gap-2">
+            <img src="./skulptlogo.png" alt="Logo" className="h-6 lg:h-10 inline-block mr-2" />
             SKULPT
             </div>
 

@@ -26,7 +26,7 @@ export const HowItWorks = () => {
   ];
 
   return (
-    <section className="h-screen flex items-center relative overflow-hidden">
+    <section className="w-full h-auto lg:h-screen flex items-center pt-12 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-200/5 rounded-full blur-3xl transform -translate-y-1/2" />
@@ -47,7 +47,7 @@ export const HowItWorks = () => {
         </div>
 
         {/* Steps Grid */}
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {steps.map((step, index) => (
             <div 
               key={step.number}
@@ -56,7 +56,7 @@ export const HowItWorks = () => {
               {/* Glass Card */}
               <div className="backdrop-blur-xl bg-blue-200/5 border border-blue-200/10 rounded-2xl p-6 lg:p-8 hover:bg-blue-200/10 transition-all duration-500 h-full">
                 {/* Step Number */}
-                <div className="text-4xl lg:text-5xl font-bold text-blue-400/30 mb-3 group-hover:text-blue-300/50 transition-colors duration-300">
+                <div className="text-4xl lg:text-3xl font-bold text-blue-400/30 mb-3 group-hover:text-blue-300/50 transition-colors duration-300">
                   {step.number}
                 </div>
                 

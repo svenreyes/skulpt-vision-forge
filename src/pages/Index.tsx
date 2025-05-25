@@ -42,7 +42,6 @@ const Index = () => {
       <Portfolio />,
       <>
         <JoinMovement />
-        <Footer />
       </>,
       <Hero2 />
     ];
