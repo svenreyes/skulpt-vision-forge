@@ -18,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			padding: {
+				safe: 'env(safe-area-inset-top)',
+			  },
 			fontFamily: {
 				'nersans-two': ['"Nersans Two"', 'sans-serif'],
 				display: ['"Nersans Two"', 'sans-serif'],
