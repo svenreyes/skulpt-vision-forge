@@ -26,38 +26,39 @@ const Index = () => {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [currentSection, sections.length]);
 
+  const renderSection = (index: number) => {
+    const isActive = index === currentSection;
+    const sectionComponents = [
+      <Hero />,
+      <HowItWorks />,
+      <Portfolio />,
+      <>
+        <JoinMovement />
+        <Footer />
+      </>
+    ];
+
+    return (
+      <div
+        key={index}
+        className={`absolute inset-0 w-screen h-screen transition-all duration-1000 ease-out ${
+          isActive 
+            ? 'opacity-100 blur-none z-20' 
+            : 'opacity-0 blur-md z-10 pointer-events-none'
+        }`}
+      >
+        {sectionComponents[index]}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-blue-50 overflow-hidden">
       <Navbar />
       
-      {/* Horizontal Scrolling Container */}
-      <div 
-        className="flex h-screen transition-transform duration-1000 ease-out"
-        style={{ 
-          transform: `translateX(-${currentSection * 100}vw)`,
-          width: `${sections.length * 100}vw`
-        }}
-      >
-        {/* Hero Section */}
-        <div id="hero" className="w-screen h-screen flex-shrink-0">
-          <Hero />
-        </div>
-
-        {/* How It Works Section */}
-        <div id="how-it-works" className="w-screen h-screen flex-shrink-0 overflow-y-auto">
-          <HowItWorks />
-        </div>
-
-        {/* Portfolio Section */}
-        <div id="portfolio" className="w-screen h-screen flex-shrink-0 overflow-y-auto">
-          <Portfolio />
-        </div>
-
-        {/* Join Movement Section */}
-        <div id="join-movement" className="w-screen h-screen flex-shrink-0 overflow-y-auto">
-          <JoinMovement />
-          <Footer />
-        </div>
+      {/* Stacked Sections with Blur Transitions */}
+      <div className="relative h-screen">
+        {sections.map((_, index) => renderSection(index))}
       </div>
 
       {/* Section Indicators */}
