@@ -26,65 +26,60 @@ export const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-24 lg:py-32 relative min-h-screen flex items-center">
+    <section className="h-screen flex items-center relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-200/5 rounded-full blur-3xl transform -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-300/10 rounded-full blur-2xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full py-20">
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-blue-50">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-blue-50">
             How Skulpting
             <br />
             <span className="text-blue-300/70">Works</span>
           </h2>
-          <p className="text-xl text-blue-200/80 max-w-3xl mx-auto">
+          <p className="text-lg text-blue-200/80 max-w-3xl mx-auto">
             Our proven process transforms ambitious startups into premium brands through strategic equity partnerships.
           </p>
         </div>
 
         {/* Steps Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           {steps.map((step, index) => (
             <div 
               key={step.number}
               className="group relative"
             >
               {/* Glass Card */}
-              <div className="backdrop-blur-xl bg-blue-200/5 border border-blue-200/10 rounded-2xl p-8 lg:p-10 hover:bg-blue-200/10 transition-all duration-500 h-full">
+              <div className="backdrop-blur-xl bg-blue-200/5 border border-blue-200/10 rounded-2xl p-6 lg:p-8 hover:bg-blue-200/10 transition-all duration-500 h-full">
                 {/* Step Number */}
-                <div className="text-6xl lg:text-7xl font-bold text-blue-400/30 mb-4 group-hover:text-blue-300/50 transition-colors duration-300">
+                <div className="text-4xl lg:text-5xl font-bold text-blue-400/30 mb-3 group-hover:text-blue-300/50 transition-colors duration-300">
                   {step.number}
                 </div>
                 
                 {/* Step Title */}
-                <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-blue-50 group-hover:text-blue-100 transition-colors duration-300">
+                <h3 className="text-xl lg:text-2xl font-bold mb-3 text-blue-50 group-hover:text-blue-100 transition-colors duration-300">
                   {step.title}
                 </h3>
                 
                 {/* Step Description */}
-                <p className="text-lg text-blue-200/80 leading-relaxed group-hover:text-blue-100/90 transition-colors duration-300">
+                <p className="text-base text-blue-200/80 leading-relaxed group-hover:text-blue-100/90 transition-colors duration-300">
                   {step.description}
                 </p>
 
                 {/* Hover Effect Line */}
                 <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-blue-200 to-blue-300 group-hover:w-full transition-all duration-500" />
               </div>
-
-              {/* Connection Line for Desktop */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-6 w-12 h-0.5 bg-gradient-to-r from-blue-200/30 to-transparent transform -translate-y-1/2" />
-              )}
             </div>
           ))}
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-20">
-          <button className="px-8 py-4 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full font-semibold text-lg text-blue-100 hover:bg-blue-200/20 transition-all duration-300">
+        <div className="text-center mt-8">
+          <button className="px-6 py-3 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full font-semibold text-base text-blue-100 hover:bg-blue-200/20 transition-all duration-300">
             Ready to Start Your Journey?
           </button>
         </div>

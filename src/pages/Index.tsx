@@ -10,21 +10,28 @@ import { Footer } from '../components/Footer';
 const Index = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const sections = ['hero', 'how-it-works', 'portfolio', 'join-movement'];
+  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
+      
+      if (isScrolling) return;
+      
+      setIsScrolling(true);
       
       if (e.deltaY > 0 && currentSection < sections.length - 1) {
         setCurrentSection(prev => prev + 1);
       } else if (e.deltaY < 0 && currentSection > 0) {
         setCurrentSection(prev => prev - 1);
       }
+      
+      setTimeout(() => setIsScrolling(false), 1000);
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [currentSection, sections.length]);
+  }, [currentSection, sections.length, isScrolling]);
 
   const renderSection = (index: number) => {
     const isActive = index === currentSection;
@@ -41,13 +48,15 @@ const Index = () => {
     return (
       <div
         key={index}
-        className={`absolute inset-0 w-screen h-screen transition-all duration-1000 ease-out ${
+        className={`absolute inset-0 w-screen h-screen overflow-hidden transition-all duration-1000 ease-out ${
           isActive 
             ? 'opacity-100 blur-none z-20' 
             : 'opacity-0 blur-md z-10 pointer-events-none'
         }`}
       >
-        {sectionComponents[index]}
+        <div className="w-full h-full overflow-y-auto">
+          {sectionComponents[index]}
+        </div>
       </div>
     );
   };
