@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# SKULPT 
 
-## Project info
+**SKULPT** is a branding studio built for visionary startups. We invest sweat equity to help bring ambitious ideas to life through compelling brand identity. This website serves as our digital presence and showcase.
 
-**URL**: https://lovable.dev/projects/f1a45ee2-4cac-418f-b7f1-3fc394d03f0d
+> "Your vision, our expertise, shared success."
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🔧 Tech Stack
 
-**Use Lovable**
+- **React + TypeScript**
+- **Vite** – fast dev environment
+- **TailwindCSS** – utility-first styling
+- **Lucide-react** – for modern iconography
+- **Custom fonts** – Nersans Two, Sohne Kraftig, Sohne Breit
+- **ShadCN (optional)** – for styled components if used
+- **GitHub Pages** – for deployment
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f1a45ee2-4cac-418f-b7f1-3fc394d03f0d) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Brand & Visual Direction
 
-**Use your preferred IDE**
+- **Monochromatic gradient theme**: deep navy to black
+- **Interactive 3D visual sections**: stemplayer-inspired carousel and soft-edged video mask
+- **Neumorphic buttons**: soft, tactile UI for play and interaction
+- **Typography**:
+    - `Nersans Two`: headings and logo
+    - `Sohne Kraftig`: subheadings and buttons
+    - `Sohne Breit`: body text
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### 1. Clone the repo
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+git clone https://github.com/your-username/skulpt.git
+cd skulpt
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Install dependencies
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 3. Run the dev server
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+App will run on [http://localhost:5173](http://localhost:5173).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## Fonts Setup
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Drop your font `.otf` files into `src/fonts/` and import them in `index.css` or via `@font-face`. Tailwind is configured to use:
 
-## What technologies are used for this project?
+```js
+fontFamily: {
+    heading: ['Nersans Two', 'sans-serif'],
+    subheading: ['Sohne Kraftig', 'sans-serif'],
+    body: ['Sohne Breit', 'sans-serif'],
+}
+```
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+This project can be deployed to GitHub Pages or Vercel.
 
-Simply open [Lovable](https://lovable.dev/projects/f1a45ee2-4cac-418f-b7f1-3fc394d03f0d) and click on Share -> Publish.
+### GitHub Pages
 
-## Can I connect a custom domain to my Lovable project?
+```bash
+npm run build
+```
 
-Yes, you can!
+Then push the `dist/` folder to your `gh-pages` branch, or use a GitHub Action for auto-deploy.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Inspiration
+
+The visual design is inspired by the digital aesthetic of [stemplayer.com](https://stemplayer.com) and minimalist tactile interfaces.
+
+---
+
+## License
+
+© 2024 SKULPT. All rights reserved.
