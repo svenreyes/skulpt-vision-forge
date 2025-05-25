@@ -44,7 +44,7 @@ export const Portfolio = () => {
   ];
 
   return (
-    <section className="w-full h-auto lg:h-screen flex items-center py-20 relative overflow-hidden">
+    <section className="pt-[env(safe-area-inset-top)] w-full h-auto lg:h-screen flex items-center py-20 relative overflow-hidden">
       {/* Background Blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="hidden md:block absolute top-0 right-1/4 w-72 h-72 bg-blue-200/5 rounded-full blur-3xl" />

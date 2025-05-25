@@ -7,7 +7,7 @@ export const JoinMovement = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="h-auto lg:h-screen flex items-center pt-10 lg:pt-0 relative overflow-hidden">
+    <section className="pt-[env(safe-area-inset-top)] h-auto lg:h-screen flex items-center pt-10 lg:pt-0 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/5 rounded-full blur-3xl animate-pulse" />

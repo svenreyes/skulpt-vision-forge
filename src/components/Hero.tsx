@@ -14,7 +14,7 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-28">
+    <section className="pt-[env(safe-area-inset-top)] relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-28">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div 

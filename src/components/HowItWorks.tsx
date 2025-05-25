@@ -26,7 +26,7 @@ export const HowItWorks = () => {
   ];
 
   return (
-    <section className="w-full h-auto lg:h-screen flex items-center pt-12 relative overflow-hidden">
+    <section className="pt-[env(safe-area-inset-top)] w-full h-auto lg:h-screen flex items-center pt-12 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-200/5 rounded-full blur-3xl transform -translate-y-1/2" />
