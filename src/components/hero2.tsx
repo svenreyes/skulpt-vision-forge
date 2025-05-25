@@ -4,7 +4,7 @@ export const Hero2 = () => {
   return (
     <section
       id="stem"
-      className="pt-[env(safe-area-inset-top)] px-6 py-16 flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#050D1F] via-[#E6EBEE] to-black"
+      className="pt-[env(safe-area-inset-top)] px-6 py-16 flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#B0BDC5] via-[#B0BDC5] to-[#B0BDC5]"
     >
       {/* SVG-based soft-edge mask */}
       <div className="relative w-[36rem] h-[36rem] lg:w-[64rem] lg:h-[64rem] lg:pb-64">
