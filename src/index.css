@@ -124,3 +124,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/*  logo silhouette  */
+.logo-mask {
+  mask: url("/skulptlogo.png") center / contain no-repeat;
+  -webkit-mask: url("/skulptlogo.png") center / contain no-repeat;
+}
+
+/*  radial feather  */
+.feather-mask {
+  mask: radial-gradient(circle at center, #000 60%, transparent 92%);
+  -webkit-mask: radial-gradient(circle at center, #000 60%, transparent 92%);
+}

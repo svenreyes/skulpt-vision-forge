@@ -27,13 +27,13 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
             <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two flex items-center gap-2">
-            <img src="./S.png" alt="Logo" className="h-6 lg:h-10 inline-block mr-2" />
+            <img src="./skulptlogo.png" alt="Logo" className="h-6 lg:h-12 inline-block mr-2" />
             SKULPT
             </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
+            {/* {navItems.map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(' ', '-')}`}
@@ -42,9 +42,9 @@ export const Navbar = () => {
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full" />
               </a>
-            ))}
-            <button className="px-6 py-2 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full text-sm font-medium text-blue-100 hover:bg-blue-200/20 transition-all duration-300 font-nersans-two">
-              Get Started
+            ))} */}
+            <button className="px-6 py-2 bg-[#CBD1D6] border border-[#CBD1D6] backdrop-blur-sm rounded-full text-sm font-medium text-blue-100 hover:bg-[#B0BDC5] hover:border-[#B0BDC5] transition-all duration-300 font-nersans-two">
+              MAKE IT MAKE SENSE
             </button>
           </div>
 
@@ -59,23 +59,23 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
-            <div className="px-6 py-4 space-y-4">
-              {navItems.map((item) => (
-                <a
-                  key={item}
-                  href={`#${item.toLowerCase().replace(' ', '-')}`}
-                  className="block text-sm font-medium text-blue-200 hover:text-blue-50 transition-colors duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item}
-                </a>
-              ))}
+          // <div className="lg:hidden absolute top-full left-0 w-full backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
+          //   <div className="px-6 py-4 space-y-4">
+          //     {navItems.map((item) => (
+          //       <a
+          //         key={item}
+          //         href={`#${item.toLowerCase().replace(' ', '-')}`}
+          //         className="block text-sm font-medium text-blue-200 hover:text-blue-50 transition-colors duration-300"
+          //         onClick={() => setIsMobileMenuOpen(false)}
+          //       >
+          //         {item}
+          //       </a>
+          //     ))}
               <button className="w-full px-6 py-2 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full text-sm font-medium text-blue-100 hover:bg-blue-200/20 transition-all duration-300">
-                Get Started
+                MAKE IT MAKE SENSE
               </button>
-            </div>
-          </div>
+          //   </div>
+          // </div>
         )}
       </div>
     </nav>
