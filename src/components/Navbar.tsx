@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -9,48 +9,59 @@ export const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems = ['[ about ]'];
+  const navItems = ["[ about ]"];
 
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? 'backdrop-blur-md bg-black/10 border-b border-blue-200/20'
-          : 'bg-transparent'
+          ? "backdrop-blur-md bg-black/10 border-b border-blue-200/20"
+          : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
-            <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two flex items-center gap-2">
-            <img src="./skulptlogo.png" alt="Logo" className="h-6 lg:h-12 inline-block mr-2" />
+          <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two flex items-center gap-2">
+            <img
+              src="./skulptlogo.png"
+              alt="Logo"
+              className="h-6 lg:h-12 inline-block mr-2"
+            />
             SKULPT
-            </div>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
+                href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="relative group text-sm font-medium text-blue-200/60 blur-sm opacity-90 hover:text-blue-50 hover:blur-none hover:opacity-100 transition-all duration-300 font-subheading"
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
-            <button className="px-6 py-2 bg-[#CBD1D6] border border-[#CBD1D6] backdrop-blur-sm rounded-full text-sm font-medium text-blue-100 hover:bg-[#B0BDC5] hover:border-[#B0BDC5] transition-all duration-300 font-nersans-two">
+
+            {/* “MAKE IT MAKE SENSE” → anchors to #how-it-works */}
+            <a
+              href="#how-it-works"
+              className="px-6 py-2 bg-[#CBD1D6] border border-[#CBD1D6] backdrop-blur-sm rounded-full
+                         text-sm font-medium text-[#E6EBEE] hover:bg-[#B0BDC5] hover:border-[#B0BDC5]
+                         transition-all duration-300 font-nersans-two"
+            >
               MAKE IT MAKE SENSE
-            </button>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => setIsMobileMenuOpen((o) => !o)}
             className="lg:hidden p-2 text-blue-100"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -59,23 +70,28 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          // <div className="lg:hidden absolute top-full left-0 w-full backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
-          //   <div className="px-6 py-4 space-y-4">
-          //     {navItems.map((item) => (
-          //       <a
-          //         key={item}
-          //         href={`#${item.toLowerCase().replace(' ', '-')}`}
-          //         className="block text-sm font-medium text-blue-200 hover:text-blue-50 transition-colors duration-300"
-          //         onClick={() => setIsMobileMenuOpen(false)}
-          //       >
-          //         {item}
-          //       </a>
-          //     ))}
-              <button className="w-full px-6 py-2 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full text-sm font-medium text-blue-100 hover:bg-blue-200/20 transition-all duration-300">
+          <div className="lg:hidden absolute top-full left-0 w-full backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
+            <div className="px-6 py-4 space-y-4">
+              {navItems.map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replace(" ", "-")}`}
+                  className="block text-sm font-medium text-blue-200 hover:text-blue-50 transition-colors duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item}
+                </a>
+              ))}
+
+              <a
+                href="#how-it-works"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full px-6 py-2 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full text-sm font-medium text-blue-100 hover:bg-blue-200/20 transition-all duration-300"
+              >
                 MAKE IT MAKE SENSE
-              </button>
-          //   </div>
-          // </div>
+              </a>
+            </div>
+          </div>
         )}
       </div>
     </nav>

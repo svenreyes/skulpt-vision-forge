@@ -40,6 +40,12 @@ export const Hero2 = () => {
           </foreignObject>
         </svg>
       </div>
+
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="font-nersans-two text-[#E6EBEE] text-lg lg:text-2xl tracking-normal">
+            COMING&nbsp;SOON
+          </span>
+        </div>
     </section>
   );
 };
