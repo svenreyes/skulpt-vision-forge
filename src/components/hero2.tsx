@@ -3,14 +3,14 @@ import React from "react";
 export const Hero2 = () => (
   <section
     id="stem"
-    className="pt-[env(safe-area-inset-top)] px-6 py-16 pb-16 flex flex-col items-center justify-center min-h-screen bg-[#E6EBEE]"
+    className="pt-[env(safe-area-inset-top)] px-6 py-16 pb-16 flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-[#E6EBEE]"
   >
     {/* GIF inside a soft-edge radial mask */}
-    <div className="gif-feather relative w-[36rem] h-[36rem] lg:w-[64rem] lg:h-[57rem] overflow-hidden">
+    <div className="gif-feather relative w-[36rem] h-[55rem] lg:w-[64rem] lg:h-[57rem] overflow-hidden">
       <img
         src="/skulpt.gif"          /* ←-- your animated GIF */
         alt="Brand animation"
-        className="w-full h-full object-cover blur-lg" /* blur *inside* */
+        className="w-full h-full object-cover blur-xl" /* blur *inside* */
       />
     </div>
 
