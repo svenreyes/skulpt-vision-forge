@@ -79,26 +79,15 @@ export const Navbar = () => {
       {/* ─── mobile drawer (optional, unchanged) ─── */}
       {mobile && (
         <div className="lg:hidden absolute top-full left-0 w-full
-                        backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
+                        backdrop-blur-xl border-b border-[#CBD1D6]">
           <div className="space-y-4 p-6">
-            {navItems.map((label) => (
-              <a
-                key={label}
-                href="#how-it-works"
-                onClick={() => setMobile(false)}
-                className="block text-sm font-medium text-blue-200
-                           hover:text-blue-50 transition-colors duration-300"
-              >
-                {label}
-              </a>
-            ))}
 
             <a
               href="#how-it-works"
               onClick={() => setMobile(false)}
               className="block w-full text-center px-6 py-2 rounded-full
-                         bg-blue-200/10 border border-blue-200/20
-                         text-sm font-medium text-blue-100
+                         bg-[#CBD1D6] border border-[#CBD1D6]
+                         text-sm font-nersans-two text-[#E6EBEE]
                          backdrop-blur-sm hover:bg-blue-200/20
                          transition-all duration-300"
             >
