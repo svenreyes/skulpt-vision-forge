@@ -13,7 +13,7 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = ['[ how it works ]', '[ portfolio ]', '[ about ]', '[ contact ]'];
+  const navItems = ['[ about ]'];
 
   return (
     <nav
@@ -33,7 +33,7 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            {/* {navItems.map((item) => (
+            {navItems.map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(' ', '-')}`}
@@ -42,7 +42,7 @@ export const Navbar = () => {
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full" />
               </a>
-            ))} */}
+            ))}
             <button className="px-6 py-2 bg-[#CBD1D6] border border-[#CBD1D6] backdrop-blur-sm rounded-full text-sm font-medium text-blue-100 hover:bg-[#B0BDC5] hover:border-[#B0BDC5] transition-all duration-300 font-nersans-two">
               MAKE IT MAKE SENSE
             </button>
