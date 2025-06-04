@@ -151,3 +151,26 @@ html, body {
   pointer-events: none;
   z-index: 50;              /* or whatever sits under navbar */
 }
+
+html, body {
+  background: #E6EBEE;   /* the page colour */
+}
+
+/* fixed navbar */
+.navbar-fixed {
+  top: env(safe-area-inset-top);     /* ← pushes it below the notch   */
+  height: calc(4rem + env(safe-area-inset-top));
+}
+
+/* OR give the element internal padding instead of moving it */
+.navbar-fixed > .inner {
+  padding-top: env(safe-area-inset-top);
+}
+
+.noiseCanvas {
+  position: fixed;
+  inset: calc(-1 * env(safe-area-inset-top)) 0 0 0;   /* pulls it UP too   */
+  width: 100%;
+  height: calc(100% + env(safe-area-inset-top));
+  pointer-events: none;
+}
