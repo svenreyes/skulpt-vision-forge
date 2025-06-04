@@ -1,99 +1,112 @@
+// src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobile, setMobile]   = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const navItems = ["[ about ]"];
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        isScrolled
-          ? "backdrop-blur-md bg-black/10 border-b border-blue-200/20"
-          : "bg-transparent"
-      }`}
+      className={`
+        fixed inset-x-0 top-0 z-50
+         transition-all duration-500
+        ${isScrolled ? "bg-black/10 border-b border-blue-200/20" : "bg-transparent"}
+      `}
+      /* height = 4 rem + notch (safe-area) */
+      style={{ height: "calc(4rem + env(safe-area-inset-top))" }}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 lg:h-20">
-          {/* Logo */}
-          <div className="text-2xl lg:text-3xl font-bold tracking-normal text-blue-50 font-nersans-two flex items-center gap-2">
-            <img
-              src="./skulptlogo.png"
-              alt="Logo"
-              className="h-6 lg:h-12 inline-block mr-2"
-            />
-            SKULPT
-          </div>
+      <div
+        className={`
+          max-w-7xl mx-auto h-full flex items-center justify-between
+          safe-px                        /* ← uses the helper from 2-B */
+        `}
+      >
+        {/* ─── logo ─── */}
+        <div className="flex items-center gap-2 font-nersans-two text-blue-50 text-2xl">
+          <img src="/skulptlogo.png" alt="Logo" className="h-6 lg:h-10" />
+          SKULPT
+        </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
+        {/* ─── desktop nav ─── */}
+        <div className="hidden lg:flex items-center space-x-8">
+          {navItems.map((label) => (
+            <a
+              key={label}
+              href="#how-it-works"
+              className="relative text-sm font-subheading font-medium
+                         text-blue-200/60 blur-sm opacity-90
+                         hover:text-blue-50 hover:blur-none hover:opacity-100
+                         transition-all duration-300"
+            >
+              {label}
+              <span
+                className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-200
+                           transition-all duration-300 group-hover:w-full"
+              />
+            </a>
+          ))}
+
+          {/* primary CTA */}
+          <a
+            href="#how-it-works"
+            className="px-6 py-2 rounded-full bg-[#CBD1D6] border border-[#CBD1D6]
+                       text-sm font-nersans-two font-medium text-[#E6EBEE]
+                       backdrop-blur-sm transition-all duration-300
+                       hover:bg-[#B0BDC5] hover:border-[#B0BDC5]"
+          >
+            MAKE IT MAKE SENSE
+          </a>
+        </div>
+
+        {/* ─── burger ─── */}
+        <button
+          onClick={() => setMobile(!mobile)}
+          className="lg:hidden text-blue-50 p-2"
+        >
+          {mobile ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* ─── mobile drawer (optional, unchanged) ─── */}
+      {mobile && (
+        <div className="lg:hidden absolute top-full left-0 w-full
+                        backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
+          <div className="space-y-4 p-6">
+            {navItems.map((label) => (
               <a
-                key={item}
-                href={`#${item.toLowerCase().replace(" ", "-")}`}
-                className="relative group text-sm font-medium text-blue-200/60 blur-sm opacity-90 hover:text-blue-50 hover:blur-none hover:opacity-100 transition-all duration-300 font-subheading"
+                key={label}
+                href="#how-it-works"
+                onClick={() => setMobile(false)}
+                className="block text-sm font-medium text-blue-200
+                           hover:text-blue-50 transition-colors duration-300"
               >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full" />
+                {label}
               </a>
             ))}
 
-            {/* “MAKE IT MAKE SENSE” → anchors to #how-it-works */}
             <a
               href="#how-it-works"
-              className="px-6 py-2 bg-[#CBD1D6] border border-[#CBD1D6] backdrop-blur-sm rounded-full
-                         text-sm font-medium text-[#E6EBEE] hover:bg-[#B0BDC5] hover:border-[#B0BDC5]
-                         transition-all duration-300 font-nersans-two"
+              onClick={() => setMobile(false)}
+              className="block w-full text-center px-6 py-2 rounded-full
+                         bg-blue-200/10 border border-blue-200/20
+                         text-sm font-medium text-blue-100
+                         backdrop-blur-sm hover:bg-blue-200/20
+                         transition-all duration-300"
             >
               MAKE IT MAKE SENSE
             </a>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen((o) => !o)}
-            className="lg:hidden p-2 text-blue-100"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full backdrop-blur-xl bg-black/90 border-b border-blue-200/10">
-            <div className="px-6 py-4 space-y-4">
-              {navItems.map((item) => (
-                <a
-                  key={item}
-                  href={`#${item.toLowerCase().replace(" ", "-")}`}
-                  className="block text-sm font-medium text-blue-200 hover:text-blue-50 transition-colors duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item}
-                </a>
-              ))}
-
-              <a
-                href="#how-it-works"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full px-6 py-2 bg-blue-200/10 backdrop-blur-sm border border-blue-200/20 rounded-full text-sm font-medium text-blue-100 hover:bg-blue-200/20 transition-all duration-300"
-              >
-                MAKE IT MAKE SENSE
-              </a>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </nav>
   );
 };
