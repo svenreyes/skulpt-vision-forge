@@ -124,3 +124,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+.gif-feather {
+  /* just a radial gradient – no logo file here – so the GIF defines the
+     shape and this gradient soft-fades the edges                                                */
+  -webkit-mask: radial-gradient(circle at center,
+                                 #000 25%,           /* fully visible */
+                                 transparent 50%);   /* fade-out ring */
+  mask:         radial-gradient(circle at center,
+                                 #000 25%,
+                                 transparent 90%);
+}
