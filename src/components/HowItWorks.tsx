@@ -9,14 +9,14 @@ export const HowItWorks = () => {
       <div className="relative max-w-3xl px-6 text-center">
         {/* Main copy block */}
         <p className="text-xl md:text-3xl text-[#C1CFD4] leading-relaxed font-subheading">
-          <span className="font-nersans-two font-bold">SKULPT</span> is a branding studio for early-stage founders who
+          <span className="font-nersans-two font-bold">SKULPT</span> is a branding studio for early-stage startups who
           would rather be understood than positioned.
           <br />
           Skulpting helps reconnect founders, team members, and audiences to a long-lasting brand built with intention.
         </p>
 
         <div className="mt-20 relative">
-          <h1 className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 text-[6rem] font-body text-[#CBD1D6] opacity-20 select-none">
+          <h1 className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 text-[4rem] md:text-[6rem] font-body text-[#CBD1D6] opacity-20 select-none">
             In Alignment
           </h1>
 
