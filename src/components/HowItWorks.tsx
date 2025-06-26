@@ -1,10 +1,15 @@
 // src/components/HowItWorks.tsx
 import React from 'react';
 import { Mail, Linkedin, Instagram } from 'lucide-react';
+import { CloudyBackground } from './CloudyBackground';
 
 export const HowItWorks = () => {
   return (
-    <section className="relative w-full h-screen bg-[#E6EBEE] overflow-hidden flex items-center justify-center">
+    <div className="relative w-full h-screen">
+      <div className="absolute inset-0 w-full h-full z-0">
+        <CloudyBackground />
+      </div>
+      <section className="relative w-full h-full bg-[#E6EBEE]/80 overflow-hidden flex items-center justify-center">
 
       <div className="relative max-w-3xl px-6 text-center">
         {/* Main copy block */}
@@ -42,5 +47,6 @@ export const HowItWorks = () => {
         </div>
       </div>
     </section>
+    </div>
   );
 };

@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { CloudyBackground } from './CloudyBackground';
 
 export const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -15,8 +16,13 @@ export const Hero = () => {
 
   return (
     <section className="pt-[env(safe-area-inset-top)] relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-28">
+      {/* Cloudy animated background */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <CloudyBackground />
+      </div>
+
       {/* Animated Background Elements */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-10">
         <div 
           className="absolute w-96 h-96 bg-blue-200/5 rounded-full blur-3xl animate-pulse"
           style={{

@@ -1,6 +1,7 @@
 // src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import logo from "../assets/skulptlogo.png";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,8 +32,8 @@ export const Navbar = () => {
         `}
       >
         {/* ─── logo ─── */}
-        <div className="flex items-center gap-2 font-nersans-two text-blue-50 text-2xl">
-          <img src="/skulptlogo.png" alt="Logo" className="h-6 lg:h-10" />
+        <div className="flex items-center font-nersans-two text-blue-50 text-2xl">
+          <img src={logo} alt="Logo" className="h-6 lg:h-10" />
           SKULPT
         </div>
 

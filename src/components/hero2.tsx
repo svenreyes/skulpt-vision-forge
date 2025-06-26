@@ -1,6 +1,11 @@
 import React from "react";
+import { CloudyBackground } from "./CloudyBackground";
 
 export const Hero2 = () => (
+  <div className="relative w-full h-full">
+    <div className="absolute inset-0 w-full h-full z-0">
+      <CloudyBackground />
+    </div>
   <section
     id="stem"
     className="pt-[env(safe-area-inset-top)] px-6 py-16 pb-16 flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-[#E6EBEE]"
@@ -21,4 +26,5 @@ export const Hero2 = () => (
       </span>
     </div>
   </section>
+  </div>
 );
