@@ -1,12 +1,17 @@
 // src/components/HowItWorks.tsx
 import React from 'react';
 import { Mail, Linkedin, Instagram } from 'lucide-react';
+import { CloudyBackground } from './CloudyBackground';
 
 export const HowItWorks = () => {
   return (
     <section className="relative w-full h-screen bg-[#E6EBEE] overflow-hidden flex items-center justify-center">
+      {/* Cloudy animated background */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <CloudyBackground />
+      </div>
 
-      <div className="relative max-w-3xl px-6 text-center">
+      <div className="relative max-w-3xl px-6 text-center z-10">
         {/* Main copy block */}
         <p className="text-xl md:text-3xl text-[#C1CFD4] leading-relaxed font-subheading">
           <span className="font-nersans-two font-bold">SKULPT</span> is a branding studio for early-stage founders who
