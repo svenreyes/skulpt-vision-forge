@@ -26,6 +26,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .subheading {
+    @apply font-subheading font-normal uppercase tracking-wider leading-tight;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+}
+
 
 @layer base {
   :root {

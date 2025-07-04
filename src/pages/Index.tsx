@@ -1,116 +1,124 @@
-import React, { useEffect, useState } from "react";
-import { Navbar } from "../components/Navbar";
-import { HowItWorks } from "../components/HowItWorks";
-import { Hero2 } from "../components/hero2";
+import React from "react";
+import {
+  ArrowUpRight,
+  Instagram,
+  Link as LinkIcon,
+  Mail,
+} from "lucide-react";
+import { CloudyBackground } from '../components/CloudyBackground';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
+import { useRef, useEffect, useState } from "react";
 
 const Index = () => {
-  const sections = ["hero2", "how-it-works"];
-  const [currentSection, setCurrentSection] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const questions = [
+    "Who are you?",
+    "Where would you go for dreams?",
+    "Who do you want to be?",
+    "What's your dream?",
+    "Who do you care about?",
+    "What's your story?",
+    "What's your responsibility?",
+    "If my answer had to be yes, what would it be?",
+    "What is freedom to you?",
+    "Have you ever been understood?",
+    "What version of yourself do people not see?",
+    "Why now?",
+  ];
 
-  // 1) On scroll wheel, move between panels
+  // For focus logic
+  const questionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const [focusedIdx, setFocusedIdx] = useState(0);
+
   useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (isScrolling) return;
-      setIsScrolling(true);
-
-      if (e.deltaY > 0 && currentSection < sections.length - 1) {
-        setCurrentSection((prev) => prev + 1);
-      } else if (e.deltaY < 0 && currentSection > 0) {
-        setCurrentSection((prev) => prev - 1);
-      }
-
-      setTimeout(() => setIsScrolling(false), 800);
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5 // Trigger when 50% of the element is visible
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [currentSection, sections.length, isScrolling]);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = questionRefs.current.findIndex(ref => ref === entry.target);
+          if (index !== -1) {
+            setFocusedIdx(index);
+          }
+        }
+      });
+    }, options);
 
-  // 2) Whenever “currentSection” changes, update the URL hash:
-  //    - If we’re on section 0 (“hero2”), remove the hash.
-  //    - If we’re on section 1 (“how-it-works”), set the hash to “#how-it-works”.
-  useEffect(() => {
-    if (currentSection === 0) {
-      history.replaceState(null, "", window.location.pathname);
-    } else if (currentSection === 1) {
-      history.replaceState(null, "", "#how-it-works");
+    // Observe all question elements
+    questionRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    // Initial focus on first question
+    if (questionRefs.current[0]) {
+      observer.observe(questionRefs.current[0]);
     }
-  }, [currentSection]);
-
-  // 3) Watch for manual hash changes (e.g. user clicks the nav link or pastes a URL with "#how-it-works"):
-  //    - If the hash becomes "#how-it-works", switch to panel 1.
-  //    - If the hash is anything else (or cleared), switch back to panel 0.
-  useEffect(() => {
-    const onHashChange = () => {
-      const hash = window.location.hash.replace("#", "");
-      if (hash === "how-it-works") {
-        setCurrentSection(1);
-      } else {
-        setCurrentSection(0);
-      }
-    };
-
-    window.addEventListener("hashchange", onHashChange);
-    // Also check on mount:
-    onHashChange();
 
     return () => {
-      window.removeEventListener("hashchange", onHashChange);
+      questionRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+      observer.disconnect();
+    };
+  }, [questions]); // Re-run if questions change
+
+  // Add smooth scroll behavior on mount
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = '';
     };
   }, []);
 
-  // 4) Map each index to its component
-  const sectionComponents = [
-    <Hero2 key="hero2" />,
-    <HowItWorks key="how-it-works" />,
-  ];
-
-  // 5) Render each “panel” stacked on top of each other.
-  const renderSection = (index: number) => {
-    const isActive = index === currentSection;
-    return (
-      <div
-        key={index}
-        className={`absolute inset-0 w-screen h-screen overflow-hidden transition-all duration-1000 ease-out ${
-          isActive
-            ? "opacity-100 blur-none z-20"
-            : "opacity-0 blur-md z-10 pointer-events-none"
-        }`}
-      >
-        <div className="w-full h-full overflow-y-auto">
-          {sectionComponents[index]}
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-blue-50 overflow-hidden">
+    <div className="h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col overflow-y-auto snap-y snap-mandatory">
+      {/* Background */}
+      <CloudyBackground />
+      {/* Decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="pointer-events-none absolute -top-20 -left-40 w-[32rem] h-[32rem] bg-white/60 rounded-full blur-3xl" />
+        <div className="pointer-events-none absolute top-20 right-0 w-[28rem] h-[28rem] bg-white/50 rounded-full blur-3xl" />
+      </div>
+      {/* Navbar */}
       <Navbar />
+      {/* Main content - scrollable questions */}
+      <main className="w-full pt-24 pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center">
+        <ul className="flex flex-col items-center w-full">
+          {questions.map((q, i) => (
+            <li
+              key={q}
+              ref={el => (questionRefs.current[i] = el)}
+              className={`snap-start transition-all duration-300 ease-in-out flex items-center justify-center w-full h-screen
+  ${focusedIdx === i
+    ? "text-[20px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] opacity-100 scale-105 z-10"
+    : "text-[20px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] opacity-40 scale-95 blur-sm z-0"}
+  `}
 
-      {/* Stack both panels (Hero2, HowItWorks) */}
-      <div className="relative h-screen">
-        {sections.map((_, index) => renderSection(index))}
-      </div>
-
-      {/* Navigation Dots */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex space-x-3">
-        {sections.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSection(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSection
-                ? "bg-[#9EA5AD] scale-125"
-                : "bg-[#CBD1D6] hover:bg-blue-200/60"
-            }`}
-          />
-        ))}
-      </div>
+              style={{
+                scrollSnapAlign: 'center',
+              }}
+            >
+              {q}
+            </li>
+          ))}
+        </ul>
+      </main>
+      {/* Tagline above Footer */}
+      <section className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-[#9EA5AD]">
+          We take Branding <span className="italic text-[#3F4851]">Personally.</span>{" "}
+          <ArrowUpRight className="inline-block w-5 h-5 mb-1" />
+        </h2>
+      </section>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
+
 
 export default Index;
