@@ -1,6 +1,7 @@
-// components/Footer.jsx
 import React from "react";
-import { Instagram, Link as LinkIcon, Mail } from "lucide-react";
+import InstagramIcon from "../assets/insta.svg";
+import LinkIcon from "../assets/link.svg";
+import MailIcon from "../assets/mail.svg";
 
 export const Footer = () => (
   <footer
@@ -21,27 +22,27 @@ export const Footer = () => (
         </nav>
 
         {/* right icons */}
-        <div className="flex space-x-8 text-[#9EA5AD]">
+        <div className="flex space-x-8">
           <a
             href="#instagram"
             aria-label="Instagram"
-            className="hover:text-[#3F4851]"
+            className="hover:brightness-75 transition-all duration-200"
           >
-            <Instagram className="w-5 h-5" />
+            <img src={InstagramIcon} alt="Instagram" className="w-5 h-5" />
           </a>
           <a
             href="#website"
             aria-label="Website"
-            className="hover:text-[#3F4851]"
+            className="hover:brightness-75 transition-all duration-200"
           >
-            <LinkIcon className="w-5 h-5" />
+            <img src={LinkIcon} alt="Website" className="w-5 h-5" />
           </a>
           <a
             href="mailto:hello@skulpt.com"
             aria-label="Email"
-            className="hover:text-[#3F4851]"
+            className="hover:brightness-75 transition-all duration-200"
           >
-            <Mail className="w-5 h-5" />
+            <img src={MailIcon} alt="Email" className="w-5 h-5" />
           </a>
         </div>
       </div>
