@@ -29,29 +29,45 @@ export const Navbar = () => {
       style={{ height: "calc(4rem + env(safe-area-inset-top))" }}
     >
       <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6 lg:px-8">
-        {/* Logo */}
-        <div className="flex items-center gap-2 font-nersans-two text-[#3F4851] text-2xl">
-          <span 
-            className="font-bold text-[28px] leading-[130%] tracking-[-1.12px] text-[#ECF1F3]"
-            style={{
-              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px rgba(255, 255, 255, 0.7)'
-            }}
-          >
-            SKULPT
-          </span>
+        {/* Logo - Left */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 font-nersans-two text-[#3F4851] text-2xl">
+            <span 
+              className="font-bold text-[28px] leading-[130%] tracking-[-1.12px] text-[#ECF1F3]"
+              style={{
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px rgba(255, 255, 255, 0.7)'
+              }}
+            >
+              SKULPT
+            </span>
+          </div>
         </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-8">
-          {navItems.map((item) => (
+        {/* Center Navigation */}
+        <div className="flex-1 flex justify-center">
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.slice(0, 3).map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="relative font-subheading text-sm tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] transition-all duration-300 hover:blur-0 blur-[2px]"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Next Button - Right */}
+        <div className="flex-1 flex justify-end">
+          <div className="hidden lg:block">
             <a
-              key={item.href}
-              href={item.href}
+              href={navItems[3].href}
               className="relative font-subheading text-sm tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] transition-all duration-300 hover:blur-0 blur-[2px]"
             >
-              {item.label}
+              {navItems[3].label}
             </a>
-          ))}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}

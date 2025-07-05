@@ -1,19 +1,13 @@
-import React from "react";
-import {
-  ArrowUpRight,
-  Instagram,
-  Link as LinkIcon,
-  Mail,
-} from "lucide-react";
-import { CloudyBackground } from '../components/CloudyBackground';
-import { Navbar } from '../components/Navbar';
-import { Footer } from '../components/Footer';
-import { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { CloudyBackground } from "../components/CloudyBackground";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 
 const Index = () => {
   const questions = [
     "Who are you?",
-    "Where would you go for dreams?",
+    "Where would you go for dinner?",
     "Who do you want to be?",
     "What's your dream?",
     "Who do you care about?",
@@ -26,99 +20,131 @@ const Index = () => {
     "Why now?",
   ];
 
-  // For focus logic
+  /* ------------------------------ refs & state ------------------------------ */
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const questionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const taglineRef = useRef<HTMLElement | null>(null);
+
   const [focusedIdx, setFocusedIdx] = useState(0);
+  const [stackedMode, setStackedMode] = useState(false); // snap/focus vs stacked/hover
+  const [freezeScroll, setFreezeScroll] = useState(false); // temporarily lock scroll
 
+  /* ---------------------------- Snap‑focus logic --------------------------- */
   useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.5 // Trigger when 50% of the element is visible
-    };
+    if (stackedMode) return; // disabled once stacked mode begins
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const index = questionRefs.current.findIndex(ref => ref === entry.target);
-          if (index !== -1) {
-            setFocusedIdx(index);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = questionRefs.current.findIndex((r) => r === entry.target);
+            if (idx !== -1) setFocusedIdx(idx);
           }
-        }
-      });
-    }, options);
+        });
+      },
+      { threshold: 0.5 }
+    );
 
-    // Observe all question elements
-    questionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+    questionRefs.current.forEach((node) => node && observer.observe(node));
+    return () => observer.disconnect();
+  }, [stackedMode]);
 
-    // Initial focus on first question
-    if (questionRefs.current[0]) {
-      observer.observe(questionRefs.current[0]);
-    }
-
-    return () => {
-      questionRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-      observer.disconnect();
-    };
-  }, [questions]); // Re-run if questions change
-
-  // Add smooth scroll behavior on mount
+  /* ---------------- Convert to stacked mode exactly on tagline -------------- */
   useEffect(() => {
-    document.documentElement.style.scrollBehavior = 'smooth';
+    if (!taglineRef.current || stackedMode) return;
+    const container = containerRef.current!;
+
+    const tagObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !stackedMode) {
+            // 1. Hard‑stop any momentum and align viewport to tagline top
+            const targetTop = taglineRef.current!.offsetTop;
+            container.scrollTo({ top: targetTop, behavior: "auto" });
+            setFreezeScroll(true);
+
+            // 2. After short delay (no momentum), enable stacked mode & re‑allow scroll
+            setTimeout(() => {
+              setStackedMode(true);
+              setFreezeScroll(false);
+            }, 300);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    tagObserver.observe(taglineRef.current);
+    return () => tagObserver.disconnect();
+  }, [stackedMode]);
+
+  /* ------------------------ Global smooth scroll feel ------------------------ */
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = "smooth";
     return () => {
-      document.documentElement.style.scrollBehavior = '';
+      document.documentElement.style.scrollBehavior = "";
     };
   }, []);
 
+  /* -------------------------------------------------------------------------- */
+
+  const baseLi =
+    "text-[24px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] transition-all duration-300 ease-in-out";
+
   return (
-    <div className="h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col overflow-y-auto snap-y snap-mandatory">
-      {/* Background */}
+    <div
+      ref={containerRef}
+      style={{ overflowY: freezeScroll ? "hidden" : "auto" }}
+      className={`h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col ${
+        stackedMode ? "" : "snap-y snap-mandatory"
+      }`}
+    >
+      {/* Moving background */}
       <CloudyBackground />
-      {/* Decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="pointer-events-none absolute -top-20 -left-40 w-[32rem] h-[32rem] bg-white/60 rounded-full blur-3xl" />
-        <div className="pointer-events-none absolute top-20 right-0 w-[28rem] h-[28rem] bg-white/50 rounded-full blur-3xl" />
-      </div>
-      {/* Navbar */}
+
       <Navbar />
-      {/* Main content - scrollable questions */}
+
+      {/* Questions list */}
       <main className="w-full pt-24 pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center">
         <ul className="flex flex-col items-center w-full">
-          {questions.map((q, i) => (
-            <li
-              key={q}
-              ref={el => (questionRefs.current[i] = el)}
-              className={`snap-start transition-all duration-300 ease-in-out flex items-center justify-center w-full h-screen
-  ${focusedIdx === i
-    ? "text-[20px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] opacity-100 scale-105 z-10"
-    : "text-[20px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] opacity-40 scale-95 blur-sm z-0"}
-  `}
+          {questions.map((q, i) => {
+            const inFocus = focusedIdx === i && !stackedMode;
+            const focusClasses = inFocus
+              ? "opacity-100 scale-105 z-10"
+              : "opacity-40 scale-95 blur-sm z-0";
+            const stackedClasses =
+              "py-6 cursor-pointer blur-sm opacity-40 hover:blur-none hover:opacity-100";
 
-              style={{
-                scrollSnapAlign: 'center',
-              }}
-            >
-              {q}
-            </li>
-          ))}
+            return (
+              <li
+                key={q}
+                ref={(el) => (questionRefs.current[i] = el)}
+                className={`${baseLi} ${stackedMode ? stackedClasses : focusClasses} ${
+                  stackedMode ? "" : "snap-start flex items-center justify-center h-screen"
+                }`}
+                style={!stackedMode ? { scrollSnapAlign: "center" } : undefined}
+              >
+                {q}
+              </li>
+            );
+          })}
         </ul>
       </main>
-      {/* Tagline above Footer */}
-      <section className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center">
+
+      {/* Tagline */}
+      <section
+        ref={taglineRef}
+        className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center"
+      >
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-[#9EA5AD]">
           We take Branding <span className="italic text-[#3F4851]">Personally.</span>{" "}
           <ArrowUpRight className="inline-block w-5 h-5 mb-1" />
         </h2>
       </section>
-      {/* Footer */}
+
       <Footer />
     </div>
   );
 };
-
 
 export default Index;
