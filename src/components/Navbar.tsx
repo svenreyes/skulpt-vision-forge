@@ -140,7 +140,7 @@ export const Navbar = () => {
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobile(false)}
-                    className="font-subheading text-white hover:text-[#9EA5AD] transition-colors duration-300 py-2"
+                    className="font-subheading text-white hover:text-[#9EA5AD] transition-colors duration-300 py-3 px-4 text-lg font-medium [text-shadow:_0_1px_3px_rgba(0,0,0,0.3)] hover:bg-white/5 rounded-lg"
                   >
                     {item.label}
                   </a>

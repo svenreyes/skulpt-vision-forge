@@ -4,7 +4,7 @@ import LinkIcon from "../assets/link.svg";
 import MailIcon from "../assets/mail.svg";
 
 export const Footer = () => (
-  <footer className="relative z-20 bg-[#F0F3F7] py-6 sm:py-10 px-4 sm:px-6 md:px-20 font-subheading select-none shadow-inner">
+  <footer className="relative z-20 bg-[#F0F3F7] py-6 sm:py-10 px-4 sm:px-6 md:px-20 font-subheading select-none shadow-inner pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
     <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
       <div className="flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0">
         {/* Mobile: Stacked links */}
