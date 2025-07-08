@@ -1,7 +1,8 @@
 // src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
 import SKULPTLogo from "../assets/SKULPT-wordmark.svg";
-import { Menu, X } from "lucide-react";
+import HamburgerIcon from "../assets/hamburger.svg";
+import CloseIcon from "../assets/ex.svg";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -100,24 +101,52 @@ export const Navbar = () => {
           className="lg:hidden text-[#3F4851] p-2"
           aria-label="Toggle menu"
         >
-          {mobile ? <X size={24} /> : <Menu size={24} />}
+          <img 
+            src={mobile ? CloseIcon : HamburgerIcon} 
+            alt={mobile ? "Close menu" : "Open menu"} 
+            className="w-6 h-6" 
+          />
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobile && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md shadow-lg">
-          <div className="flex flex-col space-y-4 p-6">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobile(false)}
-                className="font-subheading text-[#3F4851] hover:text-[#9EA5AD] transition-all duration-300 py-2 hover:blur-0 blur-[1px]"
-              >
-                {item.label}
-              </a>
-            ))}
+        <div className="lg:hidden absolute top-full left-0 w-full">
+          <div className="relative p-4">
+            {/* Glass overlay */}
+            <div 
+              className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 shadow-2xl"
+              style={{
+                background: 'radial-gradient(at 100% 0%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.18)'
+              }}
+            >
+              {/* Animated gradient border */}
+              <div 
+                className="absolute inset-0 rounded-2xl p-px"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%)',
+                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                  WebkitMaskComposite: 'xor',
+                  maskComposite: 'exclude',
+                  animation: 'shimmer 8s linear infinite',
+                  backgroundSize: '200% 200%'
+                }}
+              />
+              {/* Menu items */}
+              <div className="relative z-10 flex flex-col space-y-4 p-6">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobile(false)}
+                    className="font-subheading text-white hover:text-[#9EA5AD] transition-colors duration-300 py-2"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
