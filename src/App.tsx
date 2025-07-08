@@ -8,7 +8,6 @@ import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import { NoiseCanvas } from "@/components/NoiseCanvas";
-import AppShell from "./components/AppShell";
 
 const queryClient = new QueryClient();
 
@@ -18,18 +17,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AppShell>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          
-          {/* Grain overlay: sits on top of every page without blocking clicks */}
-          <NoiseCanvas />
-        </AppShell>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
+
+      {/* Grain overlay: sits on top of every page without blocking clicks */}
+      <NoiseCanvas />
       {/* ─────────────────────────────────────────────────────────────── */}
     </TooltipProvider>
   </QueryClientProvider>
