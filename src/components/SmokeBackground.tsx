@@ -42,16 +42,16 @@ const fragmentShader = `
   }
   void main() {
     // Scale and animate UVs for big, soft clouds
-    float loopT = 24.0;
+    float loopT = 36.0; // Increased from 24.0 to slow down the animation
     float t = mod(time, loopT);
     vec2 uv = vUv * 2.5;
     vec2 offset = vec2(
       sin(t * 2.0 * 3.14159 / loopT),
       cos(t * 2.0 * 3.14159 / loopT)
-    ) * 1.0;
-    float n = fbm(uv + offset + 0.15 * sin(uv.yx + t * 0.15));
-    float n2 = fbm(uv * 0.7 - offset * 0.4 - 0.15 * cos(uv.yx + t * 0.18));
-    float cloud = smoothstep(0.35, 0.7, mix(n, n2, 0.5));
+    ) * 0.8; // Reduced from 1.0 to make movement more subtle
+    float n = fbm(uv + offset + 0.1 * sin(uv.yx + t * 0.1)); // Reduced from 0.15 to slow down
+    float n2 = fbm(uv * 0.7 - offset * 0.3 - 0.1 * cos(uv.yx + t * 0.12)); // Reduced from 0.15 to slow down
+    float cloud = smoothstep(0.3, 0.65, mix(n, n2, 0.5)); // Adjusted thresholds for softer clouds
     
     // Convert hex colors to RGB (0-1 range)
     vec3 color1 = vec3(0.7961, 0.8196, 0.8392); // #CBD1D6 (darker gray-blue)
@@ -66,8 +66,8 @@ const fragmentShader = `
       color = mix(color2, color3, (cloud - 0.5) * 2.0); // Light to medium transition
     }
     
-    // Increased contrast and opacity
-    float alpha = 0.7 * cloud + 0.25;
+    // Reduced opacity for a more subtle effect
+    float alpha = 0.5 * cloud + 0.15;
     gl_FragColor = vec4(color, alpha);
   }
 `;
