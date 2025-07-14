@@ -30,7 +30,7 @@ export const Navbar = () => {
       `}
       style={{ height: "calc(4rem + env(safe-area-inset-top))" }}
     >
-      <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6 pt-6 lg:px-8">
         {/* Logo - Left */}
         <div className="flex-1">
           <div className="flex items-center gap-2 font-nersans-two text-[#3F4851] text-2xl">

@@ -91,7 +91,7 @@ const Index = () => {
     <div
       ref={containerRef}
       style={{ overflowY: freezeScroll ? "hidden" : "auto" }}
-      className={`h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col ${
+      className={`h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col pt-8 ${
         stackedMode ? "" : "snap-y snap-mandatory"
       }`}
     >
@@ -101,7 +101,7 @@ const Index = () => {
       <Navbar />
 
       {/* Questions list */}
-      <main className="w-full pt-24 pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center">
+      <main className="w-full pt-32 pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center">
         <ul className="flex flex-col items-center w-full">
           {questions.map((q, i) => {
             const inFocus = focusedIdx === i && !stackedMode;
@@ -132,9 +132,9 @@ const Index = () => {
         ref={taglineRef}
         className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center"
       >
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-[#9EA5AD]">
-          We take Branding <span className="italic text-[#3F4851]">Personally.</span>{" "}
-          <ArrowUpRight className="inline-block w-5 h-5 mb-1" />
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-[#B8C1CB]">
+          Taking Branding <span className="italic text-[#A0A9B4]">Personally</span>{" "}
+          <ArrowUpRight className="inline-block w-5 h-5 mb-1 text-[#A0A9B4]" />
         </h2>
       </section>
 
