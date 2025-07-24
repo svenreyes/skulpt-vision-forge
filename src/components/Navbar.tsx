@@ -112,41 +112,52 @@ export const Navbar = () => {
       {/* Mobile Menu */}
       {mobile && (
         <div className="lg:hidden absolute top-full left-0 w-full">
-          <div className="relative p-4">
-            {/* Glass overlay */}
-            <div 
-              className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 shadow-2xl"
-              style={{
-                background: 'radial-gradient(at 100% 0%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%)',
-                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.18)'
-              }}
-            >
-              {/* Animated gradient border */}
-              <div 
-                className="absolute inset-0 rounded-2xl p-px"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%)',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
-                  animation: 'shimmer 8s linear infinite',
-                  backgroundSize: '200% 200%'
-                }}
-              />
-              {/* Menu items */}
-              <div className="relative z-10 flex flex-col space-y-4 p-6">
-                {navItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobile(false)}
-                    className="font-subheading text-white hover:text-[#9EA5AD] transition-colors duration-300 py-3 px-4 text-lg font-medium [text-shadow:_0_1px_3px_rgba(0,0,0,0.3)] hover:bg-white/5 rounded-lg"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
+          <div className="p-6 space-y-4">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobile(false)}
+                className="group block w-full"
+              >
+                <div className="relative">
+                  {/* Glass overlay */}
+                  <div className="absolute inset-0">
+                    {/* Background layer that changes color on active */}
+                    <div className="absolute inset-0 bg-[#9EA5AD] opacity-0 group-active:opacity-100 transition-opacity duration-300 rounded-2xl" />
+                    
+                    {/* Glass effect layer */}
+                    <div 
+                      className="absolute inset-0 backdrop-blur-lg rounded-2xl border border-white/10 shadow-2xl transition-all duration-300"
+                      style={{
+                        background: 'radial-gradient(at 100% 0%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%)',
+                        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.18)'
+                      }}
+                    >
+                      {/* Animated gradient border */}
+                      <div 
+                        className="absolute inset-0 rounded-2xl p-px"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%)',
+                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                          WebkitMaskComposite: 'xor',
+                          maskComposite: 'exclude',
+                          animation: 'shimmer 8s linear infinite',
+                          backgroundSize: '200% 200%'
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Menu item content */}
+                  <div className="relative z-10 p-6">
+                    <span className="font-subheading text-[#9EA5AD] group-hover:text-[#9EA5AD] group-active:text-white transition-colors duration-300 text-lg font-medium">
+                      {item.label}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       )}
