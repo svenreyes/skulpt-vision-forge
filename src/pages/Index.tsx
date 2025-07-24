@@ -11,22 +11,36 @@ const Index = () => {
   const [touchEndY, setTouchEndY] = useState(0);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setTouchStartY(e.targetTouches[0].clientY);
+    const y = e.touches[0].clientY;
+    // reset both so a tap (no move) produces Δy = 0
+    setTouchStartY(y);
+    setTouchEndY(y);
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    setTouchEndY(e.targetTouches[0].clientY);
+    setTouchEndY(e.touches[0].clientY);
   };
 
   const handleTouchEnd = () => {
     if (isScrolling) return;
-    const threshold = 50;
-    // If swipe distance exceeds threshold in either direction, advance to next section (toggle)
-    if (Math.abs(touchEndY - touchStartY) > threshold) {
-      setIsScrolling(true);
-      setCurrentSection((prev) => (prev + 1) % sections.length);
-      setTimeout(() => setIsScrolling(false), 800);
+
+    const delta = touchEndY - touchStartY;   // positive = swipe-down, negative = swipe-up
+    const threshold = 60;                    // px — tweak to taste
+
+    // Ignore taps / micro-drags
+    if (Math.abs(delta) < threshold) return;
+
+    setIsScrolling(true);
+
+    if (delta < 0 && currentSection < sections.length - 1) {
+      // swipe-up → next panel
+      setCurrentSection(prev => prev + 1);
+    } else if (delta > 0 && currentSection > 0) {
+      // swipe-down → previous panel
+      setCurrentSection(prev => prev - 1);
     }
+
+    setTimeout(() => setIsScrolling(false), 800);
   };
 
   // 1) On scroll wheel, move between panels
