@@ -1,6 +1,8 @@
 // src/components/HowItWorks.tsx
 import React from 'react';
-import { Mail, Linkedin, Instagram } from 'lucide-react';
+import mailIcon from '../assets/mail.svg';
+import linkedinIcon from '../assets/linkedin.svg';
+import instaIcon from '../assets/insta.svg';
 import { CloudyBackground } from './CloudyBackground';
 
 export const HowItWorks = () => {
@@ -27,21 +29,21 @@ export const HowItWorks = () => {
 
           <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center space-x-6">
             <a href="mailto:contact@skulptbrand.com">
-              <Mail className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors" />
+              <img src={mailIcon} alt="Mail" className="w-6 h-6 opacity-70 hover:opacity-100 transition-opacity duration-300 cursor-pointer" />
             </a>
             <a
               href="https://www.linkedin.com/company/skulptbrand/about/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Linkedin className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors" />
+              <img src={linkedinIcon} alt="LinkedIn" className="w-6 h-6 opacity-70 hover:opacity-100 transition-opacity duration-300 cursor-pointer" />
             </a>
             <a
               href="https://www.instagram.com/skulptbrand/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Instagram className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors" />
+              <img src={instaIcon} alt="Instagram" className="w-6 h-6 opacity-70 hover:opacity-100 transition-opacity duration-300 cursor-pointer" />
             </a>
           </div>
         </div>

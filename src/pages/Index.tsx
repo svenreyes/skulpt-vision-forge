@@ -7,6 +7,29 @@ const Index = () => {
   const sections = ["hero2", "how-it-works"];
   const [currentSection, setCurrentSection] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [touchEndY, setTouchEndY] = useState(0);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchStartY(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchEndY(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (isScrolling) return;
+    if (touchStartY - touchEndY > 50 && currentSection < sections.length - 1) {
+      setIsScrolling(true);
+      setCurrentSection((prev) => prev + 1);
+      setTimeout(() => setIsScrolling(false), 800);
+    } else if (touchEndY - touchStartY > 50 && currentSection > 0) {
+      setIsScrolling(true);
+      setCurrentSection((prev) => prev - 1);
+      setTimeout(() => setIsScrolling(false), 800);
+    }
+  };
 
   // 1) On scroll wheel, move between panels
   useEffect(() => {
@@ -87,7 +110,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-blue-50 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-blue-50 overflow-hidden"
+         onTouchStart={handleTouchStart}
+         onTouchMove={handleTouchMove}
+         onTouchEnd={handleTouchEnd}>
       <Navbar />
 
       {/* Stack both panels (Hero2, HowItWorks) */}

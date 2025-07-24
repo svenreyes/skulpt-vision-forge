@@ -1,17 +1,41 @@
 // src/components/Navbar.tsx
-import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSwipeable } from 'react-swipeable';
 import logo from "../assets/skulptlogo.png";
+import hamburgerIcon from "../assets/hamburger.svg";
+import closeIcon from "../assets/ex.svg";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobile, setMobile]   = useState(false);
+  const [mobile, setMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 50) {
+      // Swipe left
+      const howItWorks = document.getElementById('how-it-works');
+      if (howItWorks) {
+        howItWorks.scrollIntoView({ behavior: 'smooth' });
+        setMobile(false);
+      }
+    }
+  };
 
   const navItems = ["[ about ]"];
 
@@ -34,7 +58,7 @@ export const Navbar = () => {
         {/* ─── logo ─── */}
         <div className="flex items-center font-nersans-two text-blue-50 text-2xl">
           <img src={logo} alt="Logo" className="h-6 lg:h-10" />
-          SKULPT
+          <span className="ml-2">SKULPT</span>
         </div>
 
         {/* ─── desktop nav ─── */}
@@ -72,27 +96,67 @@ export const Navbar = () => {
         <button
           onClick={() => setMobile(!mobile)}
           className="lg:hidden text-blue-50 p-2"
+          aria-label={mobile ? "Close menu" : "Open menu"}
         >
-          {mobile ? <X size={24} /> : <Menu size={24} />}
+          <img 
+            src={mobile ? closeIcon : hamburgerIcon} 
+            alt="" 
+            className="w-6 h-6"
+          />
         </button>
       </div>
 
-      {/* ─── mobile drawer (optional, unchanged) ─── */}
+      {/* Mobile menu with swipe functionality */}
       {mobile && (
-        <div className="lg:hidden absolute top-full left-0 w-full
-                        backdrop-blur-xl border-b border-[#CBD1D6]">
+        <div 
+          ref={mobileMenuRef}
+          className="lg:hidden absolute top-full left-0 w-full"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="space-y-4 p-6">
-
             <a
               href="#how-it-works"
               onClick={() => setMobile(false)}
-              className="block w-full text-center px-6 py-2 rounded-full
-                         bg-[#CBD1D6] border border-[#CBD1D6]
-                         text-sm font-nersans-two text-[#E6EBEE]
-                         backdrop-blur-sm hover:bg-blue-200/20
-                         transition-all duration-300"
+              className="group relative block w-full"
             >
-              MAKE IT MAKE SENSE
+              <div className="relative">
+                {/* Glass overlay */}
+                <div className="absolute inset-0">
+                  {/* Background layer that changes color on active */}
+                  <div className="absolute inset-0 bg-[#9EA5AD] opacity-0 group-active:opacity-100 transition-opacity duration-300 rounded-xl" />
+                  
+                  {/* Glass effect layer */}
+                  <div 
+                    className="absolute inset-0 backdrop-blur-lg rounded-2xl border border-white/10 shadow-2xl transition-all duration-300"
+                    style={{
+                      background: 'radial-gradient(at 100% 0%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%)',
+                      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.18)'
+                    }}
+                  >
+                    {/* Animated gradient border */}
+                    <div 
+                      className="absolute inset-0 rounded-2xl p-px"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%)',
+                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                        WebkitMaskComposite: 'xor',
+                        maskComposite: 'exclude',
+                        animation: 'shimmer 8s linear infinite',
+                        backgroundSize: '200% 200%'
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                {/* Button content */}
+                <div className="relative z-10 p-4 text-center">
+                  <span className="font-nersans-two text-[#9EA5AD] group-hover:text-[#9EA5AD] group-active:text-white transition-colors duration-300 text-sm font-medium">
+                    MAKE IT MAKE SENSE
+                  </span>
+                </div>
+              </div>
             </a>
           </div>
         </div>
