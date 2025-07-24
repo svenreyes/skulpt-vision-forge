@@ -20,13 +20,11 @@ const Index = () => {
 
   const handleTouchEnd = () => {
     if (isScrolling) return;
-    if (touchStartY - touchEndY > 50 && currentSection < sections.length - 1) {
+    const threshold = 50;
+    // If swipe distance exceeds threshold in either direction, advance to next section (toggle)
+    if (Math.abs(touchEndY - touchStartY) > threshold) {
       setIsScrolling(true);
-      setCurrentSection((prev) => prev + 1);
-      setTimeout(() => setIsScrolling(false), 800);
-    } else if (touchEndY - touchStartY > 50 && currentSection > 0) {
-      setIsScrolling(true);
-      setCurrentSection((prev) => prev - 1);
+      setCurrentSection((prev) => (prev + 1) % sections.length);
       setTimeout(() => setIsScrolling(false), 800);
     }
   };
@@ -102,7 +100,7 @@ const Index = () => {
             : "opacity-0 blur-md z-10 pointer-events-none"
         }`}
       >
-        <div className="w-full h-full overflow-y-auto">
+        <div className={`w-full h-full ${index === 0 ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           {sectionComponents[index]}
         </div>
       </div>
