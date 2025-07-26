@@ -26,6 +26,7 @@ export default {
 				display: ['"Nersans Two"', 'sans-serif'],
 				subheading: ['"Sohne Buch"', 'sans-serif'],
         		body: ['"Sohne Leicht"', 'sans-serif'],
+				mono: ['"Source Code Pro"', 'monospace'],
 			  },
 			colors: {
 				border: 'hsl(var(--border))',
