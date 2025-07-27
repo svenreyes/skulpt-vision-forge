@@ -11,15 +11,14 @@ export const Hero2: React.FC = () => {
     const difference = TARGET_TIMESTAMP - now;
 
     if (difference <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 };
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
     return {
       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
       minutes: Math.floor((difference / (1000 * 60)) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-      milliseconds: Math.floor(difference % 1000),
+      seconds: Math.floor((difference / 1000) % 60)
     };
   };
 
@@ -27,20 +26,15 @@ export const Hero2: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    // Use requestAnimationFrame for smoother millisecond updates
-    let animationFrameId: number;
-    let lastUpdate = 0;
+    // Update every second since we're not showing milliseconds
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
     
-    const update = (timestamp: number) => {
-      if (timestamp - lastUpdate >= 16) { // ~60fps
-        setTimeLeft(calculateTimeLeft());
-        lastUpdate = timestamp;
-      }
-      animationFrameId = requestAnimationFrame(update);
-    };
+    // Initial update
+    setTimeLeft(calculateTimeLeft());
     
-    animationFrameId = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => clearInterval(timer);
   }, []);
 
   const { days, hours, minutes, seconds, milliseconds } = timeLeft;
@@ -77,18 +71,15 @@ export const Hero2: React.FC = () => {
           
           {/* Timer in glass container */}
           <div className="backdrop-blur-md bg-white/5 p-4 rounded-xl border border-white/10 shadow-xl">
-            <div className="font-mono text-white text-lg lg:text-xl tracking-wider">
+            <div className="font-mono text-white text-2xl lg:text-3xl font-medium tracking-wider">
               <div className="flex items-baseline space-x-1">
-                <span className="text-2xl font-medium">{days}</span>
+                <span className="min-w-[1.5rem] text-center">{days}</span>
                 <span>:</span>
-                <span className="text-2xl font-medium ml-2">{hours.toString().padStart(2, '0')}</span>
+                <span className="min-w-[2.5rem] text-center">{hours.toString().padStart(2, '0')}</span>
                 <span>:</span>
-                <span className="text-2xl font-medium ml-2">{minutes.toString().padStart(2, '0')}</span>
+                <span className="min-w-[2.5rem] text-center">{minutes.toString().padStart(2, '0')}</span>
                 <span>:</span>
-                <span className="text-2xl font-medium ml-2">{seconds.toString().padStart(2, '0')}</span>
-                <span>:</span>
-                <span className="text-2xl opacity-80 font-light ml-2">{milliseconds.toString().padStart(3, '0')}</span>
-                <span className="text-lg opacity-80 font-light"></span>
+                <span className="min-w-[2.5rem] text-center">{seconds.toString().padStart(2, '0')}</span>
               </div>
             </div>
           </div>
