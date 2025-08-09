@@ -5,7 +5,7 @@ import { SmokeBackground } from './SmokeBackground';
  * Full-screen cloudy background using Three.js and a custom GLSL shader.
  * Place this at the root of any page, before all content, for a seamless effect.
  */
-export function CloudyBackground() {
+export function CloudyBackground({ zIndex = 0 }: { zIndex?: number } = {}) {
   return (
     <Canvas
       style={{
@@ -14,7 +14,7 @@ export function CloudyBackground() {
         left: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: 0,
+        zIndex,
         pointerEvents: 'none', // Let UI elements be clickable
       }}
       gl={{

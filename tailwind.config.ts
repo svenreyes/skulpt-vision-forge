@@ -24,8 +24,10 @@ export default {
 			fontFamily: {
 				'nersans-two': ['"Nersans Two"', 'sans-serif'],
 				display: ['"Nersans Two"', 'sans-serif'],
-				subheading: '"Sohne Buch", sans-serif',
-        		body: ['"Sohne Leicht"', 'sans-serif'],
+				subheading: ['"Sohne Buch"', 'sans-serif'],
+				subcursive: ['"TestSohne Buch Kursiv"', 'sans-serif'],
+        		body: ['"Test Sohne Leicht"', 'sans-serif'],
+        		bodycursive: ['"TestSohne Leicht Kursiv"', 'sans-serif'],
 			  },
 			colors: {
 				border: 'hsl(var(--border))',

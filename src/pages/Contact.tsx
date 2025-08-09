@@ -2,9 +2,11 @@ import { Canvas } from "@react-three/fiber";
 import { SmokeBackground } from "@/components/SmokeBackground";
 import { Suspense } from "react";
 import { SShape } from "@/components/SShape";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Navbar } from "@/components/Navbar";
+import arrowUrl from "@/assets/arrow.svg";
+
+
+
 import { useToast } from "@/components/ui/use-toast";
 
 const Contact = () => {
@@ -16,7 +18,7 @@ const Contact = () => {
     const formData = new FormData(form);
     const nameValue = formData.get('name');
     const emailValue = formData.get('email');
-    const messageValue = formData.get('message');
+    const lookingForValue = formData.get('lookingFor');
 
     try {
       const response = await fetch('https://hook.us2.make.com/2bwc6n8rxrjij77cun2lnak6aej58nyx', {
@@ -27,7 +29,7 @@ const Contact = () => {
         body: JSON.stringify({
           name: nameValue,
           email: emailValue,
-          message: messageValue,
+          message: lookingForValue,
           timestamp: new Date().toISOString(),
         }),
       });
@@ -54,7 +56,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden text-white font-nersans-two">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden text-white font-body">
       {/* Three.js background */}
       <Canvas
         camera={{ position: [0, 0, 8], fov: 50 }}
@@ -69,94 +71,81 @@ const Contact = () => {
         </Suspense>
       </Canvas>
 
-      {/* Contact form */}
-      <div className="relative z-10 w-full max-w-lg">
-        <div className="relative">
-          {/* Glass overlay */}
-          <div 
-            className="absolute inset-0 bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 shadow-2xl"
-            style={{
-              background: 'radial-gradient(at 100% 0%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.18)'
-            }}
-          >
-            {/* Animated gradient border */}
-            <div 
-              className="absolute inset-0 rounded-2xl p-px"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%)',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                animation: 'shimmer 8s linear infinite',
-                backgroundSize: '200% 200%'
-              }}
-            />
+      {/* Navbar */}
+      <div className="absolute inset-x-0 top-0 z-20">
+        <Navbar />
+      </div>
+
+      {/* Main layout (add top padding to clear Navbar) */}
+      <div className="relative z-10 w-full h-full min-h-screen flex flex-col justify-between text-xs tracking-wider px-6 py-6 pt-24 md:pt-28 text-[#9EA5AD]">
+        {/* Top Row */}
+        <div className="flex w-full justify-between items-start text-[#9EA5AD] text-[13px] font-body">
+          <div className="flex flex-col gap-0">
+            <div>FREYA LINDEQVIST</div>
+            <div className="opacity-80">CO-FOUNDER</div>
           </div>
-          
-          {/* Form content */}
-          <form
-            onSubmit={handleSubmit}
-            className="relative z-10 space-y-8 p-8 animate-in fade-in slide-in-from-bottom-6 duration-700"
-          >
-        <h1 className="mb-4 text-center text-4xl font-bold tracking-wide">
-          Let's Connect
-        </h1>
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="name" className="mb-1 block text-sm font-medium">
-              Name
-            </label>
-            <Input id="name" name="name" required placeholder="Your name" className="bg-transparent border-0 border-b-2 border-white/70 focus:border-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none placeholder:text-white/60 outline-none" />
+          <div className="flex flex-col gap-0">
+            <div>LUICA JUEGUEN</div>
+            <div className="opacity-80">CO-FOUNDER</div>
           </div>
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium">
-              Email
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              className="bg-transparent border-0 border-b-2 border-white/70 focus:border-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none placeholder:text-white/60 outline-none"
-            />
+          <div className="flex flex-col gap-0 text-right max-w-[260px] text-[#9EA5AD]">
+            <div>STOCKHOLM, SWEDEN</div>
+            <div>CONTACT@SKULPT.COM</div>
+            <div className="mt-2">2025 SKULPT / ALL RIGHTS RESERVED</div>
           </div>
-          <div>
-            <label htmlFor="message" className="mb-1 block text-sm font-medium">
-              Message
-            </label>
-            <Textarea
-              id="message"
-              name="message"
-              rows={4}
-              required
-              placeholder="Tell us a bit about your project…"
-              className="bg-transparent border-0 border-b-2 border-white/70 focus:border-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none placeholder:text-white/60 outline-none"
-            />
+          {/* Removed CLOSE link */}
+        </div>
+
+        {/* Middle Section - only the form on the right */}
+        <div className="flex-1 flex flex-row items-center justify-end w-full pt-12 pb-8">
+          {/* Contact Form */}
+          <div className="flex flex-col items-end text-right gap-4 min-w-[340px]">
+            <p className="text-[13px] font-body leading-tight text-[#9EA5AD] text-left normal-case whitespace-pre-line max-w-[360px]">
+              {`Drop a note using the form below.
+Tell us where you are on your journey
+and what you're building.
+We'll take it from there.`}
+            </p>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-[400px] relative">
+              {[
+                { id: 'name', type: 'text', placeholder: 'NAME' },
+                { id: 'email', type: 'email', placeholder: 'EMAIL', required: true },
+                { id: 'lookingFor', type: 'text', placeholder: 'WHAT YOU\'RE LOOKING FOR' },
+              ].map((field) => (
+                <div key={field.id} className="relative w-full">
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[#9EA5AD]/90 text-2xl">[</span>
+                  <input
+                    id={field.id}
+                    name={field.id}
+                    type={field.type}
+                    required={field.required}
+                    placeholder={field.placeholder}
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-8 text-lg font-body tracking-wide w-full"
+                    style={{ textTransform: 'none' }}
+                  />
+                  <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[#9EA5AD]/90 text-2xl">]</span>
+                </div>
+              ))}
+              <button type="submit" className="mt-4 text-left text-[#9EA5AD] hover:underline">SEND MESSAGE</button>
+            </form>
           </div>
         </div>
-            <Button type="submit" className="w-full border border-white/70 bg-transparent py-2 hover:bg-white/10 transition">
-              Send Message
-            </Button>
-          </form>
+
+        {/* Footer CTA line */}
+        <div className="w-full flex flex-col items-center justify-end gap-6 mt-auto">
+          <h3 className="text-base text-[20px] sm:text-[40px] md:text-[60px] lg:text-[90px] font-light text-[#B8C1CB]">
+            Let's <span className=" pr-4 italic text-[#A0A9B4]">Connect</span >{' '}
+            <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 mb-1 -rotate-45 scale-[2.5]" />
+          </h3>
+
+          {/* Footer - SKULPT */}
+          <div className="w-full flex justify-center items-end">
+          <span className="text-[#9EA5AD] text-[60px] sm:text-[90px] md:text-[120px] lg:text-[140px] font-nersans-two tracking-tight leading-none select-none" style={{letterSpacing:'-0.03em'}}>
+            SKULPT
+          </span>
+          </div>
         </div>
       </div>
-      
-      {/* Animation styles */}
-      <style jsx global>{`
-        @keyframes shimmer {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
     </div>
   );
 };

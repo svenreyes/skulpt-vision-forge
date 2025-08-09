@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import { NoiseCanvas } from "@/components/NoiseCanvas";
+import Skulpting from "./pages/Skulpting";
+import { RouteBlurProvider } from "@/components/RouteBlurTransition";
 
 const queryClient = new QueryClient();
 
@@ -15,14 +17,20 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <Sonner />
+      {/* Hide Sonner notifications for now (was showing a small widget bottom-right) */}
+      <div className="hidden">
+        <Sonner />
+      </div>
       <BrowserRouter>
+        <RouteBlurProvider>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/skulpting" element={<Skulpting />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </RouteBlurProvider>
       </BrowserRouter>
 
       {/* Grain overlay: sits on top of every page without blocking clicks */}

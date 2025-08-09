@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
 import { CloudyBackground } from "../components/CloudyBackground";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
+import arrowUrl from "../assets/arrow.svg";
+import { useNavigate } from "react-router-dom";
+import { useRouteBlur } from "../components/RouteBlurTransition";
 
 const Index = () => {
   const questions = [
@@ -87,6 +89,9 @@ const Index = () => {
   const baseLi =
     "text-[24px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] transition-all duration-300 ease-in-out";
 
+  const navigate = useNavigate();
+  const { trigger } = useRouteBlur();
+
   return (
     <div
       ref={containerRef}
@@ -101,7 +106,7 @@ const Index = () => {
       <Navbar />
 
       {/* Questions list */}
-      <main className="w-full pt-32 pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center">
+      <main className={`w-full ${stackedMode ? 'pt-52' : 'pt-32'} pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center`}>
         <ul className="flex flex-col items-center w-full">
           {questions.map((q, i) => {
             const inFocus = focusedIdx === i && !stackedMode;
@@ -134,7 +139,16 @@ const Index = () => {
       >
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-[#B8C1CB]">
           Taking Branding <span className="italic text-[#A0A9B4]">Personally</span>{" "}
-          <ArrowUpRight className="inline-block w-5 h-5 mb-1 text-[#A0A9B4]" />
+          <button
+            aria-label="Go to skulpting"
+            onClick={async () => {
+              await trigger({ before: 200, after: 200 });
+              navigate("/skulpting");
+            }}
+            className="align-middle inline-flex items-center justify-center ml-1 hover:opacity-80 transition-opacity"
+          >
+            <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 mb-1 -rotate-45 scale-150" />
+          </button>
         </h2>
       </section>
 

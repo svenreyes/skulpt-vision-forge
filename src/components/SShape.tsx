@@ -15,13 +15,13 @@ export function SShape() {
   // Rotate the model smoothly around the Y-axis
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-    groupRef.current.rotation.y += delta * 1.0; // Faster spin
+    groupRef.current.rotation.y += delta * 0.97; // 3% slower rotation
   });
 
   return (
     <group ref={groupRef} dispose={null}>
       {/* “Center” centers the model and applies a uniform scale so it fits the viewport */}
-      <Center scale={2}>
+      <Center scale={1.0}>
         <primitive object={scene} />
       </Center>
     </group>
