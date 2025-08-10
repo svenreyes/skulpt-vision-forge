@@ -4,7 +4,7 @@ import { CloudyBackground } from "../components/CloudyBackground";
 
 const Skulpting: React.FC = () => {
   return (
-    <div className="relative scale-[1] min-h-[100svh] w-full bg-[#E6EBEE] overflow-hidden">
+    <div className="relative scale-[1] min-h-[100svh] w-full bg-[#E6EBEE] overflow-hidden pb-24 md:pb-0">
       {/* Background clouds (bottom layer) */}
       <div className="absolute inset-0 z-0">
         <CloudyBackground zIndex={0} />
@@ -33,12 +33,12 @@ const Skulpting: React.FC = () => {
     </div>
 
       {/* Navbar (top UI layer) */}
-      <div className="relative z-20">
+      <div className="relative z-50">
         <Navbar />
       </div>
 
       {/* Center text (let pointer events pass through) */}
-      <main className="absolute inset-0 z-20 flex items-center justify-center px-6 text-center pointer-events-none select-none">
+      <main className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center pointer-events-none select-none pt-16 md:pt-0">
         <h1 className="font-subheading text-[#9EA5AD] text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
           What are we skulpting today?
         </h1>
