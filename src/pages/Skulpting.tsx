@@ -4,27 +4,33 @@ import { CloudyBackground } from "../components/CloudyBackground";
 
 const Skulpting: React.FC = () => {
   return (
-    <div className="relative min-h-screen w-full bg-[#E6EBEE] overflow-hidden">
+    <div className="relative scale-[1] min-h-[100svh] w-full bg-[#E6EBEE] overflow-hidden">
       {/* Background clouds (bottom layer) */}
       <div className="absolute inset-0 z-0">
         <CloudyBackground zIndex={0} />
       </div>
 
       {/* Interactive Spline blob (middle layer) */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <div className="relative w-full h-full md:scale-[1.35] md:translate-x-28 md:translate-y-48 lg:scale-[1.5] lg:translate-x-44 lg:translate-y-72">
-          <iframe
-            src="https://my.spline.design/untitled-joeso1Tv4ZyNsbizJR3r5kQz/"
-            className="
-              absolute left-1/2 top-1/2 translate-x-[-58%] -translate-y-1/2
-              w-[290vmin] h-[150vmin]
-              sm:translate-x-[-54%] sm:w-[160vmin] sm:h-[160vmin]
-              md:static md:w-full md:h-full md:transform-none
-            "
-            frameBorder="0"
-          />
-        </div>
+      <div className="absolute inset-0 z-10 grid place-items-center">
+      {/* Bigger canvas = bigger blob */}
+      <div
+        className="
+          relative
+          size-[min(175vw,175svh)] translate-x-[-26%]           /* xs */
+          sm:size-[min(165vw,165svh)] scale-[2.75] sm:translate-x-[-4%]      /* sm */
+          md:size-[160vmin] md:scale-[1.5] md:translate-x-0 md:translate-y-8   /* md desktop start */
+          lg:size-[160vmin lg:scale-[2] lg:-translate-y-[23%] lg:-translate-x-36  /* lg and up */
+          xl:size-[180vmin]                                      /* xl: even larger */
+        "
+      >
+        <iframe
+          src="https://my.spline.design/untitled-joeso1Tv4ZyNsbizJR3r5kQz/?ui=0"
+          className="absolute inset-0 w-full h-full"
+          allow="autoplay; fullscreen"
+          frameBorder="0"
+        />
       </div>
+    </div>
 
       {/* Navbar (top UI layer) */}
       <div className="relative z-20">

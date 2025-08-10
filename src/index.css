@@ -166,6 +166,8 @@ html, body {
   overflow: hidden;        /* ← stops vertical scrolling */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .noiseCanvas {
