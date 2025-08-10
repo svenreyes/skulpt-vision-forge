@@ -21,6 +21,7 @@ const Skulpting: React.FC = () => {
           md:size-[160vmin] md:scale-[1.5] md:translate-x-0 md:translate-y-8   /* md desktop start */
           lg:size-[160vmin lg:scale-[2] lg:-translate-y-[23%] lg:-translate-x-36  /* lg and up */
           xl:size-[180vmin]                                      /* xl: even larger */
+          blur-[3px]
         "
       >
         <iframe

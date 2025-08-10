@@ -140,7 +140,7 @@ const Contact = () => {
         {/* Mobile body (shifted right, text-left) */}
         <div className="md:hidden pl-24">
           <div className=" text-left">
-            <p className="font-subheading text-[14px] leading-tight whitespace-pre-line">
+            <p className="font-subheading text-[12px] leading-tight whitespace-pre-line">
               {`Drop a note using the form below.
 Tell us where you are on your journey
 and what you're building.
