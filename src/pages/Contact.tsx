@@ -127,8 +127,8 @@ const Contact = () => {
         </div>
 
 
-        {/* Mobile body (shifted right, text-left) */}
-        <div className="md:hidden pl-24">
+        {/* Mobile body (aligned left) */}
+        <div className="md:hidden pl-6">
           <div className=" text-left">
             <p className="font-subheading text-[12px] leading-tight whitespace-pre-line">
               {`Drop a note using the form below.
