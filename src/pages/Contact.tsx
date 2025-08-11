@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { SShape } from "@/components/SShape";
 import { Navbar } from "@/components/Navbar";
 import arrowUrl from "@/assets/arrow.svg";
+import dropUrl from "@/assets/drop.svg";
 
 import { useToast } from "@/components/ui/use-toast";
 
@@ -11,13 +12,23 @@ const Contact = () => {
   const { toast } = useToast();
 
   // Controlled values for auto-growing inputs
-  const [values, setValues] = useState<{ name: string; email: string; message: string }>({
+  const [values, setValues] = useState<{
+    name: string;
+    email: string;
+    projectName: string;
+    stage: string;
+    what: string;
+    message: string;
+  }>({
     name: "",
     email: "",
+    projectName: "",
+    stage: "",
+    what: "",
     message: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -28,6 +39,9 @@ const Contact = () => {
     const formData = new FormData(form);
     const nameValue = formData.get("name");
     const emailValue = formData.get("email");
+    const projectNameValue = formData.get("projectName");
+    const stageValue = formData.get("stage");
+    const whatValue = formData.get("what");
     const messageValue = formData.get("message");
 
     try {
@@ -37,6 +51,9 @@ const Contact = () => {
         body: JSON.stringify({
           name: nameValue,
           email: emailValue,
+          projectName: projectNameValue,
+          stage: stageValue,
+          what: whatValue,
           message: messageValue,
           timestamp: new Date().toISOString(),
         }),
@@ -44,7 +61,7 @@ const Contact = () => {
       if (response.ok) {
         toast({ title: "Thank you for reaching out!", description: "We'll get back to you soon." });
         form.reset();
-        setValues({ name: "", email: "", message: "" });
+        setValues({ name: "", email: "", projectName: "", stage: "", what: "", message: "" });
       } else {
         toast({
           title: "Submission failed",
@@ -66,13 +83,24 @@ const Contact = () => {
       {/* Three.js background */}
       <Canvas
         camera={{ position: [0, 0, 8], fov: 50 }}
-        style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
+          // Subtle blur so the 3D object recedes behind the UI
+          filter: "blur(1.5px)",
+        }}
       >
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={0.7} />
+        <hemisphereLight args={[0xbfd4ff, 0xf0e6da, 0.35]} />
         <SmokeBackground />
-        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <directionalLight position={[5, 5, 5]} intensity={1.3} />
+        <directionalLight position={[-3, 2, -1]} intensity={0.6} />
         <Suspense fallback={null}>
-          <SShape />
+          <SShape position={[0, 0, 0]} positionMd={[-3.5, 0, 0]} />
         </Suspense>
       </Canvas>
 
@@ -90,52 +118,14 @@ const Contact = () => {
           md:grid md:grid-cols-12 md:auto-rows-min md:gap-x-10
         "
       >
-        {/* ====== ROW 1: Names / contact (mobile unchanged) ====== */}
+        {/* Removed names and location as requested */}
         <div className="w-full md:col-span-12">
-          {/* Mobile names (unchanged) */}
-          <div className="font-subheading flex w-full justify-start items-start gap-3 text-[12px] md:hidden whitespace-nowrap">
-            <div className="flex flex-col leading-tight">
-              <div className="uppercase">FREYA LINDEQVIST</div>
-              <div className="opacity-80">CO-FOUNDER</div>
-            </div>
-            <div className="flex flex-col items-start leading-tight">
-              <div className="uppercase">LUICA JUEGUEN</div>
-              <div className="opacity-80">CO-FOUNDER</div>
-            </div>
-          </div>
-
-          {/* Desktop: three blocks across top */}
-          <div className="font-subheading hidden md:grid md:grid-cols-12 md:items-start md:text-[13px]">
-            {/* Left name */}
-            <div className="col-span-4 flex flex-col gap-0">
-              <div>FREYA LINDEQVIST</div>
-              <div className="opacity-80">CO-FOUNDER</div>
-            </div>
-
-            {/* Middle name */}
-            <div className="col-span-4 flex flex-col gap-0">
-              <div>LUICA JUEGUEN</div>
-              <div className="opacity-80">CO-FOUNDER</div>
-            </div>
-
-            {/* Right contact */}
-            <div className="font-subheading col-span-4 flex flex-col gap-0 text-right max-w-[320px] ml-auto">
-              <div>STOCKHOLM, SWEDEN</div>
-              <div>CONTACT@SKULPT.COM</div>
-              <div className="mt-2">2025 SKULPT / ALL RIGHTS RESERVED</div>
-            </div>
-          </div>
-        </div>
-
-        {/* ====== ROW 2: Body + form ====== */}
-        {/* Mobile contact info (shifted right, text-left) */}
-        <div className="md:hidden mt-8 pl-24">
-          <div className="font-subheading space-y-3 text-[14px]">
-            <div>STOCKHOLM, SWEDEN</div>
+          <div className="font-subheading pr-12 text-right text-[13px] opacity-80">
             <div>CONTACT@SKULPT.COM</div>
-            <div className="pt-2">2025 SKULPT / ALL RIGHTS RESERVED</div>
+            <div>2025 / ALL RIGHTS RESERVED</div>
           </div>
         </div>
+
 
         {/* Mobile body (shifted right, text-left) */}
         <div className="md:hidden pl-24">
@@ -148,34 +138,152 @@ We'll take it from there.`}
             </p>
 
             <form id="contactForm" onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4 w-full">
-              {[
-                { id: "name", type: "text", placeholder: "NAME" },
-                { id: "email", type: "email", placeholder: "EMAIL", required: true },
-                { id: "message", type: "text", placeholder: "MESSAGE" },
-              ].map((field) => (
-                <div key={field.id} className="w-full">
-                  <div className="inline-flex items-center max-w-full">
-                    <span className="text-[#9EA5AD]/90 text-2xl mr-1">[</span>
-                    <input
-                      id={field.id}
-                      name={field.id}
-                      type={field.type}
-                      required={(field as any).required}
-                      placeholder={field.placeholder}
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
-                      value={(values as any)[field.id] ?? ""}
-                      onChange={handleInputChange}
-                      size={Math.max(
-                        4,
-                        (field.placeholder?.length || 0),
-                        ((values as any)[field.id]?.length || 0)
-                      )}
-                      style={{ textTransform: "none" }}
-                    />
-                    <span className="text-[#9EA5AD]/90 text-2xl ml-1">]</span>
-                  </div>
+              {/* NAME */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="NAME"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    value={values.name}
+                    onChange={handleInputChange}
+                    size={Math.max(4, 'NAME'.length, values.name.length || 0)}
+                    style={{ textTransform: "none" }}
+                  />
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
-              ))}
+              </div>
+
+              {/* EMAIL */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="EMAIL"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    value={values.email}
+                    onChange={handleInputChange}
+                    size={Math.max(4, 'EMAIL'.length, values.email.length || 0)}
+                    style={{ textTransform: "none" }}
+                  />
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                </div>
+              </div>
+
+              {/* PROJECT NAME */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <input
+                    id="projectName"
+                    name="projectName"
+                    type="text"
+                    placeholder="PROJECT NAME"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    value={values.projectName}
+                    onChange={handleInputChange}
+                    size={Math.max(4, 'PROJECT NAME'.length, values.projectName.length || 0)}
+                    style={{ textTransform: "none" }}
+                  />
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                </div>
+              </div>
+
+              {/* STAGE (select) */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <select
+                    id="stage"
+                    name="stage"
+                    className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-6 pl-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
+                    value={values.stage}
+                    onChange={handleInputChange}
+                    style={{
+                      backgroundImage: `url(${dropUrl})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "right 0.25rem center",
+                      backgroundSize: "12px 12px",
+                    }}
+                  >
+                    <option value="" className="bg-black">STAGE</option>
+                    <option value="idea" className="bg-black">I have an idea</option>
+                    <option value="vc" className="bg-black">Worked w/ VC/accelerators before</option>
+                    <option value="logo" className="bg-black">I have a logo</option>
+                    <option value="lost" className="bg-black">I am completely lost</option>
+                  </select>
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                </div>
+              </div>
+
+              {/* WHAT ARE YOU LOOKING FOR (select) */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <select
+                    id="what"
+                    name="what"
+                    className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-6 pl-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
+                    value={values.what}
+                    onChange={handleInputChange}
+                    style={{
+                      backgroundImage: `url(${dropUrl})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "right 0.25rem center",
+                      backgroundSize: "12px 12px",
+                    }}
+                  >
+                    <option value="" className="bg-black">WHAT ARE YOU LOOKING FOR</option>
+                    <option value="brand" className="bg-black">Brand strategy</option>
+                    <option value="naming" className="bg-black">Naming</option>
+                    <option value="identity" className="bg-black">Logo & identity</option>
+                    <option value="website" className="bg-black">Website</option>
+                    <option value="deck" className="bg-black">Pitch deck</option>
+                    <option value="product" className="bg-black">Product design</option>
+                    <option value="all" className="bg-black">All of the above</option>
+                    <option value="other" className="bg-black">Other</option>
+                  </select>
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                </div>
+              </div>
+
+              {/* MESSAGE (last) */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <input
+                    id="message"
+                    name="message"
+                    type="text"
+                    placeholder="MESSAGE"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    value={values.message}
+                    onChange={handleInputChange}
+                    size={Math.max(4, 'MESSAGE'.length, values.message.length || 0)}
+                    style={{ textTransform: "none" }}
+                  />
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                </div>
+              </div>
+              <div className="mt-8">
+                <button
+                  type="submit"
+                  className="group relative text-[28px] font-light text-[#B8C1CB] transition-colors"
+                >
+                  <span className="italic text-[#A0A9B4]">We'll take it from here</span>
+                  <span
+                    className="block h-[2px] bg-[#B8C1CB] mt-1 w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -203,89 +311,158 @@ We'll take it from there.`}
             onSubmit={handleSubmit}
             className="mt-6 flex flex-col gap-5 w-full max-w-[520px] text-left"
           >
-            {[
-              { id: "name", type: "text", placeholder: "NAME" },
-              { id: "email", type: "email", placeholder: "EMAIL", required: true },
-              { id: "message", type: "text", placeholder: "MESSAGE" },
-            ].map((field) => (
-              <div key={field.id} className="w-full">
-                <div className="inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 text-2xl mr-1">[</span>
-                  <input
-                    id={field.id}
-                    name={field.id}
-                    type={field.type}
-                    required={(field as any).required}
-                    placeholder={field.placeholder}
-                    className="
-                      bg-transparent border-0 text-[#9EA5AD]
-                      placeholder:text-[#9EA5AD]/60
-                      focus:outline-none py-2 px-1.5
-                      text-lg lg:text-xl tracking-wide
-                      inline-block w-auto max-w-[calc(100%-16px)]
-                    "
-                    value={(values as any)[field.id] ?? ""}
-                    onChange={handleInputChange}
-                    size={Math.max(
-                      Math.floor(field.placeholder?.length * 1.3) || 0,
-                      ((values as any)[field.id]?.length || 0) + 2
-                    )}
-                    style={{ textTransform: "none" }}
-                  />
-                  <span className="text-[#9EA5AD]/90 text-2xl ml-1">]</span>
-                </div>
+            {/* NAME */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="NAME"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  value={values.name}
+                  onChange={handleInputChange}
+                  size={Math.max(Math.floor('NAME'.length * 1.3), (values.name?.length || 0) + 2)}
+                  style={{ textTransform: "none" }}
+                />
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
               </div>
-            ))}
+            </div>
+
+            {/* EMAIL */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="EMAIL"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  value={values.email}
+                  onChange={handleInputChange}
+                  size={Math.max(Math.floor('EMAIL'.length * 1.3), (values.email?.length || 0) + 2)}
+                  style={{ textTransform: "none" }}
+                />
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+              </div>
+            </div>
+
+            {/* PROJECT NAME */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <input
+                  id="projectName"
+                  name="projectName"
+                  type="text"
+                  placeholder="PROJECT NAME"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  value={values.projectName}
+                  onChange={handleInputChange}
+                  size={Math.max(Math.floor('PROJECT NAME'.length * 1.3), (values.projectName?.length || 0) + 2)}
+                  style={{ textTransform: "none" }}
+                />
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+              </div>
+            </div>
+
+            {/* STAGE (select) */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <select
+                  id="stage"
+                  name="stage"
+                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-7 pl-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  value={values.stage}
+                  onChange={handleInputChange}
+                  style={{
+                    backgroundImage: `url(${dropUrl})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 0.35rem center",
+                    backgroundSize: "14px 14px",
+                  }}
+                >
+                  <option value="" className="bg-black">STAGE</option>
+                  <option value="idea" className="bg-black">I have an idea</option>
+                  <option value="vc" className="bg-black">Worked with VC/accelerators before</option>
+                  <option value="logo" className="bg-black">I have a logo</option>
+                  <option value="lost" className="bg-black">I am completely lost</option>
+                </select>
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+              </div>
+            </div>
+
+            {/* WHAT ARE YOU LOOKING FOR (select) */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <select
+                  id="what"
+                  name="what"
+                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-7 pl-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  value={values.what}
+                  onChange={handleInputChange}
+                  style={{
+                    backgroundImage: `url(${dropUrl})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 0.35rem center",
+                    backgroundSize: "14px 14px",
+                  }}
+                >
+                  <option value="" className="bg-black">WHAT ARE YOU LOOKING FOR</option>
+                  <option value="brand" className="bg-black">Brand strategy</option>
+                  <option value="naming" className="bg-black">Naming</option>
+                  <option value="identity" className="bg-black">Logo & identity</option>
+                  <option value="website" className="bg-black">Website</option>
+                  <option value="deck" className="bg-black">Pitch deck</option>
+                  <option value="product" className="bg-black">Product design</option>
+                  <option value="all" className="bg-black">All of the above</option>
+                  <option value="other" className="bg-black">Other</option>
+                </select>
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+              </div>
+            </div>
+
+            {/* MESSAGE (last) */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <input
+                  id="message"
+                  name="message"
+                  type="text"
+                  placeholder="MESSAGE"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  value={values.message}
+                  onChange={handleInputChange}
+                  size={Math.max(Math.floor('MESSAGE'.length * 1.3), (values.message?.length || 0) + 2)}
+                  style={{ textTransform: "none" }}
+                />
+                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+              </div>
+            </div>
+            <div className="hidden md:block mt-8">
+              <button
+                type="submit"
+                form="contactForm"
+                className="group relative text-[36px] font-light text-[#B8C1CB] transition-colors"
+              >
+                <span className="italic text-[#A0A9B4]">We'll take it from here</span>
+                <span
+                  className="block h-[2px] bg-[#B8C1CB] w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
           </form>
         </section>
 
         {/* ====== ROW 3: Bottom brand ====== */}
-        {/* Mobile bottom: fixed at bottom, CTA right, SKULPT centered */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 w-full">
-          <div className="w-[min(92vw,480px)] mx-auto">
-            <div className="flex justify-end pb-2">
-              <button
-                type="submit"
-                form="contactForm"
-                className="text-[36px] font-light text-[#B8C1CB] decoration-[#B8C1CB]/70 hover:decoration-[#B8C1CB] transition-colors"
-              >
-                Let&apos;s <span className="underline underline-offset-4 pr-2 italic text-[#A0A9B4] ">Connect</span>{" "}
-                <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 mb-2 mr-14 -rotate-45  scale-[1.5]" />
-              </button>
-            </div>
-            <div className="w-full flex justify-center pb-4">
-              <span
-                className="text-[#9EA5AD] text-[56px] font-nersans-two tracking-tight leading-none select-none"
-                style={{ letterSpacing: "-0.03em" }}
-              >
-                SKULPT
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop bottom: big centered SKULPT with CTA above - positioned at very bottom */}
-        <div className="hidden md:flex flex-col fixed bottom-0 left-0 right-0">
-          <div className="w-full max-w-[720px] md:max-w-[820px] mx-auto px-6 flex justify-end pr-[24px]">
-            <button
-              type="submit"
-              form="contactForm"
-              className="text-[40px] font-light text-[#B8C1CB] underline underline-offset-4 decoration-[#B8C1CB]/70 hover:decoration-[#B8C1CB] transition-colors"
-            >
-              Let's <span className="italic text-[#A0A9B4] pr-4">Connect</span>{' '}
-              <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 mb-1 -rotate-45 scale-[2.5]" />
-            </button>
-          </div>
-          
-          <div className="w-full flex justify-center">
-            <span
-              className="text-[#9EA5AD] text-[120px] md:text-[160px] lg:text-[200px] font-nersans-two tracking-tight leading-none select-none"
-              style={{ letterSpacing: '-0.03em' }}
-            >
-              SKULPT
-            </span>
-          </div>
-        </div>
+        {/* Bottom sections removed as they're no longer needed */}
       </div>
     </div>
   );
