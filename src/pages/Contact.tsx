@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { SShape } from "@/components/SShape";
 import { Navbar } from "@/components/Navbar";
 import arrowUrl from "@/assets/arrow.svg";
-import dropUrl from "@/assets/drop.svg";
+
 
 import { useToast } from "@/components/ui/use-toast";
 
@@ -19,17 +19,32 @@ const Contact = () => {
     stage: string;
     what: string;
     message: string;
-  }>({
-    name: "",
-    email: "",
-    projectName: "",
-    stage: "",
-    what: "",
-    message: "",
+  }>(
+    {
+      name: "",
+      email: "",
+      projectName: "",
+      stage: "",
+      what: "",
+      message: "",
+    }
+  );
+
+  // Dynamic widths for select inputs
+  const [selectWidths, setSelectWidths] = useState<{ stage: string; what: string }>({
+    stage: "6ch", // enough for "STAGE"
+    what: "25ch", // placeholder length
   });
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    // Adjust width for select inputs based on visible text length
+    if (name === "stage" || name === "what") {
+      const selectEl = e.target as HTMLSelectElement;
+      const selectedText = selectEl.options[selectEl.selectedIndex]?.text || value;
+      setSelectWidths((prev) => ({ ...prev, [name]: `${selectedText.length + 2}ch` }));
+    }
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -147,7 +162,7 @@ We'll take it from there.`}
                     name="name"
                     type="text"
                     placeholder="NAME"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                     value={values.name}
                     onChange={handleInputChange}
                     size={Math.max(4, 'NAME'.length, values.name.length || 0)}
@@ -167,7 +182,7 @@ We'll take it from there.`}
                     type="email"
                     required
                     placeholder="EMAIL"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                     value={values.email}
                     onChange={handleInputChange}
                     size={Math.max(4, 'EMAIL'.length, values.email.length || 0)}
@@ -186,7 +201,7 @@ We'll take it from there.`}
                     name="projectName"
                     type="text"
                     placeholder="PROJECT NAME"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                     value={values.projectName}
                     onChange={handleInputChange}
                     size={Math.max(4, 'PROJECT NAME'.length, values.projectName.length || 0)}
@@ -203,15 +218,10 @@ We'll take it from there.`}
                   <select
                     id="stage"
                     name="stage"
-                    className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-6 pl-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
+                    className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
                     value={values.stage}
                     onChange={handleInputChange}
-                    style={{
-                      backgroundImage: `url(${dropUrl})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right 0.25rem center",
-                      backgroundSize: "12px 12px",
-                    }}
+                    style={{ width: selectWidths.stage }}
                   >
                     <option value="" className="bg-black">STAGE</option>
                     <option value="idea" className="bg-black">I have an idea</option>
@@ -230,15 +240,10 @@ We'll take it from there.`}
                   <select
                     id="what"
                     name="what"
-                    className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-6 pl-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
+                    className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
                     value={values.what}
                     onChange={handleInputChange}
-                    style={{
-                      backgroundImage: `url(${dropUrl})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right 0.25rem center",
-                      backgroundSize: "12px 12px",
-                    }}
+                    style={{ width: selectWidths.what }}
                   >
                     <option value="" className="bg-black">WHAT ARE YOU LOOKING FOR</option>
                     <option value="brand" className="bg-black">Brand strategy</option>
@@ -263,7 +268,7 @@ We'll take it from there.`}
                     name="message"
                     type="text"
                     placeholder="MESSAGE"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                     value={values.message}
                     onChange={handleInputChange}
                     size={Math.max(4, 'MESSAGE'.length, values.message.length || 0)}
@@ -320,7 +325,7 @@ We'll take it from there.`}
                   name="name"
                   type="text"
                   placeholder="NAME"
-                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                   value={values.name}
                   onChange={handleInputChange}
                   size={Math.max(Math.floor('NAME'.length * 1.3), (values.name?.length || 0) + 2)}
@@ -340,7 +345,7 @@ We'll take it from there.`}
                   type="email"
                   required
                   placeholder="EMAIL"
-                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                   value={values.email}
                   onChange={handleInputChange}
                   size={Math.max(Math.floor('EMAIL'.length * 1.3), (values.email?.length || 0) + 2)}
@@ -359,7 +364,7 @@ We'll take it from there.`}
                   name="projectName"
                   type="text"
                   placeholder="PROJECT NAME"
-                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                   value={values.projectName}
                   onChange={handleInputChange}
                   size={Math.max(Math.floor('PROJECT NAME'.length * 1.3), (values.projectName?.length || 0) + 2)}
@@ -376,15 +381,10 @@ We'll take it from there.`}
                 <select
                   id="stage"
                   name="stage"
-                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-7 pl-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
                   value={values.stage}
                   onChange={handleInputChange}
-                  style={{
-                    backgroundImage: `url(${dropUrl})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 0.35rem center",
-                    backgroundSize: "14px 14px",
-                  }}
+                  style={{ width: selectWidths.what }}
                 >
                   <option value="" className="bg-black">STAGE</option>
                   <option value="idea" className="bg-black">I have an idea</option>
@@ -403,15 +403,10 @@ We'll take it from there.`}
                 <select
                   id="what"
                   name="what"
-                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none py-2 pr-7 pl-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
                   value={values.what}
                   onChange={handleInputChange}
-                  style={{
-                    backgroundImage: `url(${dropUrl})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 0.35rem center",
-                    backgroundSize: "14px 14px",
-                  }}
+                  style={{ width: selectWidths.what }}
                 >
                   <option value="" className="bg-black">WHAT ARE YOU LOOKING FOR</option>
                   <option value="brand" className="bg-black">Brand strategy</option>
@@ -436,7 +431,7 @@ We'll take it from there.`}
                   name="message"
                   type="text"
                   placeholder="MESSAGE"
-                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none py-2 px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
                   value={values.message}
                   onChange={handleInputChange}
                   size={Math.max(Math.floor('MESSAGE'.length * 1.3), (values.message?.length || 0) + 2)}

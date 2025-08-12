@@ -163,7 +163,7 @@
 
 html, body {
   height: 100%;
-  overflow: hidden;        /* ← stops vertical scrolling */
+  /* overflow: hidden;  removed to enable scrolling */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
   -webkit-text-size-adjust: 100%;
@@ -190,4 +190,14 @@ body {
 .safe-px {
   padding-left : calc(1.5rem + env(safe-area-inset-left));
   padding-right: calc(1.5rem + env(safe-area-inset-right));
+}
+
+/* Animation for moving overlay text inside Skulpting video */
+@keyframes slide-right {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.slide-right-animation {
+  animation: slide-right 20s linear infinite;
 }
