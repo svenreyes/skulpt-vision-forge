@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: "FK Grotesk Light";
+  src: url("/fonts/FKGroteskTrial-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Sohne Buch";
   src: url("/fonts/Sohnebuch.otf") format("opentype");
   font-weight: 700;

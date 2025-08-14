@@ -28,6 +28,7 @@ export default {
 				subcursive: ['"TestSohne Buch Kursiv"', 'sans-serif'],
         		body: ['"Test Sohne Leicht"', 'sans-serif'],
         		bodycursive: ['"TestSohne Leicht Kursiv"', 'sans-serif'],
+        		fkgrotes: ['"FK Grotesk Light"', '"FK Grotesk"', '"FKGrotesk"', 'sans-serif'],
 			  },
 			colors: {
 				border: 'hsl(var(--border))',

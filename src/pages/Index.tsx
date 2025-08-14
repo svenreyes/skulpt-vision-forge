@@ -137,17 +137,17 @@ const Index = () => {
         ref={taglineRef}
         className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center"
       >
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-[#B8C1CB]">
-          Taking Branding <span className="italic text-[#A0A9B4]">Personally</span>{" "}
+        <h2 className="group text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-body text-[#CBD1D6] transition-colors">
+          Taking Branding <span className="italic text-[#C1CFD4] font-subheading ">Personally</span>{" "}
           <button
             aria-label="Go to skulpting"
             onClick={async () => {
               await trigger({ before: 200, after: 200 });
               navigate("/skulpting");
             }}
-            className="align-middle inline-flex items-center justify-center ml-1 hover:opacity-80 transition-opacity"
+            className="align-middle inline-flex items-center justify-center ml-1 transition-opacity"
           >
-            <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 mb-1 -rotate-45 scale-150" />
+            <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 -rotate-45 scale-150 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </button>
         </h2>
       </section>

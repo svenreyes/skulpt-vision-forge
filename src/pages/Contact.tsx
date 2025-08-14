@@ -3,7 +3,7 @@ import { SmokeBackground } from "@/components/SmokeBackground";
 import { Suspense, useState } from "react";
 import { SShape } from "@/components/SShape";
 import { Navbar } from "@/components/Navbar";
-import arrowUrl from "@/assets/arrow.svg";
+
 
 
 import { useToast } from "@/components/ui/use-toast";
@@ -221,13 +221,13 @@ We'll take it from there.`}
                     className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none"
                     value={values.stage}
                     onChange={handleInputChange}
-                    style={{ width: selectWidths.stage }}
+                    style={{ width: selectWidths.what }}
                   >
                     <option value="" className="bg-black">STAGE</option>
-                    <option value="idea" className="bg-black">I have an idea</option>
-                    <option value="vc" className="bg-black">Worked w/ VC/accelerators before</option>
-                    <option value="logo" className="bg-black">I have a logo</option>
-                    <option value="lost" className="bg-black">I am completely lost</option>
+                    <option value="idea" className="bg-black">I only have an idea</option>
+                    <option value="mvp" className="bg-black">I have a MVP</option>
+                    <option value="vc" className="bg-black">I have worked with accelerators/VCs before</option>
+                    <option value="customers" className="bg-black">I have regular customers</option>
                   </select>
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
@@ -245,15 +245,12 @@ We'll take it from there.`}
                     onChange={handleInputChange}
                     style={{ width: selectWidths.what }}
                   >
-                    <option value="" className="bg-black">WHAT ARE YOU LOOKING FOR</option>
-                    <option value="brand" className="bg-black">Brand strategy</option>
-                    <option value="naming" className="bg-black">Naming</option>
-                    <option value="identity" className="bg-black">Logo & identity</option>
-                    <option value="website" className="bg-black">Website</option>
-                    <option value="deck" className="bg-black">Pitch deck</option>
-                    <option value="product" className="bg-black">Product design</option>
-                    <option value="all" className="bg-black">All of the above</option>
-                    <option value="other" className="bg-black">Other</option>
+                    <option value="" className="bg-black">PRIMARY NEEDED</option>
+                    <option value="alignment" className="bg-black">Team/founder alignment</option>
+                    <option value="messaging" className="bg-black">Messaging</option>
+                    <option value="pitching" className="bg-black">Pitching</option>
+                    <option value="rebranding" className="bg-black">Rebranding</option>
+                    <option value="everything" className="bg-black">Everything</option>
                   </select>
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
@@ -381,16 +378,16 @@ We'll take it from there.`}
                 <select
                   id="stage"
                   name="stage"
-                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
                   value={values.stage}
                   onChange={handleInputChange}
                   style={{ width: selectWidths.what }}
                 >
                   <option value="" className="bg-black">STAGE</option>
-                  <option value="idea" className="bg-black">I have an idea</option>
-                  <option value="vc" className="bg-black">Worked with VC/accelerators before</option>
-                  <option value="logo" className="bg-black">I have a logo</option>
-                  <option value="lost" className="bg-black">I am completely lost</option>
+                  <option value="idea" className="bg-black">I only have an idea</option>
+                  <option value="mvp" className="bg-black">I have a MVP</option>
+                  <option value="vc" className="bg-black">I have worked with accelerators/VCs before</option>
+                  <option value="customers" className="bg-black">I have regular customers</option>
                 </select>
                 <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
               </div>
@@ -403,20 +400,17 @@ We'll take it from there.`}
                 <select
                   id="what"
                   name="what"
-                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
                   value={values.what}
                   onChange={handleInputChange}
                   style={{ width: selectWidths.what }}
                 >
-                  <option value="" className="bg-black">WHAT ARE YOU LOOKING FOR</option>
-                  <option value="brand" className="bg-black">Brand strategy</option>
-                  <option value="naming" className="bg-black">Naming</option>
-                  <option value="identity" className="bg-black">Logo & identity</option>
-                  <option value="website" className="bg-black">Website</option>
-                  <option value="deck" className="bg-black">Pitch deck</option>
-                  <option value="product" className="bg-black">Product design</option>
-                  <option value="all" className="bg-black">All of the above</option>
-                  <option value="other" className="bg-black">Other</option>
+                  <option value="" className="bg-black">PRIMARY NEEDED</option>
+                  <option value="alignment" className="bg-black">Team/founder alignment</option>
+                  <option value="messaging" className="bg-black">Messaging</option>
+                  <option value="pitching" className="bg-black">Pitching</option>
+                  <option value="rebranding" className="bg-black">Rebranding</option>
+                  <option value="everything" className="bg-black">Everything</option>
                 </select>
                 <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
               </div>
@@ -455,9 +449,6 @@ We'll take it from there.`}
             </div>
           </form>
         </section>
-
-        {/* ====== ROW 3: Bottom brand ====== */}
-        {/* Bottom sections removed as they're no longer needed */}
       </div>
     </div>
   );
