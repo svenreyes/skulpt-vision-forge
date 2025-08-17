@@ -209,3 +209,14 @@ body {
 .slide-right-animation {
   animation: slide-right 20s linear infinite;
 }
+
+/* Reusable marquee scroll animation – move half the width because content is duplicated */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-scroll {
+  display: inline-block;
+  animation: marquee-scroll 20s linear infinite;
+}

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Navbar } from "../components/Navbar";
 import { CloudyBackground } from "../components/CloudyBackground";
+import { SplineBlob } from "../components/SplineBlob";
 import skulptVideo from "@/assets/videos/skulpting.mp4";
+import skulpting2Video from "@/assets/videos/skulpting2.mp4";
 import arrowUrl from "../assets/arrow.svg";
 import exUrl from "../assets/ex.svg";
 
@@ -20,6 +22,31 @@ const Skulpting: React.FC = () => {
   const [displayAxis, setDisplayAxis] = useState<'strategy' | 'alignment' | 'external' | 'internal'>('strategy');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [stockholmTime, setStockholmTime] = useState(new Date());
+  const [shouldLoadBlob, setShouldLoadBlob] = useState(false);
+  const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
+  const blobRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+
+  const team = [
+    { name: 'ANAISA ACHARYA', src: anaisaImg },
+    { name: 'JACLYN PHAM', src: jaclynImg },
+    { name: 'FREYA LINDSVIST', src: freyaImg },
+    { name: 'LEA KIENLE', src: leaImg },
+    { name: 'SVEN REYES', src: svenImg },
+    { name: 'LUCIA JUEGUEN', src: luciaImg },
+  ];
+
+  // Stable per-mount randomness for height/scale/offset variety
+  const figures = useMemo(
+    () =>
+      team.map((m) => ({
+        ...m,
+        scale: +(0.95 + Math.random() * 0.30).toFixed(2),
+        yOffset: Math.floor(-24 + Math.random() * 48),
+        xOffset: Math.floor(-8 + Math.random() * 16),
+      })),
+    []
+  );
 
   const axisCopy: Record<'strategy' | 'alignment' | 'external' | 'internal', string> = {
     strategy:
@@ -49,6 +76,44 @@ const Skulpting: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Intersection Observer for lazy loading the Spline blob
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadBlob(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    if (blobRef.current) {
+      observer.observe(blobRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Intersection Observer for lazy loading videos
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideos(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '200px' }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="relative scale-[1] min-h-screen w-full bg-[#E6EBEE] overflow-y-auto overflow-x-hidden">
       {/* Background clouds (bottom layer) - extends full height */}
@@ -64,7 +129,7 @@ const Skulpting: React.FC = () => {
       {/* First section with blob and center text */}
       <section className="relative min-h-screen">
         {/* Interactive Spline blob (middle layer) */}
-        <div className="absolute inset-0 z-10 grid place-items-center">
+        <div ref={blobRef} className="absolute inset-0 z-10 grid place-items-center">
           {/* Bigger canvas = bigger blob */}
           <div
             className="
@@ -72,17 +137,23 @@ const Skulpting: React.FC = () => {
               size-[min(175vw,175svh)] translate-x-[-26%]           /* xs */
               sm:size-[min(165vw,165svh)] scale-[2.75] sm:translate-x-[-4%]      /* sm */
               md:size-[160vmin] md:scale-[1.5] md:translate-x-0 md:translate-y-8   /* md desktop start */
-              lg:size-[160vmin lg:scale-[2] lg:-translate-y-[23%] lg:-translate-x-36  /* lg and up */
+              lg:size-[160vmin] lg:scale-[2] lg:-translate-y-[23%] lg:-translate-x-36  /* lg and up */
               xl:size-[180vmin]                                      /* xl: even larger */
-              blur-[3px]
             "
+            style={{
+              filter: shouldLoadBlob ? 'blur(3px)' : 'blur(0px)',
+              transition: 'filter 0.3s ease-in-out',
+              willChange: 'transform, filter'
+            }}
           >
-            <iframe
-              src="https://my.spline.design/untitled-joeso1Tv4ZyNsbizJR3r5kQz/?ui=0"
-              className="absolute inset-0 w-full h-full"
-              allow="autoplay; fullscreen"
-              frameBorder="0"
-            />
+            {shouldLoadBlob ? (
+              <SplineBlob
+                url="https://my.spline.design/untitled-joeso1Tv4ZyNsbizJR3r5kQz/?ui=0"
+                className="absolute inset-0 w-full h-full"
+              />
+            ) : (
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#9EA5AD]/20 to-[#CBD1D6]/10 rounded-full animate-pulse" />
+            )}
           </div>
         </div>
 
@@ -91,7 +162,7 @@ const Skulpting: React.FC = () => {
           <h1 className="font-subheading text-[#9EA5AD] text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
             What are we skulpting today?
           </h1>
-        </div>
+          </div>
       </section>
 
       {/* Text boxes section */}
@@ -130,23 +201,32 @@ const Skulpting: React.FC = () => {
       </section>
 
       {/* Video marquee section */}
-      <section className="relative z-10 py-16 mx-auto max-w-6xl px-4 sm:px-6 md:px-0">
-        <div className="relative rounded-3xl overflow-hidden">
+      <section className="relative z-10 w-full mx-0 px-0 py-0 sm:py-16 sm:mx-auto sm:max-w-6xl sm:px-4 lg:px-0">
+        <div ref={videoRef} className="relative overflow-hidden rounded-none sm:rounded-3xl">
           <div
-            className="relative"
+            className="relative h-[60vh] sm:h-auto"
             style={{
               WebkitMaskImage: 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
               maskImage: 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
             }}
           >
-            <video
-              src={skulptVideo}
-              className="w-full h-auto object-cover opacity-80 blur-md scale-110 transform-gpu"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
+            {shouldLoadVideos ? (
+              <video
+                src={skulpting2Video}
+                className="w-full h-full object-cover opacity-80 scale-125 sm:scale-110 transform-gpu"
+                style={{ 
+                  filter: 'blur(8px)',
+                  willChange: 'transform'
+                }}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              />
+            ) : (
+              <div className="w-full h-48 sm:h-64 bg-gradient-to-br from-[#9EA5AD]/30 to-[#CBD1D6]/20 animate-pulse" />
+            )}
             <div className="absolute inset-0 bg-[#9EA5AD] mix-blend-multiply opacity-20" />
           </div>
           {/* Overlay scrolling text */}
@@ -157,8 +237,11 @@ const Skulpting: React.FC = () => {
               maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
             }}
           >
-            <div className="slide-right-animation whitespace-nowrap font-subheading text-[#9EA5AD] text-xl sm:text-2xl md:text-3xl lg:text-4xl">
-              Brand Identity Development&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Team Alignment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visual Design Development&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brand Messaging&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pitch Deck&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brand Identity Development&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Team Alignment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div
+              className="marquee-scroll whitespace-nowrap font-subheading text-[#9EA5AD] text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+            >
+              <span className="mr-16">Brand Identity Development&nbsp;&nbsp;&nbsp;Team Alignment&nbsp;&nbsp;&nbsp;Visual Design Development&nbsp;&nbsp;&nbsp;Brand Messaging&nbsp;&nbsp;&nbsp;Pitch Deck</span>
+              <span className="mr-16" aria-hidden="true">Brand Identity Development&nbsp;&nbsp;&nbsp;Team Alignment&nbsp;&nbsp;&nbsp;Visual Design Development&nbsp;&nbsp;&nbsp;Brand Messaging&nbsp;&nbsp;&nbsp;Pitch Deck</span>
             </div>
           </div>
         </div>
@@ -183,7 +266,7 @@ const Skulpting: React.FC = () => {
 
       {/* Strategy Circle Section */}
       <section className="relative z-10 py-64 mt-24 flex items-center justify-center px-4 sm:px-6">
-        <div className="relative w-full max-w-[720px] aspect-square">
+        <div className="relative w-full max-w-[75vw] sm:max-w-[720px] aspect-square">
           {/* Layer stack: blue glow (largest) -> video (larger) -> outline */}
           {/* Larger blue glow with blurry edges */}
           <div
@@ -214,14 +297,23 @@ const Skulpting: React.FC = () => {
                 maskImage: 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
               }}
             >
-              <video
-                src={skulptVideo}
-                className="w-full h-full object-cover opacity-85 blur-md scale-110 transform-gpu"
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+              {shouldLoadVideos ? (
+                <video
+                  src={skulptVideo}
+                  className="w-full h-full object-cover opacity-85 scale-110 transform-gpu"
+                  style={{ 
+                    filter: 'blur(8px)',
+                    willChange: 'transform'
+                  }}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-[#9EA5AD]/30 to-[#CBD1D6]/20 animate-pulse rounded-full" />
+              )}
               <div className="absolute inset-0 bg-[#9EA5AD] mix-blend-multiply opacity-25" />
             </div>
           </div>
@@ -269,28 +361,28 @@ const Skulpting: React.FC = () => {
           {/* Axis labels */}
           <span
             onMouseEnter={() => setActiveAxis('strategy')}
-            className="absolute -top-6 left-1/2 -translate-x-1/2 cursor-pointer text-sm tracking-widest font-subheading select-none"
+            className="absolute -top-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none"
             style={{ color: activeAxis === 'strategy' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
             STRATEGY
           </span>
           <span
             onMouseEnter={() => setActiveAxis('alignment')}
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-sm tracking-widest font-subheading select-none"
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none"
             style={{ color: activeAxis === 'alignment' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
             ALIGNMENT
           </span>
           <span
             onMouseEnter={() => setActiveAxis('external')}
-            className="absolute -left-20 top-1/2 -translate-y-1/2 -rotate-90 cursor-pointer text-sm tracking-widest font-subheading select-none"
+            className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-full sm:-left-20 sm:translate-x-0 -rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
             style={{ color: activeAxis === 'external' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
             EXTERNAL
           </span>
           <span
             onMouseEnter={() => setActiveAxis('internal')}
-            className="absolute top-[60%] -translate-y-9 -right-8 rotate-90 origin-right cursor-pointer text-sm tracking-widest font-subheading select-none"
+            className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-full sm:-right-20 sm:translate-x-0 rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
             style={{ color: activeAxis === 'internal' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
             INTERNAL
@@ -350,7 +442,7 @@ const Skulpting: React.FC = () => {
 
           {/* Centered paragraph */}
           <div className="absolute inset-0 flex items-center justify-center px-8 text-center select-none">
-            <p className={`font-fkgrotes text-lg sm:text-xl md:text-2xl leading-snug text-white/50 max-w-lg transition-all duration-300 ${isTransitioning ? 'opacity-0 blur-sm' : 'opacity-100'}`} dangerouslySetInnerHTML={{ __html: axisCopy[displayAxis] }} />
+            <p className={`font-fkgrotes text-sm sm:text-base md:text-lg leading-snug text-white/50 max-w-[65%] transition-all duration-300 ${isTransitioning ? 'opacity-0 blur-sm' : 'opacity-100'}`} dangerouslySetInnerHTML={{ __html: axisCopy[displayAxis] }} />
           </div>
         </div>
       </section>
@@ -376,91 +468,136 @@ const Skulpting: React.FC = () => {
         </div>
       </section>
 
-      {/* Team Clock Section - Matching Screenshot Exactly */}
+      {/* Team Clock Section */}
       <section className="relative z-10 pb-0">
-        <div className="relative min-h-[100vh] overflow-hidden">
-          
-          {/* Half-circle top with blur and specific color */}
-          <div 
-            className="absolute inset-0"
+        <div
+          className="w-screen px-0"
+          style={{ marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' }}
+        >
+          <div
+            className="relative min-h-[130vh] overflow-hidden rounded-t-[799px]"
             style={{
-              background: '#C1CFD4',
-              opacity: 0.8,
-              filter: 'blur(2px)',
-              clipPath: 'ellipse(100% 60px at 50% 0%)',
+              WebkitClipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
+              clipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
+              WebkitMaskImage: 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
+              maskImage: 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
+            }}
+          >
+          {/* Soft “dome” — NOT a half circle, no white bg */}
+          <div
+            className="absolute inset-0 pointer-events-none z-0"
+            style={{
+              background: "#C1CFD4",
+              opacity: 0.55,
+              filter: "blur(28px)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)",
+              maskImage:
+                "radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)",
             }}
           />
-          
-          {/* Main white background */}
-          <div className="absolute inset-0 bg-white" style={{ marginTop: '60px' }} />
+          {/* Optional subtle secondary bounce to match the reference vignette */}
+          <div
+            className="absolute -top-[6vh] -left-[12vw] w-[120vw] h-[120vw] pointer-events-none z-0"
+            style={{
+              background: "#C1CFD4",
+              opacity: 0.25,
+              filter: "blur(36px)",
+              WebkitMaskImage:
+                "radial-gradient(closest-side, black 55%, transparent 100%)",
+              maskImage:
+                "radial-gradient(closest-side, black 55%, transparent 100%)",
+            }}
+          />
 
-          {/* Huge ghosted time background with body font and specific color */}
-          <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
-            <div
-              className="font-body leading-none tracking-tight text-center"
-              style={{
-                fontSize: '35vw',
-                color: '#9EA5AD',
-                opacity: 0.4,
-                letterSpacing: '-0.02em',
-                filter: 'blur(1px)',
-              }}
-            >
-              {stockholmTime.toLocaleTimeString('en-GB', {
-                timeZone: 'Europe/Stockholm',
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+          {/* Time + labels (labels hug the right edge of the digits) */}
+          <div className="absolute inset-0 z-10 select-none pointer-events-none flex items-center justify-center">
+            <div className="relative inline-block leading-none">
+              <span
+                className="font-body tracking-tight block text-center"
+                style={{
+                  fontSize: "30vw",
+                  color: "#9EA5AD",
+                  opacity: 0.38,
+                  letterSpacing: "-0.02em",
+                  filter: "blur(1px)",
+                  lineHeight: 1,
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {stockholmTime.toLocaleTimeString("en-GB", {
+                  timeZone: "Europe/Stockholm",
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+                {/* AM/PM top, SWEDEN bottom – stacked just to the right of the digits */}
+                <div className="absolute top-1/2 left-full -translate-y-1/2 ml-2 sm:ml-4 flex flex-col items-start gap-96 text-[10px] sm:text-xs font-subheading tracking-widest text-[#9EA5AD] uppercase space-y-1 z-50" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+                  <span style={{ position: 'relative', zIndex: 50, textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+                    {/AM/.test(
+                      stockholmTime.toLocaleTimeString("en-US", {
+                        timeZone: "Europe/Stockholm",
+                        hour12: true,
+                      })
+                    )
+                      ? "AM"
+                      : "PM"}
+                  </span>
+                  <span style={{ position: 'relative', zIndex: 50 }}>SWEDEN</span>
+                </div>
+              </span>
             </div>
           </div>
 
-          {/* Right-side labels */}
-          <div className="absolute right-8 md:right-12 top-[30%] text-xs font-subheading tracking-widest text-[#9EA5AD] uppercase select-none opacity-70">
-            {/AM/.test(stockholmTime.toLocaleTimeString('en-US', {
-              timeZone: 'Europe/Stockholm',
-              hour12: true,
-            })) ? 'AM' : 'PM'}
-          </div>
-          <div className="absolute right-8 md:right-12 top-[65%] text-xs font-subheading tracking-widest text-[#9EA5AD] uppercase select-none opacity-70">
-            SWEDEN
-          </div>
-
-          {/* Team figures row at bottom - like grass strands with varied positions */}
-          <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center px-8 pb-16">
+          {/* Team figures — blurred by default; focus + name on hover */}
+          <div className="absolute bottom-0 left-0 right-0 z-20 flex items-end justify-center px-8 pb-16">
             <div className="flex items-end justify-between w-full max-w-5xl gap-4">
-              {[
-                { src: anaisaImg, scale: 0.9, yOffset: 8, xOffset: -2 },
-                { src: jaclynImg, scale: 0.85, yOffset: -4, xOffset: 3 },
-                { src: freyaImg, scale: 1.0, yOffset: 12, xOffset: -1 },
-                { src: leaImg, scale: 1.1, yOffset: -2, xOffset: 2 },
-                { src: svenImg, scale: 0.95, yOffset: 6, xOffset: -3 },
-                { src: luciaImg, scale: 0.88, yOffset: -8, xOffset: 1 },
-              ].map((person, i) => (
+              {figures.map((p, i) => (
                 <div
                   key={i}
-                  className="flex-1 flex justify-center"
+                  className="relative flex-1 flex justify-center items-end"
                   style={{
-                    transform: `scale(${person.scale}) translateY(${person.yOffset}px) translateX(${person.xOffset}px)`,
-                    height: '32vh',
+                    transform: `translateX(${p.xOffset}px) translateY(${p.yOffset}px) scale(${p.scale})`,
+                    height: "36vh",
+                    willChange: "filter, opacity, transform",
                   }}
                 >
+                  {/* Name above figure */}
+                  <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 opacity-0 text-[10px] sm:text-xs text-[#9EA5AD] font-subheading tracking-widest transition-opacity duration-500 ease-out">
+                    {p.name}
+                  </span>
+
+                  {/* Image: blur → sharp on hover */}
                   <img
-                    src={person.src}
-                    alt={`Team member ${i + 1}`}
-                    className="h-full object-contain"
+                    src={p.src}
+                    alt={p.name}
+                    className="h-full object-contain transition-[filter,opacity,transform] duration-700 ease-out grayscale blur-[3px] opacity-60 hover:grayscale-0 hover:blur-0 hover:opacity-100"
                     style={{
-                      filter: 'grayscale(1) blur(0.8px)',
-                      opacity: 0.65,
-                      WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
-                      maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
+                      WebkitMaskImage:
+                        "linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
+                      maskImage:
+                        "linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
+                      willChange: "filter, opacity, transform",
                     }}
                     draggable={false}
+                    onMouseEnter={(e) => {
+                      const label = (e.currentTarget.previousSibling as HTMLElement);
+                      if (label) label.style.opacity = "1";
+                    }}
+                    onMouseLeave={(e) => {
+                      const label = (e.currentTarget.previousSibling as HTMLElement);
+                      if (label) label.style.opacity = "0";
+                    }}
                   />
                 </div>
               ))}
             </div>
           </div>
+        </div>
         </div>
       </section>
 
