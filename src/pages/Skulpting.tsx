@@ -159,7 +159,7 @@ const Skulpting: React.FC = () => {
 
         {/* Center text (let pointer events pass through) */}
         <div className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center pointer-events-none select-none pt-16 md:pt-0">
-          <h1 className="font-subheading text-[#9EA5AD] text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+          <h1 className="font-subheading text-[#9EA5AD] text-[24px] leading-[190%] tracking-[-0.8px] font-normal">
             What are we skulpting today?
           </h1>
           </div>
@@ -567,7 +567,7 @@ const Skulpting: React.FC = () => {
                   }}
                 >
                   {/* Name above figure */}
-                  <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 opacity-0 text-[10px] sm:text-xs text-[#9EA5AD] font-subheading tracking-widest transition-opacity duration-500 ease-out">
+                  <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 opacity-0 text-[10px] sm:text-xs text-[#9EA5AD] font-eyebrow tracking-widest transition-opacity duration-500 ease-out">
                     {p.name}
                   </span>
 

@@ -1,27 +1,37 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import InstagramIcon from "../assets/insta.svg";
 import LinkIcon from "../assets/link.svg";
 import MailIcon from "../assets/mail.svg";
 
-export const Footer = () => (
-  <footer className="relative z-20 bg-[#F0F3F7] pt-6 sm:pt-10 pb-12 px-4 sm:px-6 md:px-20 font-subheading select-none shadow-inner">
-    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-      <div className="flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0">
+type FooterProps = {
+  compact?: boolean;
+};
+
+export const Footer: React.FC<FooterProps> = ({ compact = false }) => (
+  <footer
+    className={
+      `relative bg-[#F0F3F7] font-subheading select-none shadow-inner ` +
+      (compact ? "pt-2 sm:pt-3 pb-3 px-4 sm:px-6 md:px-8" : "pt-6 sm:pt-10 pb-12 px-4 sm:px-6 md:px-20")
+    }
+  >
+    <div className={compact ? "max-w-7xl mx-auto space-y-3 sm:space-y-4" : "max-w-7xl mx-auto space-y-6 sm:space-y-8"}>
+      <div className={compact ? "flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0" : "flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0"}>
         {/* Mobile: Stacked links */}
-        <nav className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm text-[#9EA5AD] w-full sm:w-auto">
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
-            <a 
-              href="#privacy" 
-              className="hover:text-[#3F4851] transition-colors duration-200 py-3 sm:py-0 text-center sm:text-left"
+        <nav className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-[#9EA5AD] w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
+            <Link
+              to="/privacy"
+              className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
             >
               Privacy Policy
-            </a>
-            <a 
-              href="#contact" 
-              className="hover:text-[#3F4851] transition-colors duration-200 py-3 sm:py-0 text-center sm:text-left"
+            </Link>
+            <Link
+              to="/contact"
+              className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
             >
               Contact Us
-            </a>
+            </Link>
           </div>
         </nav>
 
@@ -30,29 +40,29 @@ export const Footer = () => (
           <a
             href="#instagram"
             aria-label="Instagram"
-            className="hover:brightness-75 transition-all duration-200 p-3"
+            className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
           >
-            <img src={InstagramIcon} alt="Instagram" className="w-5 h-5 sm:w-6 sm:h-6" />
+            <img src={InstagramIcon} alt="Instagram" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
           <a
             href="#website"
             aria-label="Website"
-            className="hover:brightness-75 transition-all duration-200 p-3"
+            className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
           >
-            <img src={LinkIcon} alt="Website" className="w-5 h-5 sm:w-6 sm:h-6" />
+            <img src={LinkIcon} alt="Website" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
           <a
             href="mailto:hello@skulpt.com"
             aria-label="Email"
-            className="hover:brightness-75 transition-all duration-200 p-3"
+            className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
           >
-            <img src={MailIcon} alt="Email" className="w-5 h-5 sm:w-6 sm:h-6" />
+            <img src={MailIcon} alt="Email" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
         </div>
       </div>
 
       {/* divider */}
-      <hr className="border-t border-[#D8DDE4] mt-6 sm:mt-8" />
+      <hr className={compact ? "border-t border-[#D8DDE4] mt-3" : "border-t border-[#D8DDE4] mt-6 sm:mt-8"} />
     </div>
   </footer>
 );

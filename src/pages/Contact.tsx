@@ -277,9 +277,9 @@ We'll take it from there.`}
               <div className="mt-8">
                 <button
                   type="submit"
-                  className="group relative text-[28px] font-light text-[#B8C1CB] transition-colors"
+                  className="group relative text-[22px] font-light text-[#B8C1CB] transition-colors"
                 >
-                  <span className="italic text-[#A0A9B4]">We'll take it from here</span>
+                  <span className="text-[#A0A9B4]">Send</span>
                   <span
                     className="block h-[2px] bg-[#B8C1CB] mt-1 w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
                     aria-hidden="true"
@@ -438,9 +438,9 @@ We'll take it from there.`}
               <button
                 type="submit"
                 form="contactForm"
-                className="group relative text-[36px] font-light text-[#B8C1CB] transition-colors"
+                className="group relative text-[28px] font-light text-[#B8C1CB] transition-colors"
               >
-                <span className="italic text-[#A0A9B4]">We'll take it from here</span>
+                <span className="text-[#A0A9B4]">Send</span>
                 <span
                   className="block h-[2px] bg-[#B8C1CB] w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
                   aria-hidden="true"
