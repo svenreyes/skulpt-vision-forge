@@ -16,7 +16,7 @@ export const HowItWorks = () => {
       <div className="relative max-w-3xl px-6 text-center">
         {/* Main copy block */}
         <p className="text-xl md:text-3xl text-[#C1CFD4] leading-relaxed font-subheading">
-          <span className="font-nersans-two font-bold">SKULPT</span> is a branding studio for early-stage startups who
+          <span className="font-nersans-two font-bold">SKULPT</span> is a brand partner for early-stage startups who
           would rather be understood than positioned.
           <br />
           Skulpting helps reconnect founders, team members, and audiences to a long-lasting brand built with intention.
