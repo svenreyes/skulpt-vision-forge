@@ -6,9 +6,11 @@ import MailIcon from "../assets/mail.svg";
 
 type FooterProps = {
   compact?: boolean;
+  /** When true, on mobile (below sm) render the nav links side-by-side instead of stacked. */
+  mobileRowNav?: boolean;
 };
 
-export const Footer: React.FC<FooterProps> = ({ compact = false }) => (
+export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = false }) => (
   <footer
     className={
       `relative bg-[#F0F3F7] font-subheading select-none shadow-inner ` +
@@ -18,8 +20,14 @@ export const Footer: React.FC<FooterProps> = ({ compact = false }) => (
     <div className={compact ? "max-w-7xl mx-auto space-y-3 sm:space-y-4" : "max-w-7xl mx-auto space-y-6 sm:space-y-8"}>
       <div className={compact ? "flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0" : "flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0"}>
         {/* Mobile: Stacked links */}
-        <nav className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-[#9EA5AD] w-full sm:w-auto">
-          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
+        <nav className={(mobileRowNav
+            ? "flex flex-row justify-center items-center gap-8 "
+            : "flex flex-col items-center space-y-2 ") +
+            "sm:flex-row sm:space-y-0 sm:space-x-6 text-sm text-[#9EA5AD] w-full sm:w-auto"}>
+          <div className={(mobileRowNav
+              ? "flex flex-row justify-center items-center gap-8 "
+              : "flex flex-col items-center space-y-2 ") +
+              "sm:flex-row sm:space-y-0 sm:space-x-6"}>
             <Link
               to="/privacy"
               className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { CloudyBackground } from "../components/CloudyBackground";
 import { SplineBlob } from "../components/SplineBlob";
@@ -26,6 +27,7 @@ const Skulpting: React.FC = () => {
   const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
   const blobRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLDivElement>(null);
+  const marqueeVideoRef = useRef<HTMLVideoElement>(null);
 
   const team = [
     { name: 'ANAISA ACHARYA', src: anaisaImg },
@@ -94,6 +96,37 @@ const Skulpting: React.FC = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  // Start marquee video at 3s and keep looping from there
+  useEffect(() => {
+    const v = marqueeVideoRef.current;
+    if (!v) return;
+
+    const setToThree = () => {
+      try {
+        if (v.currentTime < 2.9 || v.currentTime > 3.1) v.currentTime = 3;
+      } catch {}
+    };
+
+    const onLoadedMeta = () => setToThree();
+    const onPlay = () => setToThree();
+    // With loop enabled, 'ended' won't fire. Use timeupdate guard to snap to 3s.
+    const onTimeUpdate = () => {
+      if (v.currentTime < 2.8) setToThree();
+    };
+
+    v.addEventListener('loadedmetadata', onLoadedMeta);
+    v.addEventListener('play', onPlay);
+    v.addEventListener('timeupdate', onTimeUpdate);
+    // If metadata already loaded
+    if (v.readyState >= 1) setToThree();
+
+    return () => {
+      v.removeEventListener('loadedmetadata', onLoadedMeta);
+      v.removeEventListener('play', onPlay);
+      v.removeEventListener('timeupdate', onTimeUpdate);
+    };
+  }, [shouldLoadVideos]);
 
   // Intersection Observer for lazy loading videos
   useEffect(() => {
@@ -212,6 +245,7 @@ const Skulpting: React.FC = () => {
           >
             {shouldLoadVideos ? (
               <video
+                ref={marqueeVideoRef}
                 src={skulpting2Video}
                 className="w-full h-full object-cover opacity-80 scale-125 sm:scale-110 transform-gpu"
                 style={{ 
@@ -249,8 +283,8 @@ const Skulpting: React.FC = () => {
 
       {/* Make it make Sense callout */}
       <section className="relative z-10 py-24 mx-auto max-w-6xl px-4 sm:px-6 md:px-0 flex justify-end">
-        <a
-          href="/contact"
+        <Link
+          to="/skulpted"
           className="font-body text-[#CBD1D6] text-2xl sm:text-3xl md:text-4xl lg:text-5xl inline-flex items-center gap-2 group select-none"
         >
           <span>
@@ -261,7 +295,7 @@ const Skulpting: React.FC = () => {
             alt="arrow"
             className="inline-block w-5 h-5 -rotate-45 scale-150 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
           />
-        </a>
+        </Link>
       </section>
 
       {/* Strategy Circle Section */}
@@ -475,7 +509,7 @@ const Skulpting: React.FC = () => {
           style={{ marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' }}
         >
           <div
-            className="relative min-h-[130vh] overflow-hidden rounded-t-[799px]"
+            className="relative min-h-[95vh] sm:min-h-[120vh] overflow-hidden rounded-t-[799px]"
             style={{
               WebkitClipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
               clipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
@@ -516,7 +550,9 @@ const Skulpting: React.FC = () => {
               <span
                 className="font-body tracking-tight block text-center"
                 style={{
-                  fontSize: "30vw",
+                  fontSize: "24vw",
+                  // bump back up on larger screens via media query in tailwind is tricky inline,
+                  // so we keep mobile smaller and overall layout tighter
                   color: "#9EA5AD",
                   opacity: 0.38,
                   letterSpacing: "-0.02em",
@@ -536,7 +572,7 @@ const Skulpting: React.FC = () => {
                   minute: "2-digit",
                 })}
                 {/* AM/PM top, SWEDEN bottom – stacked just to the right of the digits */}
-                <div className="absolute top-1/2 left-full -translate-y-1/2 ml-2 sm:ml-4 flex flex-col items-start gap-96 text-[10px] sm:text-xs font-subheading tracking-widest text-[#9EA5AD] uppercase space-y-1 z-50" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+                <div className="absolute top-1/2 left-full -translate-y-1/2 ml-2 sm:ml-4 flex flex-col items-start gap-1 sm:gap-96 text-[10px] sm:text-xs font-subheading tracking-widest text-[#9EA5AD] uppercase z-50" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
                   <span style={{ position: 'relative', zIndex: 50, textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
                     {/AM/.test(
                       stockholmTime.toLocaleTimeString("en-US", {
@@ -554,15 +590,14 @@ const Skulpting: React.FC = () => {
           </div>
 
           {/* Team figures — blurred by default; focus + name on hover */}
-          <div className="absolute bottom-0 left-0 right-0 z-20 flex items-end justify-center px-8 pb-16">
-            <div className="flex items-end justify-between w-full max-w-5xl gap-4">
+          <div className="absolute bottom-0 left-0 right-0 z-20 flex items-end justify-center px-6 pb-6 sm:px-8 sm:pb-16">
+            <div className="flex items-end justify-between w-full max-w-5xl gap-2 sm:gap-4">
               {figures.map((p, i) => (
                 <div
                   key={i}
-                  className="relative flex-1 flex justify-center items-end"
+                  className="relative flex-1 flex justify-center items-end h-[24vh] sm:h-[36vh]"
                   style={{
                     transform: `translateX(${p.xOffset}px) translateY(${p.yOffset}px) scale(${p.scale})`,
-                    height: "36vh",
                     willChange: "filter, opacity, transform",
                   }}
                 >
