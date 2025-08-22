@@ -55,8 +55,8 @@ function BlurSlideshow({
           />)
         )}
       </div>
-      {/* Reserve height */}
-      <div className="relative w-full h-[160px] md:h-[220px]" />
+      {/* Reserve height (taller on mobile only) */}
+      <div className="relative w-full h-[240px] sm:h-[220px] md:h-[220px]" />
     </div>
   );
 }
@@ -183,29 +183,29 @@ const Skulpted: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div ref={scrollerRef} className="relative z-10 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <div className="flex w-[850vw] sm:w-[900vw]">
+      <div ref={scrollerRef} className=" relative z-10 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className=" inline-flex pl-6 sm:pl-0">
           {/* Panel 1 */}
-          <main className="w-screen">
+          <main className="w-screen mr-6 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <div className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center py-6">
+              <div className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center py-8 sm:py-12 items-center">
                 {/* Lead heading */}
-                <section className="mb-4 select-none">
-                  <h1 className="font-body text-[clamp(18px,2vw,30px)] leading-[120%] tracking-[-1.6px] font-[300] text-[#CBD1D6]">
+                <section className="mb-8 sm:mb-4 select-none w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
+                  <h1 className="font-body text-[clamp(18px,5vw,30px)] leading-[150%] tracking-[-0.6px] font-[300] text-[#CBD1D6]">
                     Grounded in <span className="font-[400] text-[#B0BDC5]">innovation and impact</span>,
-                    <br className="hidden sm:block" /> we partner with <span className="font-[400] text-[#B0BDC5]">next-gen entrepreneurs</span>
+                    <br className="hidden sm:block" /> we partner with <span className="font-[400] text-[#B0BDC5]">next-gen entrepreneurs </span>
                     <br className="hidden sm:block" />
-                    with ideas to elevate the collective
+                    with ideas <span className="block sm:inline">to elevate the collective</span>
                   </h1>
                 </section>
 
                 {/* Hero image card */}
-                <section className="mb-3">
-                  <div className="relative w-full sm:w-[78vw] md:w-[60vw] lg:w-[48vw] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.20)] border border-white/20 bg-white/20 backdrop-blur-md">
+                <section className="pt-12 sm:pt-6 md:pt-6 mb-3">
+                  <div className="relative w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw] h-[40vh] sm:h-auto min-h-[280px] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.20)] border border-white/20 bg-white/20 backdrop-blur-md">
                     <img
                       src={ridelinkImg}
                       alt="RIDELINK showcase"
-                      className="block w-full h-full object-cover"
+                      className="block w-full h-full object-cover object-left"
                       loading="eager"
                       decoding="async"
                     />
@@ -213,52 +213,30 @@ const Skulpted: React.FC = () => {
                 </section>
 
                 {/* Title + description */}
-                <section className="mb-2">
-                  <h2 className="font-display text-xs text-[#9EA5AD]">RIDELINK</h2>
-                  <p className="mt-1 font-body text-sm text-[#B8C1CB]">
+                <section className="mb-2 w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
+                  <h1 className="text-[23px] leading-[35px] font-display text-md text-[#9EA5AD]">RIDELINK</h1>
+                  <p className="mt-1 font-body text-lg text-[#B8C1CB]">
                     University ridesharing, reimagined from the inside out.
                   </p>
                 </section>
 
                 {/* Boxed tags row */}
                 <section className="mb-4">
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 md:gap-3 rounded-[4.029px] border-[1.612px] border-[#E6EBEE] bg-[#E6EBEE] backdrop-blur-[20px] p-1.5 sm:p-2">
-                    {[
-                      "Pre-Seed",
-                      "Team Alignment",
-                      "Visual Identity",
-                      "Brand Messaging",
-                    ].map((label, idx) => (
-                      <span
-                        key={label}
-                        className={`inline-flex w-[148px] sm:w-[172px] md:w-[184px] px-3 sm:px-4 py-[6px] justify-center items-center text-[10px] sm:text-[11px] font-subheading tracking-wide ${idx === 0 ? "text-[#85919A] font-semibold" : "text-[#A9B2BB] font-medium"}`}
-                      >
-                        {label}
-                      </span>
-                    ))}
-                  </div>
                 </section>
 
                 {/* Large empty glass input-like card (reduced height on small screens) */}
-                <section>
-                  <div className="rounded-2xl border border-white/25 bg-white/25 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.12)] flex items-center justify-center w-full h-[84px] sm:h-[100px] md:h-[115px]">
-                    <span className="text-[#A9B2BB] opacity-80 select-none" aria-hidden>
-                      |
-                    </span>
-                  </div>
-                </section>
               </div>
             </div>
           </main>
  
 
           {/* Panel 2 */}
-          <main className=" w-screen">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center grid-cols-1 lg:grid-cols-[420px_1fr] gap-5 sm:gap-8">
+          <main className=" w-screen mr-6 sm:mr-0">
+            <div className=" mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
+              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center grid-cols-1 lg:grid-cols-[420px_1fr] gap-5 sm:gap-8">
               {/* Left text column */}
               <div>
-                <p className="font-subheading text-[12px] sm:text-[14px] leading-[16.8px] font-semibold text-[#B0BDC5] uppercase">Technology</p>
+                <p className=" font-subheading text-[12px] sm:text-[14px] leading-[16.8px] font-semibold text-[#B0BDC5] uppercase">Technology</p>
                 <h3 className="mt-2 font-display text-[24px] sm:text-[32px] md:text-[40px] text-[#9EA5AD] tracking-[-0.02em]">RIDE-LINK</h3>
                 <p className="mt-3 sm:mt-4 font-body text-[15px] sm:text-[17px] leading-relaxed text-[#9EA5AD]">
                   Ride-Link is a ride-sharing platform for college students, connecting them with affordable,
@@ -293,7 +271,7 @@ const Skulpted: React.FC = () => {
               </div>
 
               {/* Right image/card column */}
-              <div className="flex items-center justify-center">
+              <div className="pb-8 flex items-center justify-center">
                 <div className="w-full h-[100%] sm:h-[300px] md:h-[380px] rounded-[28px] border border-[#C9D0D4]/50 bg-[#ECEAE8] flex items-center justify-center">
                   <img
                     src={ridelink2Img}
@@ -310,11 +288,11 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 3 */}
-          <main className=" w-screen">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center">
+          <main className=" w-screen mr-6 sm:mr-0">
+            <div className="mx-auto max-w-[1126px] px-12 pt-[calc(4rem_+_env(safe-area-inset-top))]">
+              <section className="pb-16 min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-0">
                   <h2 className=" pt-4 font-subcursive italic text-[28px] sm:text-[36px] leading-tight text-[#B8C1CB]">
                     Riley Link<span className="not-italic font-body text-[#CBD1D6]">, 21</span>
                   </h2>
@@ -326,8 +304,8 @@ const Skulpted: React.FC = () => {
                 {/* Content grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-8">
                   {/* Left avatar */}
-                  <div className="flex items-start justify-center lg:justify-start">
-                    <div className="rounded-full bg-white/90 border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.12)] w-[120px] h-[120px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] overflow-hidden flex items-center justify-center">
+                  <div className="p-4 flex items-start justify-center lg:justify-start">
+                    <div className="rounded-full bg-white/90 border border-white/40 w-[120px] h-[120px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] overflow-hidden flex items-center justify-center">
                       <img
                         src={ridelinkPfp}
                         alt="Riley Link"
@@ -360,10 +338,10 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 4 */}
-          <main className="w-screen">
+          <main className="w-screen mr-6 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               {/* Align toward top to match screenshot */}
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start">
+              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start">
                 <div className="mt-4 sm:mt-10">
                   {/* Large headline */}
                   <h2 className=" pt-10 sm:pt-20 font-subcursive italic text-[30px] sm:text-[48px] md:text-[64px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
@@ -392,12 +370,12 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 5 */}
-          <main className="mx-6 w-screen">
+          <main className="w-screen mr-6 sm:mr-0">
             <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
+              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
                 {/* Left text column */}
                 <div className=" max-w-[720px]">
-                  <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
+                  <h2 className=" pt-28 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
                     On the skulpting process,
                   </h2>
                   <p className="pb-6 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
@@ -435,7 +413,33 @@ const Skulpted: React.FC = () => {
                 {/* Right image slideshow (auto cycles every 3s with blur transition) */}
               <div className="lg:pl-4">
                 <div className="w-full max-w-[480px] lg:max-w-[420px] ml-auto">
-                  <BlurSlideshow images={[yourrideImg, thefutureImg, ridelinkImg]} />
+                  {/* Mobile: slideshow */}
+                  <div className="lg:hidden">
+                    <BlurSlideshow images={[yourrideImg, thefutureImg, ridelinkImg]} />
+                  </div>
+                  {/* Desktop: stacked images */}
+                  <div
+                    className="hidden lg:flex lg:flex-col lg:gap-6"
+                    style={{
+                      height:
+                        "calc(100vh - 4rem - env(safe-area-inset-top) - var(--footer-h,56px) - 80px)",
+                    }}
+                  >
+                    {[yourrideImg, thefutureImg, ridelinkImg].map((src, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 min-h-0 rounded-3xl overflow-hidden border border-white/25 bg-white/25 backdrop-blur-md"
+                      >
+                        <img
+                          src={src}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               </section>
@@ -443,12 +447,12 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 6 */}
-          <main className="w-screen">
+          <main className="w-screen mr-6 sm:mr-0">
             <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
+              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
                 {/* Left text column */}
                 <div className=" max-w-[720px]">
-                  <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
+                  <h2 className=" pt-28 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
                     After the skulpting process,
                   </h2>
                   <p className="pb-6 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
@@ -483,16 +487,97 @@ const Skulpted: React.FC = () => {
 
                 {/* Right image slideshow (auto cycles every 3s with blur transition) */}
               <div className="lg:pl-4">
-                <div className="pt-16 w-full max-w-[480px] lg:max-w-[420px] ml-auto">
-                  <BlurSlideshow images={[process1Img, process2Img, process3Img]} />
+                <div className="pt-8 lg:pt-0 lg:mt-0 w-full max-w-[480px] lg:max-w-[420px] ml-auto">
+                  {/* Mobile: slideshow */}
+                  <div className="lg:hidden">
+                    <BlurSlideshow images={[process1Img, process2Img, process3Img]} />
+                  </div>
+                  {/* Desktop: stacked images */}
+                  <div
+                    className="hidden lg:flex lg:flex-col lg:gap-6"
+                    style={{
+                      height:
+                        "calc(100vh - 4rem - env(safe-area-inset-top) - var(--footer-h,56px) - 80px)",
+                    }}
+                  >
+                    {[process1Img, process2Img, process3Img].map((src, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 min-h-0 rounded-3xl overflow-hidden border border-white/25 bg-white/25 backdrop-blur-md"
+                      >
+                        <img
+                          src={src}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               </section>
             </div>
           </main>
 
+          {/* Mobile: Stacked Books Panel */}
+          <main className="w-screen sm:hidden">
+            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
+              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] flex flex-col justify-center py-8">
+                <div className="space-y-6">
+                  <img
+                    src={pitchdeckImg}
+                    alt="Pitch Deck"
+                    className="w-full max-w-[280px] mx-auto object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <img
+                    src={playbookImg}
+                    alt="Playbook"
+                    className="w-full max-w-[280px] mx-auto object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <img
+                    src={workshopNotebookImg}
+                    alt="Workshop Notebook"
+                    className="w-full max-w-[280px] mx-auto object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <img
+                    src={brandguidelinesImg}
+                    alt="Brand Guidelines"
+                    className="w-full max-w-[280px] mx-auto object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                
+                {/* Let's Connect underneath */}
+                <div className="mt-12 text-center">
+                  <Link
+                    to="/contact"
+                    className="text-[22px] group inline-flex items-center gap-2 text-[#B0BDC5] hover:text-[#9EA5AD] transition-colors"
+                  >
+                    <span className="font-subheading">Let's</span>
+                    <span className="font-subcursive text-[#C1CFD4] italic">Connect</span>
+                    <img
+                      src={arrowSvg}
+                      className="-rotate-45 w-6 h-6 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                      alt="→"
+                    />
+                  </Link>
+                </div>
+              </section>
+            </div>
+          </main>
+
+          {/* Desktop: Individual Book Panels */}
           {/* Panel 7 - Pitch Deck */}
-          <main className="w-[90vw] sm:w-[85vw]">
+          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
                 <div className="flex items-center justify-center w-full h-full">
@@ -509,7 +594,7 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 8 - Playbook */}
-          <main className="w-[90vw] sm:w-[85vw]">
+          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
                 <div className="flex items-center justify-center w-full h-full">
@@ -526,7 +611,7 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 9 - Workshop Notebook */}
-          <main className="w-[90vw] sm:w-[85vw]">
+          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
                 <div className="flex items-center justify-center w-full h-full">
@@ -543,7 +628,7 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 10 - Brand Guidelines with Let's Connect */}
-          <main className="w-[110vw] sm:w-[85vw] pr-[20vw]">
+          <main className="hidden sm:block w-[110vw] sm:w-[85vw] pr-[20vw]">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
                 <div className="flex items-center justify-center w-full h-full">
@@ -562,7 +647,7 @@ const Skulpted: React.FC = () => {
                     to="/contact"
                     className="text-[22px] sm:text-[36px] md:text-[44px] group inline-flex items-center gap-2 text-[#B0BDC5] hover:text-[#9EA5AD] transition-colors"
                   >
-                    <span className="font-subheading">Let’s</span>
+                    <span className="font-subheading">Let's</span>
                     <span className="font-subcursive text-[#C1CFD4] italic">Connect</span>
                     <img
                       src={arrowSvg}
@@ -578,8 +663,8 @@ const Skulpted: React.FC = () => {
         </div>
       </div>
 
-      {/* Sticky Footer (compact) */}
-      <div ref={footerRef} className="fixed inset-x-0 bottom-0 z-40">
+      {/* Sticky Footer (compact) - hidden on mobile */}
+      <div ref={footerRef} className="hidden sm:block fixed inset-x-0 bottom-0 z-40">
         <Footer compact mobileRowNav />
       </div>
     </div>
