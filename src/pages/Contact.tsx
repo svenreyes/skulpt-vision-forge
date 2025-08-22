@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { SmokeBackground } from "@/components/SmokeBackground";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useRef } from "react";
 import { SShape } from "@/components/SShape";
 import { Navbar } from "@/components/Navbar";
 
@@ -37,7 +37,7 @@ const Contact = () => {
   });
 
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     // Adjust width for select inputs based on visible text length
     if (name === "stage" || name === "what") {
@@ -46,6 +46,26 @@ const Contact = () => {
       setSelectWidths((prev) => ({ ...prev, [name]: `${selectedText.length + 2}ch` }));
     }
     setValues((prev) => ({ ...prev, [name]: value }));
+
+    // Dynamic width for mobile message textarea
+    if (name === "message" && messageRef.current) {
+      // Approximate width in ch until 32ch (~full mobile width)
+      const ch = value.length + 1;
+      if (ch < 32) {
+        messageRef.current.style.width = `${ch}ch`;
+      } else {
+        messageRef.current.style.width = "100%"; // trigger wrap
+      }
+    }
+  };
+
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Auto-resize helper for mobile textarea
+  const autoResize = (el: HTMLTextAreaElement) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -256,22 +276,24 @@ We'll take it from there.`}
                 </div>
               </div>
 
-              {/* MESSAGE (last) */}
+              {/* MESSAGE (last) — mobile uses textarea that wraps */}
               <div className="w-full">
-                <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                  <input
+                <div className="group flex flex-wrap items-start max-w-full align-top">
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl leading-[1.2]">[</span>
+                  <textarea
                     id="message"
                     name="message"
-                    type="text"
                     placeholder="MESSAGE"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    rows={2}
+                    maxLength={1000}
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-[calc(100%-16px)] max-w-[calc(100%-16px)] resize-none overflow-hidden leading-snug"
                     value={values.message}
                     onChange={handleInputChange}
-                    size={Math.max(4, 'MESSAGE'.length, values.message.length || 0)}
+                    ref={messageRef}
+                    onInput={(e) => autoResize(e.currentTarget)}
                     style={{ textTransform: "none" }}
                   />
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl leading-[1.2]">]</span>
                 </div>
               </div>
               <div className="mt-8">
