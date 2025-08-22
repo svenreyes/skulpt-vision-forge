@@ -28,7 +28,27 @@ const Skulpting: React.FC = () => {
   const blobRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLDivElement>(null);
   const marqueeVideoRef = useRef<HTMLVideoElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    if (mq.addEventListener) {
+      mq.addEventListener('change', onChange);
+    } else {
+      // @ts-ignore
+      mq.addListener(onChange);
+    }
+    return () => {
+      if (mq.removeEventListener) {
+        mq.removeEventListener('change', onChange);
+      } else {
+        // @ts-ignore
+        mq.removeListener(onChange);
+      }
+    };
+  }, []);
   const team = [
     { name: 'ANAISA ACHARYA', src: anaisaImg },
     { name: 'JACLYN PHAM', src: jaclynImg },
@@ -299,7 +319,7 @@ const Skulpting: React.FC = () => {
       </section>
 
       {/* Strategy Circle Section */}
-      <section className="relative z-10 py-64 mt-24 flex items-center justify-center px-4 sm:px-6">
+      <section className="relative z-10 lg:py-64 sm:py-16 mt-24 flex items-center justify-center px-4 sm:px-6">
         <div className="relative w-full max-w-[75vw] sm:max-w-[720px] aspect-square">
           {/* Layer stack: blue glow (largest) -> video (larger) -> outline */}
           {/* Larger blue glow with blurry edges */}
@@ -513,8 +533,12 @@ const Skulpting: React.FC = () => {
             style={{
               WebkitClipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
               clipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
-              WebkitMaskImage: 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
-              maskImage: 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
+              WebkitMaskImage: isMobile
+                ? 'radial-gradient(ellipse 120% 80% at center, black 85%, transparent 100%)'
+                : 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
+              maskImage: isMobile
+                ? 'radial-gradient(ellipse 120% 80% at center, black 85%, transparent 100%)'
+                : 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
             }}
           >
           {/* Soft “dome” — NOT a half circle, no white bg */}
@@ -524,15 +548,17 @@ const Skulpting: React.FC = () => {
               background: "#C1CFD4",
               opacity: 0.55,
               filter: "blur(28px)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)",
-              maskImage:
-                "radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)",
+              WebkitMaskImage: isMobile
+                ? 'radial-gradient(ellipse 110% 75% at 50% 10%, black 75%, transparent 100%)'
+                : 'radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)',
+              maskImage: isMobile
+                ? 'radial-gradient(ellipse 110% 75% at 50% 10%, black 75%, transparent 100%)'
+                : 'radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)',
             }}
           />
           {/* Optional subtle secondary bounce to match the reference vignette */}
           <div
-            className="absolute -top-[6vh] -left-[12vw] w-[120vw] h-[120vw] pointer-events-none z-0"
+            className="absolute -top-[8vh] sm:-top-[6vh] -left-[30vw] sm:-left-[12vw] w-[160vw] sm:w-[120vw] h-[160vw] sm:h-[120vw] pointer-events-none z-0"
             style={{
               background: "#C1CFD4",
               opacity: 0.25,

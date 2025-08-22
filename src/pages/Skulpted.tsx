@@ -69,6 +69,8 @@ const Skulpted: React.FC = () => {
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches; // sm breakpoint
+    if (!isDesktop) return; // On mobile, allow normal vertical scrolling
     const onWheel = (e: WheelEvent) => {
       // Free scrolling: only intercept vertical->horizontal when it actually scrolls horizontally
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -89,6 +91,8 @@ const Skulpted: React.FC = () => {
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches; // sm breakpoint
+    if (!isDesktop) return; // On mobile, do not remap gestures; allow vertical scroll
 
     let startX = 0;
     let startY = 0;
@@ -148,6 +152,8 @@ const Skulpted: React.FC = () => {
     const footerEl = footerRef.current;
     const scrollerEl = scrollerRef.current;
     if (!footerEl || !scrollerEl) return;
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches; // sm breakpoint
+    if (!isDesktop) return; // Footer is hidden on mobile; skip handler
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {
         const maxScrollLeft = scrollerEl.scrollWidth - scrollerEl.clientWidth;
@@ -164,7 +170,7 @@ const Skulpted: React.FC = () => {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative min-h-screen w-full bg-[#E6EBEE] overflow-hidden">
+    <div ref={rootRef} className="relative min-h-screen w-full bg-[#E6EBEE] overflow-x-hidden sm:overflow-hidden">
       {/* Subtle soft vignettes to match the screenshot */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div
@@ -183,10 +189,10 @@ const Skulpted: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div ref={scrollerRef} className=" relative z-10 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <div className=" inline-flex pl-6 sm:pl-0">
+      <div ref={scrollerRef} className=" relative z-10 overflow-x-hidden sm:overflow-x-auto sm:overflow-y-hidden sm:touch-pan-x sm:overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className=" block sm:inline-flex pl-0 sm:pl-0">
           {/* Panel 1 */}
-          <main className="w-screen mr-6 sm:mr-0">
+          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <div className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center py-8 sm:py-12 items-center">
                 {/* Lead heading */}
@@ -231,7 +237,7 @@ const Skulpted: React.FC = () => {
  
 
           {/* Panel 2 */}
-          <main className=" w-screen mr-6 sm:mr-0">
+          <main className=" w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className=" mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center grid-cols-1 lg:grid-cols-[420px_1fr] gap-5 sm:gap-8">
               {/* Left text column */}
@@ -288,9 +294,9 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 3 */}
-          <main className=" w-screen mr-6 sm:mr-0">
+          <main className=" w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-12 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="pb-16 min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center">
+              <section className="pb-8 sm:pb-16 sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center">
                 {/* Header */}
                 <div className="mb-0">
                   <h2 className=" pt-4 font-subcursive italic text-[28px] sm:text-[36px] leading-tight text-[#B8C1CB]">
@@ -338,10 +344,10 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 4 */}
-          <main className="w-screen mr-6 sm:mr-0">
+          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               {/* Align toward top to match screenshot */}
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start">
+              <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start">
                 <div className="mt-4 sm:mt-10">
                   {/* Large headline */}
                   <h2 className=" pt-10 sm:pt-20 font-subcursive italic text-[30px] sm:text-[48px] md:text-[64px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
@@ -370,15 +376,15 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 5 */}
-          <main className="w-screen mr-6 sm:mr-0">
+          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
+              <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
                 {/* Left text column */}
                 <div className=" max-w-[720px]">
-                  <h2 className=" pt-28 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
+                  <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
                     On the skulpting process,
                   </h2>
-                  <p className="pb-6 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
+                  <p className="pb-4 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
                     reimagine from the inside out.
                   </p>
 
@@ -447,15 +453,15 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 6 */}
-          <main className="w-screen mr-6 sm:mr-0">
+          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
+              <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
                 {/* Left text column */}
                 <div className=" max-w-[720px]">
-                  <h2 className=" pt-28 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
+                  <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
                     After the skulpting process,
                   </h2>
-                  <p className="pb-6 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
+                  <p className="pb-4 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
                     a partnership were born.
                   </p>
 
@@ -522,7 +528,7 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Mobile: Stacked Books Panel */}
-          <main className="w-screen sm:hidden">
+          <main className="w-full sm:hidden">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] flex flex-col justify-center py-8">
                 <div className="space-y-6">
@@ -663,7 +669,12 @@ const Skulpted: React.FC = () => {
         </div>
       </div>
 
-      {/* Sticky Footer (compact) - hidden on mobile */}
+      {/* Mobile Footer (non-fixed) */}
+      <div className="sm:hidden relative z-40">
+        <Footer compact mobileRowNav />
+      </div>
+
+      {/* Desktop Sticky Footer (compact) */}
       <div ref={footerRef} className="hidden sm:block fixed inset-x-0 bottom-0 z-40">
         <Footer compact mobileRowNav />
       </div>
