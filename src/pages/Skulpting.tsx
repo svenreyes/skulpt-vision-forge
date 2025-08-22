@@ -422,7 +422,13 @@ const Skulpting: React.FC = () => {
           </span>
           <span
             onMouseEnter={() => setActiveAxis('alignment')}
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none"
+            onClick={() => setActiveAxis('alignment')}
+            onTouchStart={() => setActiveAxis('alignment')}
+            onPointerDown={() => setActiveAxis('alignment')}
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none pointer-events-auto"
+            role="button"
+            tabIndex={0}
+            aria-pressed={activeAxis === 'alignment'}
             style={{ color: activeAxis === 'alignment' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
             ALIGNMENT
