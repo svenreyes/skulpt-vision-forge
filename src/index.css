@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: "FK Grotesk Light";
+  src: url("/fonts/FKGroteskTrial-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Sohne Buch";
   src: url("/fonts/Sohnebuch.otf") format("opentype");
   font-weight: 700;
@@ -15,9 +23,34 @@
 }
 
 @font-face {
-  font-family: "Sohne Leicht";
-  src: url("/fonts/Sohne-Leicht.otf") format("opentype");
+  font-family: "Test Sohne Leicht";
+  src: url("/fonts/Test Sohne Leicht.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Cursive (italic) variants registered as separate families per config */
+@font-face {
+  font-family: "TestSohne Buch Kursiv";
+  src: url("/fonts/TestSohne Buch Kursiv.otf") format("opentype");
   font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TestSohne Leicht Kursiv";
+  src: url("/fonts/TestSohne Leicht Kursiv.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TestSohne Halbfett";
+  src: url("/fonts/TestSohne-Halbfett-BF663d89cd2d67b.otf") format("opentype");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -25,6 +58,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .subheading {
+    @apply font-subheading font-normal uppercase tracking-wider leading-tight;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+}
 
 
 @layer base {
@@ -138,9 +179,11 @@
 
 html, body {
   height: 100%;
-  overflow: hidden;        /* ← stops vertical scrolling */
+  /* overflow: hidden;  removed to enable scrolling */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .noiseCanvas {
@@ -163,4 +206,25 @@ body {
 .safe-px {
   padding-left : calc(1.5rem + env(safe-area-inset-left));
   padding-right: calc(1.5rem + env(safe-area-inset-right));
+}
+
+/* Animation for moving overlay text inside Skulpting video */
+@keyframes slide-right {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.slide-right-animation {
+  animation: slide-right 20s linear infinite;
+}
+
+/* Reusable marquee scroll animation – move half the width because content is duplicated */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-scroll {
+  display: inline-block;
+  animation: marquee-scroll 20s linear infinite;
 }

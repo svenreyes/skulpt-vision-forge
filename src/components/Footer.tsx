@@ -1,85 +1,76 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import InstagramIcon from "../assets/insta.svg";
+import LinkIcon from "../assets/link.svg";
+import MailIcon from "../assets/mail.svg";
 
-import React from 'react';
-
-export const Footer = () => {
-  const footerSections = [
-    {
-      title: "Services",
-      links: ["Brand Strategy", "Visual Identity", "Digital Design", "Marketing Systems"]
-    },
-    {
-      title: "Company", 
-      links: ["About", "Team", "Careers", "Press"]
-    },
-    {
-      title: "Resources",
-      links: ["Case Studies", "Blog", "Founder Guide", "Brand Toolkit"]
-    },
-    {
-      title: "Legal",
-      links: ["Privacy Policy", "Terms of Service", "Equity Terms", "Contact"]
-    }
-  ];
-
-  return (
-    <footer className="relative border-t border-blue-200/10">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-200/5 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
-        {/* Top Section */}
-        <div className="grid lg:grid-cols-5 gap-12 mb-16">
-          {/* Brand Column */}
-          <div className="lg:col-span-1">
-            <div className="text-3xl font-bold tracking-tight mb-4 text-blue-50">
-              SKULPT
-            </div>
-            <p className="text-blue-200/80 text-sm leading-relaxed">
-              Sculpting the future of startup branding through strategic equity partnerships.
-            </p>
-          </div>
-
-          {/* Links Columns */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h3 className="font-semibold text-blue-100 mb-4">{section.title}</h3>
-              <ul className="space-y-3">
-                {section.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-blue-200/80 hover:text-blue-100 transition-colors duration-300"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-center pt-8 border-t border-blue-200/10">
-          <div className="text-sm text-blue-300/70 mb-4 lg:mb-0">
-            © 2024 SKULPT. All rights reserved.
-          </div>
-          
-          <div className="flex space-x-6">
-            {['Twitter', 'LinkedIn', 'Instagram', 'Dribbble'].map((social) => (
-              <a
-                key={social}
-                href="#"
-                className="text-sm text-blue-200/80 hover:text-blue-100 transition-colors duration-300"
-              >
-                {social}
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+type FooterProps = {
+  compact?: boolean;
+  /** When true, on mobile (below sm) render the nav links side-by-side instead of stacked. */
+  mobileRowNav?: boolean;
 };
+
+export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = false }) => (
+  <footer
+    className={
+      `relative bg-[#F0F3F7] font-subheading select-none shadow-inner ` +
+      (compact ? "pt-2 sm:pt-3 pb-3 px-4 sm:px-6 md:px-8" : "pt-6 sm:pt-10 pb-12 px-4 sm:px-6 md:px-20")
+    }
+  >
+    <div className={compact ? "max-w-7xl mx-auto space-y-3 sm:space-y-4" : "max-w-7xl mx-auto space-y-6 sm:space-y-8"}>
+      <div className={compact ? "flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0" : "flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0"}>
+        {/* Mobile: Stacked links */}
+        <nav className={(mobileRowNav
+            ? "flex flex-row justify-center items-center gap-8 "
+            : "flex flex-col items-center space-y-2 ") +
+            "sm:flex-row sm:space-y-0 sm:space-x-6 text-sm text-[#9EA5AD] w-full sm:w-auto"}>
+          <div className={(mobileRowNav
+              ? "flex flex-row justify-center items-center gap-8 "
+              : "flex flex-col items-center space-y-2 ") +
+              "sm:flex-row sm:space-y-0 sm:space-x-6"}>
+            <Link
+              to="/privacy"
+              className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              to="/contact"
+              className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </nav>
+
+        {/* Icons - centered on mobile, right-aligned on larger screens */}
+        <div className="flex justify-center sm:justify-start space-x-6 sm:space-x-8 w-full sm:w-auto">
+          <a
+            href="#instagram"
+            aria-label="Instagram"
+            className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
+          >
+            <img src={InstagramIcon} alt="Instagram" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
+          </a>
+          <a
+            href="#website"
+            aria-label="Website"
+            className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
+          >
+            <img src={LinkIcon} alt="Website" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
+          </a>
+          <a
+            href="mailto:hello@skulpt.com"
+            aria-label="Email"
+            className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
+          >
+            <img src={MailIcon} alt="Email" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
+          </a>
+        </div>
+      </div>
+
+      {/* divider */}
+      <hr className={compact ? "border-t border-[#D8DDE4] mt-3" : "border-t border-[#D8DDE4] mt-6 sm:mt-8"} />
+    </div>
+  </footer>
+);

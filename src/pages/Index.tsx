@@ -1,152 +1,158 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { CloudyBackground } from "../components/CloudyBackground";
 import { Navbar } from "../components/Navbar";
-import { HowItWorks } from "../components/HowItWorks";
-import { Hero2 } from "../components/hero2";
+import { Footer } from "../components/Footer";
+import arrowUrl from "../assets/arrow.svg";
+import { useNavigate } from "react-router-dom";
+import { useRouteBlur } from "../components/RouteBlurTransition";
 
 const Index = () => {
-  const sections = ["hero2", "how-it-works"];
-  const [currentSection, setCurrentSection] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [touchStartY, setTouchStartY] = useState(0);
-  const [touchEndY, setTouchEndY] = useState(0);
+  const questions = [
+    "Who are you?",
+    "Where would you go for dinner?",
+    "Who do you want to be?",
+    "What's your story?",
+    "If my answer had to be yes, what would it be?",
+    "Have you ever been understood?",
+    "What version of yourself do people not see?",
+    "Why now?",
+  ];
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    const y = e.touches[0].clientY;
-    // reset both so a tap (no move) produces Δy = 0
-    setTouchStartY(y);
-    setTouchEndY(y);
-  };
+  /* ------------------------------ refs & state ------------------------------ */
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const questionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const taglineRef = useRef<HTMLElement | null>(null);
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    setTouchEndY(e.touches[0].clientY);
-  };
+  const [focusedIdx, setFocusedIdx] = useState(0);
+  const [stackedMode, setStackedMode] = useState(false); // snap/focus vs stacked/hover
+  const [freezeScroll, setFreezeScroll] = useState(false); // temporarily lock scroll
 
-  const handleTouchEnd = () => {
-    if (isScrolling) return;
-
-    const delta = touchEndY - touchStartY;   // positive = swipe-down, negative = swipe-up
-    const threshold = 60;                    // px — tweak to taste
-
-    // Ignore taps / micro-drags
-    if (Math.abs(delta) < threshold) return;
-
-    setIsScrolling(true);
-
-    if (delta < 0 && currentSection < sections.length - 1) {
-      // swipe-up → next panel
-      setCurrentSection(prev => prev + 1);
-    } else if (delta > 0 && currentSection > 0) {
-      // swipe-down → previous panel
-      setCurrentSection(prev => prev - 1);
-    }
-
-    setTimeout(() => setIsScrolling(false), 800);
-  };
-
-  // 1) On scroll wheel, move between panels
+  /* ---------------------------- Snap‑focus logic --------------------------- */
   useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (isScrolling) return;
-      setIsScrolling(true);
+    if (stackedMode) return; // disabled once stacked mode begins
 
-      if (e.deltaY > 0 && currentSection < sections.length - 1) {
-        setCurrentSection((prev) => prev + 1);
-      } else if (e.deltaY < 0 && currentSection > 0) {
-        setCurrentSection((prev) => prev - 1);
-      }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = questionRefs.current.findIndex((r) => r === entry.target);
+            if (idx !== -1) setFocusedIdx(idx);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
 
-      setTimeout(() => setIsScrolling(false), 800);
-    };
+    questionRefs.current.forEach((node) => node && observer.observe(node));
+    return () => observer.disconnect();
+  }, [stackedMode]);
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [currentSection, sections.length, isScrolling]);
-
-  // 2) Whenever “currentSection” changes, update the URL hash:
-  //    - If we’re on section 0 (“hero2”), remove the hash.
-  //    - If we’re on section 1 (“how-it-works”), set the hash to “#how-it-works”.
+  /* ---------------- Convert to stacked mode exactly on tagline -------------- */
   useEffect(() => {
-    if (currentSection === 0) {
-      history.replaceState(null, "", window.location.pathname);
-    } else if (currentSection === 1) {
-      history.replaceState(null, "", "#how-it-works");
-    }
-  }, [currentSection]);
+    if (!taglineRef.current || stackedMode) return;
+    const container = containerRef.current!;
 
-  // 3) Watch for manual hash changes (e.g. user clicks the nav link or pastes a URL with "#how-it-works"):
-  //    - If the hash becomes "#how-it-works", switch to panel 1.
-  //    - If the hash is anything else (or cleared), switch back to panel 0.
+    const tagObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !stackedMode) {
+            // 1. Hard‑stop any momentum and align viewport to tagline top
+            const targetTop = taglineRef.current!.offsetTop;
+            container.scrollTo({ top: targetTop, behavior: "auto" });
+            setFreezeScroll(true);
+
+            // 2. After short delay (no momentum), enable stacked mode & re‑allow scroll
+            setTimeout(() => {
+              setStackedMode(true);
+              setFreezeScroll(false);
+            }, 300);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    tagObserver.observe(taglineRef.current);
+    return () => tagObserver.disconnect();
+  }, [stackedMode]);
+
+  /* ------------------------ Global smooth scroll feel ------------------------ */
   useEffect(() => {
-    const onHashChange = () => {
-      const hash = window.location.hash.replace("#", "");
-      if (hash === "how-it-works") {
-        setCurrentSection(1);
-      } else {
-        setCurrentSection(0);
-      }
-    };
-
-    window.addEventListener("hashchange", onHashChange);
-    // Also check on mount:
-    onHashChange();
-
+    document.documentElement.style.scrollBehavior = "smooth";
     return () => {
-      window.removeEventListener("hashchange", onHashChange);
+      document.documentElement.style.scrollBehavior = "";
     };
   }, []);
 
-  // 4) Map each index to its component
-  const sectionComponents = [
-    <Hero2 key="hero2" />,
-    <HowItWorks key="how-it-works" />,
-  ];
+  /* -------------------------------------------------------------------------- */
 
-  // 5) Render each “panel” stacked on top of each other.
-  const renderSection = (index: number) => {
-    const isActive = index === currentSection;
-    return (
-      <div
-        key={index}
-        className={`absolute inset-0 w-screen h-screen overflow-hidden transition-all duration-1000 ease-out ${
-          isActive
-            ? "opacity-100 blur-none z-20"
-            : "opacity-0 blur-md z-10 pointer-events-none"
-        }`}
-      >
-        <div className={`w-full h-full ${index === 0 ? 'overflow-hidden' : 'overflow-y-auto'}`}>
-          {sectionComponents[index]}
-        </div>
-      </div>
-    );
-  };
+  const baseLi =
+    "text-[24px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] transition-all duration-300 ease-in-out";
+
+  const navigate = useNavigate();
+  const { trigger } = useRouteBlur();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-blue-50 overflow-hidden"
-         onTouchStart={handleTouchStart}
-         onTouchMove={handleTouchMove}
-         onTouchEnd={handleTouchEnd}>
+    <div
+      ref={containerRef}
+      style={{ overflowY: freezeScroll ? "hidden" : "auto" }}
+      className={`h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col pt-8 ${
+        stackedMode ? "" : "snap-y snap-mandatory"
+      }`}
+    >
+      {/* Moving background */}
+      <CloudyBackground />
+
       <Navbar />
 
-      {/* Stack both panels (Hero2, HowItWorks) */}
-      <div className="relative h-screen">
-        {sections.map((_, index) => renderSection(index))}
-      </div>
+      {/* Questions list */}
+      <main className={`w-full ${stackedMode ? 'pt-52' : 'pt-32'} pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center`}>
+        <ul className="flex flex-col items-center w-full">
+          {questions.map((q, i) => {
+            const inFocus = focusedIdx === i && !stackedMode;
+            const focusClasses = inFocus
+              ? "opacity-100 scale-105 z-10"
+              : "opacity-40 scale-95 blur-sm z-0";
+            const stackedClasses =
+              "py-6 cursor-pointer blur-sm opacity-40 hover:blur-none hover:opacity-100";
 
-      {/* Navigation Dots */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex space-x-3">
-        {sections.map((_, index) => (
+            return (
+              <li
+                key={q}
+                ref={(el) => (questionRefs.current[i] = el)}
+                className={`${baseLi} ${stackedMode ? stackedClasses : focusClasses} ${
+                  stackedMode ? "" : "snap-start flex items-center justify-center h-screen"
+                }`}
+                style={!stackedMode ? { scrollSnapAlign: "center" } : undefined}
+              >
+                {q}
+              </li>
+            );
+          })}
+        </ul>
+      </main>
+
+      {/* Tagline */}
+      <section
+        ref={taglineRef}
+        className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center"
+      >
+        <h2 className="group text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-body text-[#CBD1D6] transition-colors">
+          Taking Branding <span className="italic text-[#C1CFD4] font-subheading ">Personally</span>{" "}
           <button
-            key={index}
-            onClick={() => setCurrentSection(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSection
-                ? "bg-[#9EA5AD] scale-125"
-                : "bg-[#CBD1D6] hover:bg-blue-200/60"
-            }`}
-          />
-        ))}
-      </div>
+            aria-label="Go to skulpting"
+            onClick={async () => {
+              await trigger({ before: 200, after: 200 });
+              navigate("/skulpting");
+            }}
+            className="align-middle inline-flex items-center justify-center ml-1 transition-opacity"
+          >
+            <img src={arrowUrl} alt="arrow" className="inline-block w-5 h-5 -rotate-45 scale-150 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </button>
+        </h2>
+      </section>
+
+      <Footer />
     </div>
   );
 };
