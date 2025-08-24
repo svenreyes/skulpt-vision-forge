@@ -1,94 +1,51 @@
 # SKULPT 
 
-**SKULPT** is a branding studio built for visionary startups. We invest sweat equity to help bring ambitious ideas to life through compelling brand identity. This website serves as our digital presence and showcase.
+**SKULPT** is a branding partner built for visionary startups. We invest sweat equity to help bring ambitious ideas to life through compelling brand identity. This website serves as our digital presence and showcase.
 
-> "Your vision, our expertise, shared success."
+> "Taking branding personally."
 
 ---
 
 ## 🔧 Tech Stack
 
-- **React + TypeScript**
-- **Vite** – fast dev environment
-- **TailwindCSS** – utility-first styling
-- **Lucide-react** – for modern iconography
-- **Custom fonts** – Nersans Two, Sohne Kraftig, Sohne Breit
-- **ShadCN (optional)** – for styled components if used
-- **GitHub Pages** – for deployment
+- **Language/Runtime**: TypeScript, Node.js
+- **App**: React 18
+- **Bundler/Dev server**: Vite 5 + `@vitejs/plugin-react-swc` (SWC)
+- **Routing**: React Router v6 (`react-router-dom`)
+- **Server state**: TanStack React Query v5
+- **Styling**: Tailwind CSS 3 + PostCSS + Autoprefixer
+- **UI primitives/components**: shadcn/ui (Radix UI), lucide-react icons
+- **3D/Graphics**: Three.js, React Three Fiber, drei, three-stdlib
+- **Charts/UX**: Recharts, Embla Carousel, react-resizable-panels, cmdk, vaul, date-fns
+- **Utilities**: clsx, tailwind-merge, class-variance-authority
+- **Linting**: ESLint 9 (flat config) with typescript-eslint, react-hooks, react-refresh
 
 ---
 
 ## Brand & Visual Direction
 
 - **Monochromatic gradient theme**: deep navy to black
-- **Interactive 3D visual sections**: stemplayer-inspired carousel and soft-edged video mask
-- **Neumorphic buttons**: soft, tactile UI for play and interaction
-- **Typography**:
-    - `Nersans Two`: headings and logo
-    - `Sohne Kraftig`: subheadings and buttons
-    - `Sohne Breit`: body text
+- **Interactive 3D visual sections** powered by Three.js / R3F
+- **Tactile UI** with subtle motion and depth
+- **Typography** configured via Tailwind (see Fonts Setup)
 
 ---
 
-## Getting Started
+## Live
 
-### 1. Clone the repo
+The site is live at:
 
-```bash
-git clone https://github.com/your-username/skulpt.git
-cd skulpt
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Run the dev server
-
-```bash
-npm run dev
-```
-
-App will run on [http://localhost:5173](http://localhost:5173).
+https://skulptbrand.com
 
 ---
 
-## Fonts Setup
+## 3D / Visuals
 
-Drop your font `.otf` files into `src/fonts/` and import them in `index.css` or via `@font-face`. Tailwind is configured to use:
-
-```js
-fontFamily: {
-    heading: ['Nersans Two', 'sans-serif'],
-    subheading: ['Sohne Kraftig', 'sans-serif'],
-    body: ['Sohne Breit', 'sans-serif'],
-}
-```
-
----
-
-## Deployment
-
-This project can be deployed to GitHub Pages or Vercel.
-
-### GitHub Pages
-
-```bash
-npm run build
-```
-
-Then push the `dist/` folder to your `gh-pages` branch, or use a GitHub Action for auto-deploy.
-
----
-
-## Inspiration
-
-The visual design is inspired by the digital aesthetic of [stemplayer.com](https://stemplayer.com) and minimalist tactile interfaces.
+- Three.js scene components under `src/components/` (e.g., `SmokeBackground.tsx`, `SShape.tsx`, `SplineBlob.tsx`, `NoiseCanvas.tsx`)
+- Spline asset: `public/3D/Blob Study.spline`
 
 ---
 
 ## License
 
-© 2024 SKULPT. All rights reserved.
+© 2025 SKULPT. All rights reserved.
