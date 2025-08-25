@@ -52,7 +52,7 @@ const Skulpting: React.FC = () => {
   const team = [
     { name: 'ANAISA ACHARYA', src: anaisaImg },
     { name: 'JACLYN PHAM', src: jaclynImg },
-    { name: 'FREYA LINDSVIST', src: freyaImg },
+    { name: 'FREYA LINDQVIST', src: freyaImg },
     { name: 'LEA KIENLE', src: leaImg },
     { name: 'SVEN REYES', src: svenImg },
     { name: 'LUCIA JUEGUEN', src: luciaImg },
@@ -224,7 +224,7 @@ const Skulpting: React.FC = () => {
           {/* First text box */}
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 flex justify-end cursor-pointer lg:ml-[400px] transition-all duration-300 ease-in-out hover:text-[#7A8289] text-[#B8C1CB]">
             <p className="lg:text-[24px] text-[20px] leading-[120%] tracking-[-0.8px] font-normal max-w-xl text-right">
-              SKULPT is a branding studio for early-stage founders who<br />
+              SKULPT is a brand partner for early-stage founders who<br />
               would rather be understood than positioned.<br />
               Skulpting helps reconnect founders, team members, and audiences to a long-lasting brand built with intention.
             </p>
