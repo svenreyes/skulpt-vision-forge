@@ -245,7 +245,7 @@ We'll take it from there.`}
                   >
                     <option value="" className="bg-black">STAGE</option>
                     <option value="idea" className="bg-black">I only have an idea</option>
-                    <option value="mvp" className="bg-black">I have a MVP</option>
+                    <option value="mvp" className="bg-black">I have an MVP</option>
                     <option value="vc" className="bg-black">I have worked with accelerators/VCs before</option>
                     <option value="customers" className="bg-black">I have regular customers</option>
                   </select>
@@ -400,14 +400,14 @@ We'll take it from there.`}
                 <select
                   id="stage"
                   name="stage"
-                  className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
                   value={values.stage}
                   onChange={handleInputChange}
-                  style={{ width: selectWidths.what }}
+                  style={{ width: selectWidths.stage }}
                 >
                   <option value="" className="bg-black">STAGE</option>
                   <option value="idea" className="bg-black">I only have an idea</option>
-                  <option value="mvp" className="bg-black">I have a MVP</option>
+                  <option value="mvp" className="bg-black">I have an MVP</option>
                   <option value="vc" className="bg-black">I have worked with accelerators/VCs before</option>
                   <option value="customers" className="bg-black">I have regular customers</option>
                 </select>
@@ -422,7 +422,7 @@ We'll take it from there.`}
                 <select
                   id="what"
                   name="what"
-                  className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
+                  className="bg-transparent border-0 text-[#9EA5AD] focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none"
                   value={values.what}
                   onChange={handleInputChange}
                   style={{ width: selectWidths.what }}
