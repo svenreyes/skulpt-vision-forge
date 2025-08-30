@@ -12,6 +12,8 @@ import { NoiseCanvas } from "@/components/NoiseCanvas";
 import Skulpting from "./pages/Skulpting";
 import Skulpted from "./pages/Skulpted";
 import { RouteBlurProvider } from "@/components/RouteBlurTransition";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,9 @@ const App = () => (
       {/* Grain overlay: sits on top of every page without blocking clicks */}
       <NoiseCanvas />
       {/* ─────────────────────────────────────────────────────────────── */}
+      {/* Vercel Analytics & Speed Insights */}
+      <Analytics />
+      <SpeedInsights />
     </TooltipProvider>
   </QueryClientProvider>
 );
