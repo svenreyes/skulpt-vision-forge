@@ -12,7 +12,7 @@ const Index = () => {
     "Where would you go for dinner?",
     "Who do you want to be?",
     "What's your story?",
-    "If my answer had to be yes, what would it be?",
+    "Who do you care about?",
     "Have you ever been understood?",
     "What version of yourself do people not see?",
     "Why now?",
