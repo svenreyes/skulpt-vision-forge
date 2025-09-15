@@ -3,6 +3,7 @@ import { SmokeBackground } from "@/components/SmokeBackground";
 import { Suspense, useState, useRef } from "react";
 import { SShape } from "@/components/SShape";
 import { Navbar } from "@/components/Navbar";
+import { Seo } from "@/components/Seo";
 
 
 
@@ -32,8 +33,8 @@ const Contact = () => {
 
   // Dynamic widths for select inputs
   const [selectWidths, setSelectWidths] = useState<{ stage: string; what: string }>({
-    stage: "6ch", // enough for "STAGE"
-    what: "25ch", // placeholder length
+    stage: "6ch",
+    what: "25ch",
   });
 
 
@@ -49,19 +50,17 @@ const Contact = () => {
 
     // Dynamic width for mobile message textarea
     if (name === "message" && messageRef.current) {
-      // Approximate width in ch until 32ch (~full mobile width)
       const ch = value.length + 1;
       if (ch < 32) {
         messageRef.current.style.width = `${ch}ch`;
       } else {
-        messageRef.current.style.width = "100%"; // trigger wrap
+        messageRef.current.style.width = "100%";
       }
     }
   };
 
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Auto-resize helper for mobile textarea
   const autoResize = (el: HTMLTextAreaElement) => {
     if (!el) return;
     el.style.height = 'auto';
@@ -114,6 +113,13 @@ const Contact = () => {
   };
 
   return (
+    <>
+      <Seo
+        title="Contact — Next"
+        description="Get in touch with SKULPT. Tell us where you are on your journey and what you're building — we'll take it from there."
+        path="/contact"
+        type="website"
+      />
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden text-white font-body">
       {/* Three.js background */}
       <Canvas
@@ -125,7 +131,6 @@ const Contact = () => {
           width: "100%",
           height: "100%",
           zIndex: 0,
-          // Subtle blur so the 3D object recedes behind the UI
           filter: "blur(1.5px)",
         }}
       >
@@ -153,7 +158,6 @@ const Contact = () => {
           md:grid md:grid-cols-12 md:auto-rows-min md:gap-x-10
         "
       >
-        {/* Removed names and location as requested */}
         <div className="w-full md:col-span-12">
           <div className="font-subheading pr-12 text-right text-[13px] opacity-80">
             <div>CONTACT@SKULPT.COM</div>
@@ -162,7 +166,6 @@ const Contact = () => {
         </div>
 
 
-        {/* Mobile body (aligned left) */}
         <div className="md:hidden pl-6">
           <div className=" text-left">
             <p className="font-subheading text-[12px] leading-tight whitespace-pre-line">
@@ -276,7 +279,7 @@ We'll take it from there.`}
                 </div>
               </div>
 
-              {/* MESSAGE (last) — mobile uses textarea that wraps */}
+              {/* MESSAGE*/}
               <div className="w-full">
                 <div className="group flex flex-wrap items-start max-w-full align-top">
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl leading-[1.2]">[</span>
@@ -312,7 +315,6 @@ We'll take it from there.`}
           </div>
         </div>
 
-        {/* Desktop body: right column block like the reference */}
         <section
           className="
             hidden md:block
@@ -323,13 +325,11 @@ We'll take it from there.`}
           "
         >
 
-          {/* Small copy above fields */}
           <p className="font-subheading mt-6 text-[16px] leading-tight max-w-[520px]">
             Drop a note using the form below. Tell us where you are on your journey and what you&apos;re
             building. We&apos;ll take it from there.
           </p>
 
-          {/* Form — left aligned fields with brackets */}
           <form
             id="contactForm"
             onSubmit={handleSubmit}
@@ -473,6 +473,7 @@ We'll take it from there.`}
         </section>
       </div>
     </div>
+    </>
   );
 };
 

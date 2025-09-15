@@ -26,6 +26,11 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
     { label: "[skulpted]", to: "/skulpted" },
     { label: "[next]", to: "/contact" }
   ];
+  const ariaByTo: Record<string, string> = {
+    "/skulpting": "About SKULPT",
+    "/skulpted": "Portfolio: our work",
+    "/contact": "Contact us",
+  };
 
   return (
     <nav
@@ -89,6 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                     key={item.to}
                     onClick={async () => { await trigger({ before: 180, after: 180 }); navigate(item.to); }}
                     className="relative font-subheading text-sm tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0 blur-[1px]"
+                    aria-label={`${item.label} — ${ariaByTo[item.to] || 'Navigate'}`}
                   >
                     {item.label}
                   </button>
@@ -97,6 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                     key={item.href}
                     href={item.href}
                     className="relative font-subheading text-sm tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0 blur-[1px]"
+                    aria-label={`${item.label} — External link`}
                   >
                     {item.label}
                   </a>
@@ -112,6 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
               <button
                 onClick={async () => { await trigger({ before: 180, after: 180 }); navigate((navItems[2] as { to: string }).to); }}
                 className="relative font-subheading text-sm tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0 blur-[1px]"
+                aria-label={`${navItems[2].label} — ${ariaByTo[(navItems[2] as { to: string }).to] || 'Navigate'}`}
               >
                 {navItems[2].label}
               </button>
@@ -119,6 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
               <a
                 href={(navItems[2] as { href: string }).href}
                 className="relative font-subheading text-sm tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0 blur-[1px]"
+                aria-label={`${navItems[2].label} — External link`}
               >
                 {navItems[2].label}
               </a>

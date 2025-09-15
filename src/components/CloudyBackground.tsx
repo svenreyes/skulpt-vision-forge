@@ -16,7 +16,7 @@ export function CloudyBackground({ zIndex = 0, height = '100vh' }: CloudyBackgro
         width: '100vw',
         height,
         zIndex,
-        pointerEvents: 'none', // Let UI elements be clickable
+        pointerEvents: 'none',
       }}
       gl={{
         alpha: true,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import InstagramIcon from "../assets/insta.svg";
-import LinkIcon from "../assets/link.svg";
+import LinkedInIcon from "../assets/linkedin.svg";
 import MailIcon from "../assets/mail.svg";
 
 type FooterProps = {
@@ -46,18 +46,18 @@ export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = 
         {/* Icons - centered on mobile, right-aligned on larger screens */}
         <div className="flex justify-center sm:justify-start space-x-6 sm:space-x-8 w-full sm:w-auto">
           <a
-            href="#instagram"
+            href="https://www.instagram.com/skulptbrand?igsh=a3hrMW15YmRnN2Yw"
             aria-label="Instagram"
             className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
           >
             <img src={InstagramIcon} alt="Instagram" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
           <a
-            href="#website"
-            aria-label="Website"
+            href="https://www.linkedin.com/company/skulptbrand/posts/?feedView=all"
+            aria-label="LinkedIn"
             className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
           >
-            <img src={LinkIcon} alt="Website" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
+            <img src={LinkedInIcon} alt="LinkedIn" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
           <a
             href="mailto:hello@skulpt.com"

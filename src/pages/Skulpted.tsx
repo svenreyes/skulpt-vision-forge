@@ -15,8 +15,8 @@ import playbookImg from "@/assets/images/playbook.png";
 import arrowSvg from "@/assets/arrow.svg";
 import workshopNotebookImg from "@/assets/images/workshop_notebook.png";
 import brandguidelinesImg from "@/assets/images/brandguidelines.png";
+import { Seo } from "../components/Seo";
 
-// Simple blur-transition slideshow used in Panels 5 and 6
 function BlurSlideshow({
   images,
   intervalMs = 3000,
@@ -55,7 +55,6 @@ function BlurSlideshow({
           />)
         )}
       </div>
-      {/* Reserve height (taller on mobile only) */}
       <div className="relative w-full h-[240px] sm:h-[220px] md:h-[220px]" />
     </div>
   );
@@ -69,10 +68,9 @@ const Skulpted: React.FC = () => {
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
-    const isDesktop = window.matchMedia("(min-width: 640px)").matches; // sm breakpoint
-    if (!isDesktop) return; // On mobile, allow normal vertical scrolling
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches;
+    if (!isDesktop) return;
     const onWheel = (e: WheelEvent) => {
-      // Free scrolling: only intercept vertical->horizontal when it actually scrolls horizontally
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         const maxScrollLeft = el.scrollWidth - el.clientWidth;
         const prev = el.scrollLeft;
@@ -87,12 +85,11 @@ const Skulpted: React.FC = () => {
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
-  // Touch gestures: map vertical swipes to horizontal scroll to enforce horizontal-only navigation
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
-    const isDesktop = window.matchMedia("(min-width: 640px)").matches; // sm breakpoint
-    if (!isDesktop) return; // On mobile, do not remap gestures; allow vertical scroll
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches;
+    if (!isDesktop) return;
 
     let startX = 0;
     let startY = 0;
@@ -115,9 +112,9 @@ const Skulpted: React.FC = () => {
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
       const useVertical = Math.abs(dy) > Math.abs(dx);
-      const delta = useVertical ? dy : dx; // vertical attempts are translated to horizontal delta
+      const delta = useVertical ? dy : dx;
       el.scrollLeft = startScrollLeft - delta;
-      e.preventDefault(); // prevent page vertical scroll
+      e.preventDefault();
     };
 
     const onTouchEnd = () => {
@@ -136,7 +133,6 @@ const Skulpted: React.FC = () => {
     };
   }, []);
 
-  // Measure footer height and expose as CSS var for layout calculations
   useEffect(() => {
     const updateFooterHeight = () => {
       const h = footerRef.current?.offsetHeight || 0;
@@ -152,8 +148,8 @@ const Skulpted: React.FC = () => {
     const footerEl = footerRef.current;
     const scrollerEl = scrollerRef.current;
     if (!footerEl || !scrollerEl) return;
-    const isDesktop = window.matchMedia("(min-width: 640px)").matches; // sm breakpoint
-    if (!isDesktop) return; // Footer is hidden on mobile; skip handler
+    const isDesktop = window.matchMedia("(min-width: 640px)").matches;
+    if (!isDesktop) return;
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {
         const maxScrollLeft = scrollerEl.scrollWidth - scrollerEl.clientWidth;
@@ -170,8 +166,14 @@ const Skulpted: React.FC = () => {
   }, []);
 
   return (
+    <>
+      <Seo
+        title="Portfolio — Skulpted"
+        description="Explore SKULPT's selected work: brand strategy, visual identity, messaging, and tools that turn alignment into momentum."
+        path="/skulpted"
+        type="website"
+      />
     <div ref={rootRef} className="relative min-h-screen w-full bg-[#E6EBEE] overflow-x-hidden sm:overflow-hidden">
-      {/* Subtle soft vignettes to match the screenshot */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div
           className="absolute -top-10 -left-10 w-[60vw] h-[60vw] rounded-full"
@@ -230,7 +232,6 @@ const Skulpted: React.FC = () => {
                 <section className="mb-4">
                 </section>
 
-                {/* Large empty glass input-like card (reduced height on small screens) */}
               </div>
             </div>
           </main>
@@ -240,7 +241,6 @@ const Skulpted: React.FC = () => {
           <main className=" w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className=" mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center grid-cols-1 lg:grid-cols-[420px_1fr] gap-5 sm:gap-8">
-              {/* Left text column */}
               <div>
                 <p className=" font-subheading text-[12px] sm:text-[14px] leading-[16.8px] font-semibold text-[#B0BDC5] uppercase">Technology</p>
                 <h3 className="mt-2 font-display text-[24px] sm:text-[32px] md:text-[40px] text-[#9EA5AD] tracking-[-0.02em]">RIDE-LINK</h3>
@@ -276,7 +276,6 @@ const Skulpted: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right image/card column */}
               <div className="pb-8 flex items-center justify-center">
                 <div className="w-full h-[100%] sm:h-[300px] md:h-[380px] rounded-[28px] border border-[#C9D0D4]/50 bg-[#ECEAE8] flex items-center justify-center">
                   <img
@@ -346,10 +345,8 @@ const Skulpted: React.FC = () => {
           {/* Panel 4 */}
           <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              {/* Align toward top to match screenshot */}
               <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start">
                 <div className="mt-4 sm:mt-10">
-                  {/* Large headline */}
                   <h2 className=" pt-10 sm:pt-20 font-subcursive italic text-[30px] sm:text-[48px] md:text-[64px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
                     University Ridesharing,
                   </h2>
@@ -416,7 +413,6 @@ const Skulpted: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right image slideshow (auto cycles every 3s with blur transition) */}
               <div className="lg:pl-4">
                 <div className="w-full max-w-[480px] lg:max-w-[420px] ml-auto">
                   {/* Mobile: slideshow */}
@@ -456,7 +452,6 @@ const Skulpted: React.FC = () => {
           <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
-                {/* Left text column */}
                 <div className=" max-w-[720px]">
                   <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
                     After the skulpting process,
@@ -491,7 +486,6 @@ const Skulpted: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right image slideshow (auto cycles every 3s with blur transition) */}
               <div className="lg:pl-4">
                 <div className="pt-8 lg:pt-0 lg:mt-0 w-full max-w-[480px] lg:max-w-[420px] ml-auto">
                   {/* Mobile: slideshow */}
@@ -647,7 +641,6 @@ const Skulpted: React.FC = () => {
                   />
                 </div>
 
-                {/* Bottom-right call to action */}
                 <div className="absolute bottom-[calc(var(--footer-h,56px)+16px)] left-[6vw] sm:left-[50vw]">
                   <Link
                     to="/contact"
@@ -679,6 +672,7 @@ const Skulpted: React.FC = () => {
         <Footer compact mobileRowNav />
       </div>
     </div>
+    </>
   );
 };
 

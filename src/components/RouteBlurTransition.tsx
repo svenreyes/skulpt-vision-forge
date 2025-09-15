@@ -19,14 +19,12 @@ export const RouteBlurProvider: React.FC<React.PropsWithChildren> = ({ children 
   const timeoutRef = useRef<number | null>(null);
 
   const trigger = useCallback(async (opts?: { before?: number; after?: number }) => {
-    const before = opts?.before ?? 220; // time to wait before navigating
-    const after = opts?.after ?? 220;   // time to keep blur after navigation
+    const before = opts?.before ?? 220;
+    const after = opts?.after ?? 220;
 
-    // Blur out
     setActive(true);
     await new Promise((r) => setTimeout(r, before));
-    // Caller should navigate now
-    // Blur in completes automatically
+
     if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
     timeoutRef.current = window.setTimeout(() => setActive(false), after);
   }, []);

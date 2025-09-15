@@ -7,8 +7,8 @@ import skulptVideo from "@/assets/videos/skulpting.mp4";
 import skulpting2Video from "@/assets/videos/skulpting2.mp4";
 import arrowUrl from "../assets/arrow.svg";
 import exUrl from "../assets/ex.svg";
+import { Seo } from "../components/Seo";
 
-// Team member images
 import anaisaImg from "@/assets/skulpting/anaisa 1.png";
 import freyaImg from "@/assets/skulpting/freya 1.png";
 import jaclynImg from "@/assets/skulpting/jaclyn 1.png";
@@ -37,14 +37,12 @@ const Skulpting: React.FC = () => {
     if (mq.addEventListener) {
       mq.addEventListener('change', onChange);
     } else {
-      // @ts-ignore
       mq.addListener(onChange);
     }
     return () => {
       if (mq.removeEventListener) {
         mq.removeEventListener('change', onChange);
       } else {
-        // @ts-ignore
         mq.removeListener(onChange);
       }
     };
@@ -58,7 +56,6 @@ const Skulpting: React.FC = () => {
     { name: 'LUCIA JUEGUEN', src: luciaImg },
   ];
 
-  // Stable per-mount randomness for height/scale/offset variety
   const figures = useMemo(
     () =>
       team.map((m) => ({
@@ -90,7 +87,6 @@ const Skulpting: React.FC = () => {
     return () => clearTimeout(timer);
   }, [activeAxis]);
 
-  // Update Stockholm time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setStockholmTime(new Date());
@@ -117,7 +113,6 @@ const Skulpting: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Start marquee video at 3s and keep looping from there
   useEffect(() => {
     const v = marqueeVideoRef.current;
     if (!v) return;
@@ -130,7 +125,6 @@ const Skulpting: React.FC = () => {
 
     const onLoadedMeta = () => setToThree();
     const onPlay = () => setToThree();
-    // With loop enabled, 'ended' won't fire. Use timeupdate guard to snap to 3s.
     const onTimeUpdate = () => {
       if (v.currentTime < 2.8) setToThree();
     };
@@ -138,7 +132,6 @@ const Skulpting: React.FC = () => {
     v.addEventListener('loadedmetadata', onLoadedMeta);
     v.addEventListener('play', onPlay);
     v.addEventListener('timeupdate', onTimeUpdate);
-    // If metadata already loaded
     if (v.readyState >= 1) setToThree();
 
     return () => {
@@ -168,8 +161,15 @@ const Skulpting: React.FC = () => {
   }, []);
 
   return (
+    <>
+      <Seo
+        title="About SKULPT — Skulpting"
+        description="Meet SKULPT: a strategy-first brand partner for early-stage founders. Learn our process across strategy, alignment, and expression."
+        path="/skulpting"
+        type="website"
+      />
     <div className="relative scale-[1] min-h-screen w-full bg-[#E6EBEE] overflow-y-auto overflow-x-hidden">
-      {/* Background clouds (bottom layer) - extends full height */}
+      {/* Background clouds (bottom layer) */}
       <div className="absolute inset-0 z-0 min-h-[300vh]">
         <CloudyBackground zIndex={0} height="300vh" />
       </div>
@@ -321,8 +321,6 @@ const Skulpting: React.FC = () => {
       {/* Strategy Circle Section */}
       <section className="relative z-10 lg:py-64 sm:py-16 mt-24 flex items-center justify-center px-4 sm:px-6">
         <div className="relative w-full max-w-[75vw] sm:max-w-[720px] aspect-square">
-          {/* Layer stack: blue glow (largest) -> video (larger) -> outline */}
-          {/* Larger blue glow with blurry edges */}
           <div
             className="absolute inset-0 overflow-visible flex items-center justify-center pointer-events-none"
           >
@@ -382,17 +380,14 @@ const Skulpting: React.FC = () => {
             preserveAspectRatio="xMidYMid meet"
           >
             {(() => {
-              // Draw four equal arc segments (one per quadrant) without wrapping across the seam.
-              // Use math so the visible dash length is exactly a quarter of the circumference.
               const r = 49;
-              const circumference = 2 * Math.PI * r; // ~308
-              const dash = circumference / 4;        // ~77
-              // Center each segment on a cardinal direction by starting each dash halfway before it.
+              const circumference = 2 * Math.PI * r;
+              const dash = circumference / 4;
               return ([
-                { key: 'strategy',  offset: dash * 2.5 }, // TOP label was highlighting bottom; swap so strategy controls top
-                { key: 'external',  offset: dash * 1.5 }, // left (180°)
-                { key: 'alignment', offset: dash * 0.5 }, // bottom label was highlighting top; swap so alignment controls bottom
-                { key: 'internal',  offset: dash * 3.5 }, // right (0°/360°)
+                { key: 'strategy',  offset: dash * 2.5 },
+                { key: 'external',  offset: dash * 1.5 },
+                { key: 'alignment', offset: dash * 0.5 },
+                { key: 'internal',  offset: dash * 3.5 },
               ] as const).map(({ key, offset }) => (
               <circle
                 key={key}
@@ -448,7 +443,6 @@ const Skulpting: React.FC = () => {
             INTERNAL
           </span>
 
-          {/* Dots (hidden when ex icon overlaps) */}
           {activeAxis !== 'strategy' && (
             <span
               className="absolute left-1/2 translate-y-4 -translate-x-1/2 bg-white rounded-full"
@@ -474,14 +468,11 @@ const Skulpting: React.FC = () => {
             />
           )}
 
-          {/* X icon at top center */}
           <img
             src={exUrl}
             alt="x"
             className="absolute w-6 h-6 select-none pointer-events-none transition-all duration-700"
             style={{
-              // Position relative to the true circle edge using its radius (49%).
-              // Extra spacing so the ex sits further under the hovered label.
               top:
                 activeAxis === 'strategy'
                   ? 'calc(50% - 49% + 48px)'
@@ -495,7 +486,6 @@ const Skulpting: React.FC = () => {
                   ? 'calc(50% + 49% - 48px)'
                   : '50%',
               transform: 'translate(-50%,-50%)',
-              // Force white regardless of source SVG color
               filter: 'brightness(0) invert(1)',
             }}
           />
@@ -547,7 +537,6 @@ const Skulpting: React.FC = () => {
                 : 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
             }}
           >
-          {/* Soft “dome” — NOT a half circle, no white bg */}
           <div
             className="absolute inset-0 pointer-events-none z-0"
             style={{
@@ -562,7 +551,6 @@ const Skulpting: React.FC = () => {
                 : 'radial-gradient(ellipse 85% 65% at 50% 8%, black 62%, transparent 100%)',
             }}
           />
-          {/* Optional subtle secondary bounce to match the reference vignette */}
           <div
             className="absolute -top-[8vh] sm:-top-[6vh] -left-[30vw] sm:-left-[12vw] w-[160vw] sm:w-[120vw] h-[160vw] sm:h-[120vw] pointer-events-none z-0"
             style={{
@@ -576,15 +564,12 @@ const Skulpting: React.FC = () => {
             }}
           />
 
-          {/* Time + labels (labels hug the right edge of the digits) */}
           <div className="absolute inset-0 z-10 select-none pointer-events-none flex items-center justify-center">
             <div className="relative inline-block leading-none">
               <span
                 className="font-body tracking-tight block text-center"
                 style={{
                   fontSize: "24vw",
-                  // bump back up on larger screens via media query in tailwind is tricky inline,
-                  // so we keep mobile smaller and overall layout tighter
                   color: "#9EA5AD",
                   opacity: 0.38,
                   letterSpacing: "-0.02em",
@@ -603,7 +588,6 @@ const Skulpting: React.FC = () => {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
-                {/* AM/PM top, SWEDEN bottom – stacked just to the right of the digits */}
                 <div className="absolute top-1/2 left-full -translate-y-1/2 ml-2 sm:ml-4 flex flex-col items-start gap-1 sm:gap-96 text-[10px] sm:text-xs font-subheading tracking-widest text-[#9EA5AD] uppercase z-50" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
                   <span style={{ position: 'relative', zIndex: 50, textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
                     {/AM/.test(
@@ -621,7 +605,6 @@ const Skulpting: React.FC = () => {
             </div>
           </div>
 
-          {/* Team figures — blurred by default; focus + name on hover */}
           <div className="absolute bottom-0 left-0 right-0 z-20 flex items-end justify-center px-6 pb-6 sm:px-8 sm:pb-16">
             <div className="flex items-end justify-between w-full max-w-5xl gap-2 sm:gap-4">
               {figures.map((p, i) => (
@@ -638,7 +621,6 @@ const Skulpting: React.FC = () => {
                     {p.name}
                   </span>
 
-                  {/* Image: blur → sharp on hover */}
                   <img
                     src={p.src}
                     alt={p.name}
@@ -670,6 +652,7 @@ const Skulpting: React.FC = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 

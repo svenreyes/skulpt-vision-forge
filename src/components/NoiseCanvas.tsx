@@ -24,9 +24,8 @@ export function NoiseCanvas() {
       const len = buffer32.length;
 
       for (let i = 0; i < len; i++) {
-        // 50% chance each pixel is black, otherwise transparent
         if (Math.random() < 0.5) {
-          buffer32[i] = 0xff000000; // opaque black
+          buffer32[i] = 0xff000000;
         }
       }
 
@@ -71,7 +70,6 @@ export function NoiseCanvas() {
     loop();
     window.addEventListener("resize", onResize);
 
-    // Cleanup on unmount
     return () => {
       clearTimeout(loopTimeout);
       window.removeEventListener("resize", onResize);
@@ -91,7 +89,7 @@ export function NoiseCanvas() {
         zIndex: 9999,
         pointerEvents: "none",
         mixBlendMode: "overlay",
-        opacity: 0.25, // adjust this for darker/lighter grain
+        opacity: 0.25,
       }}
     />
   );

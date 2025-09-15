@@ -8,13 +8,13 @@ import { useRouteBlur } from "../components/RouteBlurTransition";
 
 const Index = () => {
   const questions = [
-    "Who are you?",
+    "Tell us about yourself.",
     "Where would you go for dinner?",
-    "Who do you want to be?",
+    "Who do you aspire to be?",
     "What's your story?",
     "Who do you care about?",
-    "Have you ever been understood?",
-    "What version of yourself do people not see?",
+    "Have you felt truly understood?",
+    "What part of you do people not see?",
     "Why now?",
   ];
 
@@ -24,12 +24,13 @@ const Index = () => {
   const taglineRef = useRef<HTMLElement | null>(null);
 
   const [focusedIdx, setFocusedIdx] = useState(0);
-  const [stackedMode, setStackedMode] = useState(false); // snap/focus vs stacked/hover
-  const [freezeScroll, setFreezeScroll] = useState(false); // temporarily lock scroll
+  const [stackedMode, setStackedMode] = useState(false);
+  const [freezeScroll, setFreezeScroll] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   /* ---------------------------- Snap‑focus logic --------------------------- */
   useEffect(() => {
-    if (stackedMode) return; // disabled once stacked mode begins
+    if (stackedMode) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -56,12 +57,10 @@ const Index = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !stackedMode) {
-            // 1. Hard‑stop any momentum and align viewport to tagline top
             const targetTop = taglineRef.current!.offsetTop;
             container.scrollTo({ top: targetTop, behavior: "auto" });
             setFreezeScroll(true);
 
-            // 2. After short delay (no momentum), enable stacked mode & re‑allow scroll
             setTimeout(() => {
               setStackedMode(true);
               setFreezeScroll(false);
@@ -84,13 +83,38 @@ const Index = () => {
     };
   }, []);
 
-  /* -------------------------------------------------------------------------- */
+  // Mark interaction once the user scrolls or clicks
+  useEffect(() => {
+    const onWheel = () => setHasInteracted(true);
+    const onKey = (e: KeyboardEvent) => {
+      if (["ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) setHasInteracted(true);
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("wheel", onWheel as any);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
 
   const baseLi =
     "text-[24px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] transition-all duration-300 ease-in-out";
 
   const navigate = useNavigate();
   const { trigger } = useRouteBlur();
+
+  // Helper: advance to next question on click when in snap mode
+  const advanceToNext = () => {
+    if (stackedMode) return;
+    const next = Math.min(focusedIdx + 1, questions.length - 1);
+    const el = questionRefs.current[next];
+    const container = containerRef.current;
+    if (el && container) {
+      container.scrollTo({ top: el.offsetTop, behavior: "smooth" });
+      setHasInteracted(true);
+    }
+  };
 
   return (
     <div
@@ -100,13 +124,21 @@ const Index = () => {
         stackedMode ? "" : "snap-y snap-mandatory"
       }`}
     >
-      {/* Moving background */}
+
       <CloudyBackground />
 
-      <Navbar />
+      <header>
+        <Navbar />
+      </header>
 
-      {/* Questions list */}
-      <main className={`w-full ${stackedMode ? 'pt-52' : 'pt-32'} pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center`}>
+
+      <main
+        className={`w-full ${stackedMode ? 'pt-52' : 'pt-32'} pb-16 px-6 mx-auto max-w-4xl font-subheading relative z-10 text-center`}
+        role="main"
+        onClick={advanceToNext}
+      >
+        {/* Accessible site heading for SEO and semantics */}
+        <h1 className="sr-only">SKULPT — Taking Branding Personally</h1>
         <ul className="flex flex-col items-center w-full">
           {questions.map((q, i) => {
             const inFocus = focusedIdx === i && !stackedMode;
@@ -132,7 +164,7 @@ const Index = () => {
         </ul>
       </main>
 
-      {/* Tagline */}
+
       <section
         ref={taglineRef}
         className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center"
@@ -152,7 +184,21 @@ const Index = () => {
         </h2>
       </section>
 
-      <Footer />
+      {/* Scroll affordance: visible only on first screen before interaction */}
+      {!stackedMode && !hasInteracted && focusedIdx === 0 && (
+        <div className="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-[#9EA5AD]">
+          <span className="text-xs sm:text-sm font-body tracking-wide">Scroll to explore</span>
+          <img
+            src={arrowUrl}
+            alt="Scroll down"
+            className="w-4 h-4 opacity-70 animate-bounce"
+          />
+        </div>
+      )}
+
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };

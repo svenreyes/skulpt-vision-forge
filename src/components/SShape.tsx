@@ -29,17 +29,13 @@ export function SShape({ position = [0, 0, 0], positionMd }: SShapeProps) {
       }
     };
     
-    // Set initial position
     handleResize();
     
-    // Add resize listener
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [position, positionMd]);
-  // Load the GLB model from the public folder (Vite will copy this path verbatim in production)
   const { scene } = useGLTF("/skulpt.glb");
 
-  // Enforce a consistent "clay" material look across the imported meshes
   useEffect(() => {
     if (!scene) return;
     scene.traverse((obj) => {
@@ -49,19 +45,18 @@ export function SShape({ position = [0, 0, 0], positionMd }: SShapeProps) {
       const applyClay = (m: MeshStandardMaterial) => {
         if (!m) return;
         m.color.set("#ffffff");
-        m.roughness = 0.9; // matte
-        m.metalness = 0.0; // non-metallic
-        m.envMapIntensity = 0.2; // subtle environment response
+        m.roughness = 0.9;
+        m.metalness = 0.0;
+        m.envMapIntensity = 0.2;
       };
       if (Array.isArray(mat)) mat.forEach(applyClay);
       else applyClay(mat);
     });
   }, [scene]);
 
-  // Rotate the model smoothly around the Y-axis
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-    groupRef.current.rotation.y += delta * 0.95; // 3% slower rotation
+    groupRef.current.rotation.y += delta * 0.95;
   });
 
   return (
