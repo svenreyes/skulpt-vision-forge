@@ -188,11 +188,6 @@ const Index = () => {
       {!stackedMode && !hasInteracted && focusedIdx === 0 && (
         <div className="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-[#9EA5AD]">
           <span className="text-xs sm:text-sm font-body tracking-wide">Scroll to explore</span>
-          <img
-            src={arrowUrl}
-            alt="Scroll down"
-            className="w-4 h-4 opacity-70 animate-bounce"
-          />
         </div>
       )}
 
