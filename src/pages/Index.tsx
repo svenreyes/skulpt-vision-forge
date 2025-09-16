@@ -8,7 +8,7 @@ import { useRouteBlur } from "../components/RouteBlurTransition";
 
 const Index = () => {
   const questions = [
-    "Tell us about yourself.",
+    "Who are you?",
     "Where would you go for dinner?",
     "Who do you aspire to be?",
     "What's your story?",
