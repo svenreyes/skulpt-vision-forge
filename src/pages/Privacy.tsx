@@ -1,16 +1,24 @@
 import React from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Seo } from "@/components/Seo";
 
 const Privacy: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] text-[#3F4851] flex flex-col">
-      <Navbar />
+    <>
+      <Seo
+        title="Privacy Policy | SKULPT"
+        description="Our Privacy Policy explains how SKULPT (the “Company”, “we”, “us”) collects, uses, and protects your information."
+        path="/privacy"
+        type="website"
+      />
+      <div className="min-h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] text-[#3F4851] flex flex-col">
+        <Navbar />
 
-      <main className="flex-1 px-6 md:px-10 lg:px-20 py-16 md:py-24 mx-auto w-full max-w-4xl font-body">
-        <h1 className="font-subheading pt-12 text-2xl sm:text-3xl md:text-4xl text-[#7A8289] tracking-tight mb-6">
-          Privacy Policy
-        </h1>
+        <main className="flex-1 px-6 md:px-10 lg:px-20 py-16 md:py-24 mx-auto w-full max-w-4xl font-body">
+          <h1 className="font-subheading pt-12 text-2xl sm:text-3xl md:text-4xl text-[#7A8289] tracking-tight mb-6">
+            Privacy Policy
+          </h1>
 
         <p className="text-[#75808B] mb-6">Last updated: {new Date().getFullYear()}</p>
 
@@ -100,10 +108,11 @@ const Privacy: React.FC = () => {
         <p className="text-[#606A74]">
           We may update this policy from time to time. We will revise the “Last updated” date above when we do.
         </p>
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 

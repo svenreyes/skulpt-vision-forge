@@ -163,7 +163,7 @@ const Skulpting: React.FC = () => {
   return (
     <>
       <Seo
-        title="About SKULPT — Skulpting"
+        title="About SKULPT | Skulpting"
         description="Meet SKULPT: a strategy-first brand partner for early-stage founders. Learn our process across strategy, alignment, and expression."
         path="/skulpting"
         type="website"

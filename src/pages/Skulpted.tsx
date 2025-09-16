@@ -168,7 +168,7 @@ const Skulpted: React.FC = () => {
   return (
     <>
       <Seo
-        title="Portfolio — Skulpted"
+        title="Our Portfolio | Skulpted"
         description="Explore SKULPT's selected work: brand strategy, visual identity, messaging, and tools that turn alignment into momentum."
         path="/skulpted"
         type="website"

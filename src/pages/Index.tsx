@@ -138,7 +138,7 @@ const Index = () => {
         onClick={advanceToNext}
       >
         {/* Accessible site heading for SEO and semantics */}
-        <h1 className="sr-only">SKULPT — Taking Branding Personally</h1>
+        <h1 className="sr-only">SKULPT | Taking Branding Personally</h1>
         <ul className="flex flex-col items-center w-full">
           {questions.map((q, i) => {
             const inFocus = focusedIdx === i && !stackedMode;

@@ -115,8 +115,8 @@ const Contact = () => {
   return (
     <>
       <Seo
-        title="Contact — Next"
-        description="Get in touch with SKULPT. Tell us where you are on your journey and what you're building — we'll take it from there."
+        title="Contact us | Next"
+        description="Get in touch with SKULPT. Tell us where you are on your journey and what you're building - we'll take it from there."
         path="/contact"
         type="website"
       />
