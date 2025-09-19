@@ -160,7 +160,7 @@ const Contact = () => {
       >
         <div className="w-full md:col-span-12">
           <div className="font-subheading pr-12 text-right text-[13px] opacity-80">
-            <div>CONTACT@SKULPT.COM</div>
+            <div>CONTACT@SKULPTBRAND.COM</div>
             <div>2025 / ALL RIGHTS RESERVED</div>
           </div>
         </div>
