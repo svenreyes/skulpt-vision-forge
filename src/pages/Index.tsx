@@ -13,8 +13,7 @@ const Index = () => {
     "Who do you aspire to be?",
     "What's your story?",
     "Who do you care about?",
-    "Have you felt truly understood?",
-    "What part of you do people not see?",
+    "What part of you do people not understand?",
     "Why now?",
   ];
 
@@ -99,7 +98,7 @@ const Index = () => {
 
 
   const baseLi =
-    "text-[24px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] transition-all duration-300 ease-in-out";
+    "text-[28.2px] leading-[120%] tracking-[-0.8px] font-normal text-[#9EA5AD] transition-all duration-300 ease-in-out";
 
   const navigate = useNavigate();
   const { trigger } = useRouteBlur();

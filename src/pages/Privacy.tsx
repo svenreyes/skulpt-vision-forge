@@ -35,7 +35,7 @@ const Privacy: React.FC = () => {
         </section>
 
         <h2 className="font-subheading text-xl md:text-2xl text-[#7A8289] mt-10 mb-3">Data Controller</h2>
-        <p className="text-[#606A74]">SKULPT. Contact: <span className="font-subheading">contact@skulpt.com</span></p>
+        <p className="text-[#606A74]">SKULPT. Contact: <span className="font-subheading">contact@skulptbrand.com</span></p>
 
         <h2 className="font-subheading text-xl md:text-2xl text-[#7A8289] mt-10 mb-3">Information We Collect</h2>
         <ul className="list-disc list-inside space-y-2 text-[#606A74]">
@@ -101,7 +101,7 @@ const Privacy: React.FC = () => {
 
         <h2 className="font-subheading text-xl md:text-2xl text-[#7A8289] mt-10 mb-3">Contact</h2>
         <p className="text-[#606A74]">
-          Email: <span className="font-subheading">contact@skulpt.com</span>
+          Email: <span className="font-subheading">contact@skulptbrand.com</span>
         </p>
 
         <h2 className="font-subheading text-xl md:text-2xl text-[#7A8289] mt-10 mb-3">Changes</h2>

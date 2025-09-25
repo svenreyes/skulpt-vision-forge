@@ -1,9 +1,10 @@
 // src/App.tsx
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
@@ -17,6 +18,20 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const queryClient = new QueryClient();
 
+// Fires GA4 page_view on every route change in a SPA
+const GtagRouteTracker = () => {
+  const location = useLocation();
+  React.useEffect(() => {
+    const gtag = (window as any).gtag as undefined | ((...args: any[]) => void);
+    if (typeof gtag === "function") {
+      gtag('config', 'G-TVLXLC445H', {
+        page_path: location.pathname + location.search + location.hash,
+      });
+    }
+  }, [location.pathname, location.search, location.hash]);
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -26,6 +41,8 @@ const App = () => (
         <Sonner />
       </div>
       <BrowserRouter>
+        {/* Track SPA route changes for GA4 */}
+        <GtagRouteTracker />
         <RouteBlurProvider>
         <Routes>
           <Route path="/" element={<Index />} />

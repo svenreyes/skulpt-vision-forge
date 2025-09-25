@@ -69,7 +69,7 @@ const Skulpting: React.FC = () => {
 
   const axisCopy: Record<'strategy' | 'alignment' | 'external' | 'internal', string> = {
     strategy:
-      "We begin at the root. <span class='font-semibold text-white'>Who are you, really?</span><br />Asking the questions most founders skip; we surface your values, story, and belief system to set the foundation your brand stand on",
+      "We begin at the root. <span class='font-semibold text-white'>Who are you, really?</span><br />Asking the questions most founders skip; we surface your values, story, and belief system to set the foundation your brand stands on",
     internal:
       "Through guided, immersive workshops, we <span class='font-bold text-white'> shape how you show up,</span> and ensure your clients, community, investors, and mom get it.<br />Internal branding is our differential step and SKULPT's expertise",
     alignment:
@@ -212,7 +212,7 @@ const Skulpting: React.FC = () => {
 
         {/* Center text (let pointer events pass through) */}
         <div className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center pointer-events-none select-none pt-16 md:pt-0">
-          <h1 className="font-subheading text-[#9EA5AD] text-[24px] leading-[190%] tracking-[-0.8px] font-normal">
+          <h1 className="font-subheading text-[#9EA5AD] text-[28.2px] leading-[190%] tracking-[-0.8px] font-normal">
             What are we skulpting today?
           </h1>
           </div>
@@ -426,14 +426,14 @@ const Skulpting: React.FC = () => {
             aria-pressed={activeAxis === 'alignment'}
             style={{ color: activeAxis === 'alignment' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
-            ALIGNMENT
+            EXTERNAL
           </span>
           <span
             onMouseEnter={() => setActiveAxis('external')}
             className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-full sm:-left-20 sm:translate-x-0 -rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
             style={{ color: activeAxis === 'external' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
           >
-            EXTERNAL
+            ALIGNMENT
           </span>
           <span
             onMouseEnter={() => setActiveAxis('internal')}
