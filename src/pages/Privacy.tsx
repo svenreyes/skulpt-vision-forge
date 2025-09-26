@@ -8,7 +8,7 @@ const Privacy: React.FC = () => {
     <>
       <Seo
         title="Privacy Policy | SKULPT"
-        description="Our Privacy Policy explains how SKULPT (the “Company”, “we”, “us”) collects, uses, and protects your information."
+        description="Our Privacy Policy explains how SKULPT (the “Company”, “we”, “us”) collects, uses, and protects your data."
         path="/privacy"
         type="website"
       />
