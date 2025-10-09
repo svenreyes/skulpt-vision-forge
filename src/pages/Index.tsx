@@ -14,7 +14,6 @@ const Index = () => {
     "What's your story?",
     "Who do you care about?",
     "What part of you do people not understand?",
-    "Why now?",
   ];
 
   /* ------------------------------ refs & state ------------------------------ */
@@ -137,7 +136,7 @@ const Index = () => {
         onClick={advanceToNext}
       >
         {/* Accessible site heading for SEO and semantics */}
-        <h1 className="sr-only">SKULPT | Taking Branding Personally</h1>
+        <h1 className="sr-only">SKULPT | Why Now?</h1>
         <ul className="flex flex-col items-center w-full">
           {questions.map((q, i) => {
             const inFocus = focusedIdx === i && !stackedMode;
@@ -169,7 +168,7 @@ const Index = () => {
         className="snap-start text-center py-32 z-10 select-none min-h-screen flex items-center justify-center"
       >
         <h2 className="group text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-body text-[#CBD1D6] transition-colors">
-          Taking Branding <span className="italic text-[#C1CFD4] font-subheading ">Personally</span>{" "}
+          Why <span className="italic text-[#C1CFD4] font-subheading ">Now?</span>{" "}
           <button
             aria-label="Go to skulpting"
             onClick={async () => {

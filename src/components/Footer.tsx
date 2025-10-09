@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import InstagramIcon from "../assets/insta.svg";
 import LinkedInIcon from "../assets/linkedin.svg";
-import MailIcon from "../assets/mail.svg";
+import TikTokIcon from "../assets/tiktok.svg";
 
 type FooterProps = {
   compact?: boolean;
@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = 
         <nav className={(mobileRowNav
             ? "flex flex-row justify-center items-center gap-8 "
             : "flex flex-col items-center space-y-2 ") +
-            "sm:flex-row sm:space-y-0 sm:space-x-6 text-sm text-[#9EA5AD] w-full sm:w-auto"}>
+            "sm:flex-row sm:space-y-0 sm:space-x-6 text-md text-[#9EA5AD] w-full sm:w-auto"}>
           <div className={(mobileRowNav
               ? "flex flex-row justify-center items-center gap-8 "
               : "flex flex-col items-center space-y-2 ") +
@@ -34,12 +34,12 @@ export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = 
             >
               Privacy Policy
             </Link>
-            <Link
-              to="/contact"
+            <a
+              href="mailto:contact@skulptbrand.com"
               className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
             >
               Contact Us
-            </Link>
+            </a>
           </div>
         </nav>
 
@@ -60,11 +60,13 @@ export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = 
             <img src={LinkedInIcon} alt="LinkedIn" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
           <a
-            href="mailto:hello@skulpt.com"
-            aria-label="Email"
+            href="https://www.tiktok.com/@skulptbrand?_t=ZT-90OWN13MioX&_r=1"
+            aria-label="TikTok"
+            target="_blank"
+            rel="noopener noreferrer"
             className={compact ? "hover:brightness-75 transition-all duration-200 p-2" : "hover:brightness-75 transition-all duration-200 p-3"}
           >
-            <img src={MailIcon} alt="Email" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
+            <img src={TikTokIcon} alt="TikTok" className={compact ? "w-5 h-5" : "w-5 h-5 sm:w-6 sm:h-6"} />
           </a>
         </div>
       </div>

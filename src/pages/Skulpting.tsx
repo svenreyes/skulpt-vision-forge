@@ -9,7 +9,6 @@ import arrowUrl from "../assets/arrow.svg";
 import exUrl from "../assets/ex.svg";
 import { Seo } from "../components/Seo";
 
-import anaisaImg from "@/assets/skulpting/anaisa 1.png";
 import freyaImg from "@/assets/skulpting/freya 1.png";
 import jaclynImg from "@/assets/skulpting/jaclyn 1.png";
 import leaImg from "@/assets/skulpting/lea 1.png";
@@ -48,7 +47,6 @@ const Skulpting: React.FC = () => {
     };
   }, []);
   const team = [
-    { name: 'ANAISA ACHARYA', src: anaisaImg },
     { name: 'JACLYN PHAM', src: jaclynImg },
     { name: 'FREYA LINDQVIST', src: freyaImg },
     { name: 'LEA KIENLE', src: leaImg },
