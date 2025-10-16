@@ -28,6 +28,9 @@ const Skulpting: React.FC = () => {
   const videoRef = useRef<HTMLDivElement>(null);
   const marqueeVideoRef = useRef<HTMLVideoElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [showSwipeArrow, setShowSwipeArrow] = useState(true);
+  const [touchStart, setTouchStart] = useState(0);
+  const circleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)');
@@ -65,6 +68,8 @@ const Skulpting: React.FC = () => {
     []
   );
 
+  const axisOrder: ('strategy' | 'alignment' | 'external' | 'internal')[] = ['strategy', 'external', 'alignment', 'internal'];
+
   const axisCopy: Record<'strategy' | 'alignment' | 'external' | 'internal', string> = {
     strategy:
       "We begin at the root. <span class='font-semibold text-white'>Who are you, really?</span><br />Asking the questions most founders skip; we surface your values, story, and belief system to set the foundation your brand stands on",
@@ -74,6 +79,33 @@ const Skulpting: React.FC = () => {
       "From tone to visual identity, we translate strategy into tangible elements the world can see and feel. Nothing is arbitrary.<br />Every decision is <span class='font-bold text-white'>grounded in your truth</span>",
     external:
       "We bring your company into complete focus. This is where <span class='font-bold text-white'> alignment happens </span>, connecting purpose with people. Voice with vision. We work deep, intentional, and focused on longevity and growth",
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isMobile) return;
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isMobile) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+
+    // Swipe threshold
+    if (Math.abs(diff) > 50) {
+      setShowSwipeArrow(false);
+      const currentIndex = axisOrder.indexOf(activeAxis);
+      
+      if (diff > 0) {
+        // Swiped left, go to next
+        const nextIndex = (currentIndex + 1) % axisOrder.length;
+        setActiveAxis(axisOrder[nextIndex]);
+      } else {
+        // Swiped right, go to previous
+        const prevIndex = (currentIndex - 1 + axisOrder.length) % axisOrder.length;
+        setActiveAxis(axisOrder[prevIndex]);
+      }
+    }
   };
 
   useEffect(() => {
@@ -253,22 +285,27 @@ const Skulpting: React.FC = () => {
 
       {/* Video marquee section */}
       <section className="relative z-10 w-full mx-0 px-0 py-0 sm:py-16 sm:mx-auto sm:max-w-6xl sm:px-4 lg:px-0">
-        <div ref={videoRef} className="relative overflow-hidden rounded-none sm:rounded-3xl">
+        <div ref={videoRef} className="relative overflow-visible rounded-none sm:rounded-3xl">
           <div
-            className="relative h-[60vh] sm:h-auto"
+            className="relative h-[65vh] sm:h-auto py-12"
             style={{
-              WebkitMaskImage: 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
-              maskImage: 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
+              WebkitMaskImage: isMobile 
+                ? 'radial-gradient(ellipse 70% 55% at center, black 35%, rgba(0,0,0,0.8) 55%, transparent 95%)'
+                : 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
+              maskImage: isMobile
+                ? 'radial-gradient(ellipse 70% 55% at center, black 35%, rgba(0,0,0,0.8) 55%, transparent 95%)'
+                : 'radial-gradient(ellipse 50% 50% at center, black 60%, transparent 100%)',
             }}
           >
             {shouldLoadVideos ? (
               <video
                 ref={marqueeVideoRef}
                 src={skulpting2Video}
-                className="w-full h-full object-cover opacity-80 scale-125 sm:scale-110 transform-gpu"
+                className="w-full h-full object-cover opacity-80 transform-gpu"
                 style={{ 
-                  filter: 'blur(8px)',
-                  willChange: 'transform'
+                  filter: isMobile ? 'blur(18px)' : 'blur(8px)',
+                  willChange: 'transform',
+                  transform: isMobile ? 'scale(1.5)' : 'scale(1.1)',
                 }}
                 autoPlay
                 muted
@@ -318,7 +355,12 @@ const Skulpting: React.FC = () => {
 
       {/* Strategy Circle Section */}
       <section className="relative z-10 lg:py-64 sm:py-16 mt-24 flex items-center justify-center px-4 sm:px-6">
-        <div className="relative w-full max-w-[75vw] sm:max-w-[720px] aspect-square">
+        <div 
+          ref={circleRef}
+          className="relative w-full max-w-[75vw] sm:max-w-[720px] aspect-square"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div
             className="absolute inset-0 overflow-visible flex items-center justify-center pointer-events-none"
           >
@@ -371,126 +413,196 @@ const Skulpting: React.FC = () => {
           {/* Outer blurry glow */}
           <div className="absolute inset-0 rounded-full bg-[#9EA5AD]/30 blur-[140px] pointer-events-none" />
 
-          {/* Circular outline split into 4 individually hover-able segments */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            {(() => {
-              const r = 49;
-              const circumference = 2 * Math.PI * r;
-              const dash = circumference / 4;
-              return ([
-                { key: 'strategy',  offset: dash * 2.5 },
-                { key: 'external',  offset: dash * 1.5 },
-                { key: 'alignment', offset: dash * 0.5 },
-                { key: 'internal',  offset: dash * 3.5 },
-              ] as const).map(({ key, offset }) => (
-              <circle
-                key={key}
-                cx="50"
-                cy="50"
-                r="49"
-                fill="none"
-                stroke="white"
-                strokeOpacity={activeAxis === key ? 1 : 0.35}
-                strokeWidth="1.2"
-                strokeDasharray={`${dash} ${circumference - dash}`}
-                strokeDashoffset={-offset}
-                style={{ transition: 'stroke-opacity 0.2s ease' }}
-                strokeLinecap="round"
+          {/* Circular outline split into 4 individually hover-able segments - hidden on mobile */}
+          {!isMobile && (
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              {(() => {
+                const r = 49;
+                const circumference = 2 * Math.PI * r;
+                const dash = circumference / 4;
+                return ([
+                  { key: 'strategy',  offset: dash * 2.5 },
+                  { key: 'external',  offset: dash * 1.5 },
+                  { key: 'alignment', offset: dash * 0.5 },
+                  { key: 'internal',  offset: dash * 3.5 },
+                ] as const).map(({ key, offset }) => (
+                <circle
+                  key={key}
+                  cx="50"
+                  cy="50"
+                  r="49"
+                  fill="none"
+                  stroke="white"
+                  strokeOpacity={activeAxis === key ? 1 : 0.35}
+                  strokeWidth="1.2"
+                  strokeDasharray={`${dash} ${circumference - dash}`}
+                  strokeDashoffset={-offset}
+                  style={{ transition: 'stroke-opacity 0.2s ease' }}
+                  strokeLinecap="round"
+                />
+              ))
+              })()}
+            </svg>
+          )}
+
+          {/* Desktop Axis labels */}
+          {!isMobile && (
+            <>
+              <span
+                onMouseEnter={() => setActiveAxis('strategy')}
+                className="absolute -top-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none"
+                style={{ color: activeAxis === 'strategy' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
+              >
+                STRATEGY
+              </span>
+              <span
+                onMouseEnter={() => setActiveAxis('alignment')}
+                onClick={() => setActiveAxis('alignment')}
+                onTouchStart={() => setActiveAxis('alignment')}
+                onPointerDown={() => setActiveAxis('alignment')}
+                className="absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none pointer-events-auto"
+                role="button"
+                tabIndex={0}
+                aria-pressed={activeAxis === 'alignment'}
+                style={{ color: activeAxis === 'alignment' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
+              >
+                EXTERNAL
+              </span>
+              <span
+                onMouseEnter={() => setActiveAxis('external')}
+                className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-full sm:-left-20 sm:translate-x-0 -rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
+                style={{ color: activeAxis === 'external' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
+              >
+                ALIGNMENT
+              </span>
+              <span
+                onMouseEnter={() => setActiveAxis('internal')}
+                className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-full sm:-right-20 sm:translate-x-0 rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
+                style={{ color: activeAxis === 'internal' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
+              >
+                INTERNAL
+              </span>
+
+              {activeAxis !== 'strategy' && (
+                <span
+                  className="absolute left-1/2 translate-y-4 -translate-x-1/2 bg-white rounded-full"
+                  style={{ width: 8, height: 8, top: 'calc(50% - 49% + 10px)' }}
+                />
+              )}
+              {activeAxis !== 'alignment' && (
+                <span
+                  className="absolute left-1/2 -translate-y-6 -translate-x-1/2 bg-white rounded-full"
+                  style={{ width: 8, height: 8, top: 'calc(50% + 49% - 10px)' }}
+                />
+              )}
+              {activeAxis !== 'external' && (
+                <span
+                  className="absolute top-1/2 translate-x-4 -translate-y-1/2 bg-white rounded-full"
+                  style={{ width: 8, height: 8, left: 'calc(50% - 49% + 10px)' }}
+                />
+              )}
+              {activeAxis !== 'internal' && (
+                <span
+                  className="absolute top-1/2 -translate-x-6 -translate-y-1/2 bg-white rounded-full"
+                  style={{ width: 8, height: 8, left: 'calc(50% + 49% - 10px)' }}
+                />
+              )}
+
+              <img
+                src={exUrl}
+                alt="x"
+                className="absolute w-6 h-6 select-none pointer-events-none transition-all duration-700"
+                style={{
+                  top:
+                    activeAxis === 'strategy'
+                      ? 'calc(50% - 49% + 48px)'
+                      : activeAxis === 'alignment'
+                      ? 'calc(50% + 49% - 48px)'
+                      : '50%',
+                  left:
+                    activeAxis === 'external'
+                      ? 'calc(50% - 49% + 48px)'
+                      : activeAxis === 'internal'
+                      ? 'calc(50% + 49% - 48px)'
+                      : '50%',
+                  transform: 'translate(-50%,-50%)',
+                  filter: 'brightness(0) invert(1)',
+                }}
               />
-            ))
-            })()}
-          </svg>
-
-          {/* Axis labels */}
-          <span
-            onMouseEnter={() => setActiveAxis('strategy')}
-            className="absolute -top-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none"
-            style={{ color: activeAxis === 'strategy' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
-          >
-            STRATEGY
-          </span>
-          <span
-            onMouseEnter={() => setActiveAxis('alignment')}
-            onClick={() => setActiveAxis('alignment')}
-            onTouchStart={() => setActiveAxis('alignment')}
-            onPointerDown={() => setActiveAxis('alignment')}
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-xs tracking-widest font-subheading select-none pointer-events-auto"
-            role="button"
-            tabIndex={0}
-            aria-pressed={activeAxis === 'alignment'}
-            style={{ color: activeAxis === 'alignment' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
-          >
-            EXTERNAL
-          </span>
-          <span
-            onMouseEnter={() => setActiveAxis('external')}
-            className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-full sm:-left-20 sm:translate-x-0 -rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
-            style={{ color: activeAxis === 'external' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
-          >
-            ALIGNMENT
-          </span>
-          <span
-            onMouseEnter={() => setActiveAxis('internal')}
-            className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-full sm:-right-20 sm:translate-x-0 rotate-90 cursor-pointer text-xs tracking-widest font-subheading select-none"
-            style={{ color: activeAxis === 'internal' ? '#FFFFFF' : 'rgba(255,255,255,0.6)' }}
-          >
-            INTERNAL
-          </span>
-
-          {activeAxis !== 'strategy' && (
-            <span
-              className="absolute left-1/2 translate-y-4 -translate-x-1/2 bg-white rounded-full"
-              style={{ width: 8, height: 8, top: 'calc(50% - 49% + 10px)' }}
-            />
-          )}
-          {activeAxis !== 'alignment' && (
-            <span
-              className="absolute left-1/2 -translate-y-6 -translate-x-1/2 bg-white rounded-full"
-              style={{ width: 8, height: 8, top: 'calc(50% + 49% - 10px)' }}
-            />
-          )}
-          {activeAxis !== 'external' && (
-            <span
-              className="absolute top-1/2 translate-x-4 -translate-y-1/2 bg-white rounded-full"
-              style={{ width: 8, height: 8, left: 'calc(50% - 49% + 10px)' }}
-            />
-          )}
-          {activeAxis !== 'internal' && (
-            <span
-              className="absolute top-1/2 -translate-x-6 -translate-y-1/2 bg-white rounded-full"
-              style={{ width: 8, height: 8, left: 'calc(50% + 49% - 10px)' }}
-            />
+            </>
           )}
 
-          <img
-            src={exUrl}
-            alt="x"
-            className="absolute w-6 h-6 select-none pointer-events-none transition-all duration-700"
-            style={{
-              top:
-                activeAxis === 'strategy'
-                  ? 'calc(50% - 49% + 48px)'
-                  : activeAxis === 'alignment'
-                  ? 'calc(50% + 49% - 48px)'
-                  : '50%',
-              left:
-                activeAxis === 'external'
-                  ? 'calc(50% - 49% + 48px)'
-                  : activeAxis === 'internal'
-                  ? 'calc(50% + 49% - 48px)'
-                  : '50%',
-              transform: 'translate(-50%,-50%)',
-              filter: 'brightness(0) invert(1)',
-            }}
-          />
+          {/* Mobile Axis labels - centered horizontally */}
+          {isMobile && (
+            <>
+              <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-3">
+                <div className="relative flex items-start justify-center gap-4">
+                  {axisOrder.map((axis) => {
+                    const isActive = activeAxis === axis;
+                    
+                    return (
+                      <div key={axis} className="relative flex flex-col items-center" style={{ minWidth: '70px' }}>
+                        <span
+                          onClick={() => {
+                            setActiveAxis(axis);
+                            setShowSwipeArrow(false);
+                          }}
+                          className="text-[10px] tracking-[0.15em] font-subheading select-none transition-all duration-300 whitespace-nowrap cursor-pointer"
+                          style={{ 
+                            color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.25)',
+                            fontWeight: isActive ? 600 : 400,
+                          }}
+                        >
+                          {axis.toUpperCase()}
+                        </span>
+                      </div>
+                    );
+                  })}
+                  {/* Animated circle that SLIDES between words */}
+                  <span
+                    className="absolute bg-white rounded-full transition-all duration-500 ease-out"
+                    style={{ 
+                      width: 5, 
+                      height: 5,
+                      top: '20px',
+                      left: `calc(${axisOrder.indexOf(activeAxis) * 25}% + 12.5%)`,
+                      transform: 'translateX(-50%)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Swipe arrow indicator */}
+              {showSwipeArrow && (
+                <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-2 animate-pulse">
+                  <img
+                    src={arrowUrl}
+                    alt="swipe left"
+                    className="w-5 h-5 rotate-180"
+                    style={{ filter: 'brightness(0) invert(1) opacity(0.5)' }}
+                  />
+                  <span className="text-[11px] text-white/50 font-subheading tracking-[0.2em]">SWIPE</span>
+                  <img
+                    src={arrowUrl}
+                    alt="swipe right"
+                    className="w-5 h-5"
+                    style={{ filter: 'brightness(0) invert(1) opacity(0.5)' }}
+                  />
+                </div>
+              )}
+            </>
+          )}
 
           {/* Centered paragraph */}
-          <div className="absolute inset-0 flex items-center justify-center px-8 text-center select-none">
-            <p className={`font-fkgrotes text-sm sm:text-base md:text-lg leading-snug text-white/50 max-w-[65%] transition-all duration-300 ${isTransitioning ? 'opacity-0 blur-sm' : 'opacity-100'}`} dangerouslySetInnerHTML={{ __html: axisCopy[displayAxis] }} />
+          <div className="absolute inset-0 flex items-center justify-center px-2 sm:px-6 text-center select-none">
+            <p 
+              className={`font-fkgrotes text-[17px] sm:text-base md:text-lg leading-[1.8] sm:leading-snug text-white/50 ${isMobile ? 'max-w-[98%]' : 'max-w-[65%]'} transition-all duration-300 ${isTransitioning ? 'opacity-0 blur-sm' : 'opacity-100'}`}
+              dangerouslySetInnerHTML={{ __html: axisCopy[displayAxis] }} 
+            />
           </div>
         </div>
       </section>
