@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 import uncheckedUrl from "../assets/unchecked.svg";
 import checkedUrl from "../assets/checked.svg";
 
-// Character limits for form fields
 const CHAR_LIMITS = {
   name: 100,
   email: 150,
@@ -25,7 +24,6 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSubmitTime, setLastSubmitTime] = useState<number>(0);
 
-  // Controlled values for auto-growing inputs
   const [values, setValues] = useState<{
     name: string;
     email: string;
@@ -48,17 +46,78 @@ const Contact = () => {
     }
   );
 
-  // Dropdown state for biggest challenges
+  const [touched, setTouched] = useState<{ 
+    name: boolean; 
+    email: boolean; 
+    projectName: boolean; 
+    projectLink: boolean; 
+    stage: boolean; 
+    investmentLevel: boolean; 
+    whyNow: boolean; 
+    biggestChallenges: boolean; 
+  }>({
+    name: false,
+    email: false,
+    projectName: false,
+    projectLink: false,
+    stage: false,
+    investmentLevel: false,
+    whyNow: false,
+    biggestChallenges: false,
+  });
+
+  const VALID_CHAR_REGEX = /^[a-zA-Z0-9 .,'-]+$/;
+  const validateNameLike = (text: string): string | undefined => {
+    if (!text) return "Required";
+    if (!VALID_CHAR_REGEX.test(text)) return "Only letters, numbers, spaces, and .,'-";
+    return undefined;
+  };
+
   const [isChallengesOpen, setIsChallengesOpen] = useState(false);
   const challengesRef = useRef<HTMLDivElement>(null);
   
-  // Email validation
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // Dynamic widths for select inputs
+  type FieldErrors = Partial<Record<
+    'name' | 'email' | 'projectName' | 'projectLink' | 'stage' | 'investmentLevel' | 'whyNow' | 'biggestChallenges',
+    string
+  >>;
+  const getErrors = (v: typeof values): FieldErrors => {
+    const errs: FieldErrors = {};
+    const nameErr = validateNameLike(v.name);
+    if (nameErr) errs.name = nameErr;
+
+    if (!v.email) errs.email = "Required"; else if (!validateEmail(v.email)) errs.email = "Enter a valid email address";
+
+    const projectNameErr = validateNameLike(v.projectName);
+    if (projectNameErr) errs.projectName = projectNameErr;
+
+    if (!v.projectLink) errs.projectLink = "Required"; else {
+      try { new URL(v.projectLink); } catch { errs.projectLink = "Enter a valid URL (e.g., https://example.com)"; }
+    }
+
+    if (!v.stage) errs.stage = "Required";
+    if (!v.investmentLevel) errs.investmentLevel = "Required";
+    if (!v.whyNow) errs.whyNow = "Required";
+    if (v.biggestChallenges.length === 0) errs.biggestChallenges = "Select at least one challenge";
+    return errs;
+  };
+
+  const [errors, setErrors] = useState<FieldErrors>({});
+  useEffect(() => {
+    setErrors(getErrors(values));
+  }, [values]);
+
+  const fieldInvalid = (field: keyof typeof touched): boolean => {
+    return Boolean(touched[field] && errors[field]);
+  };
+  const fieldError = (field: keyof typeof touched): string | undefined => {
+    return errors[field];
+  };
+
   const [selectWidths, setSelectWidths] = useState<{ stage: string; investmentLevel: string }>({
     stage: "7ch",
     investmentLevel: "21ch",
@@ -67,7 +126,6 @@ const Contact = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    // Handle checkbox group for biggestChallenges
     if (name === "biggestChallenges") {
       const checkbox = e.target as HTMLInputElement;
       setValues((prev) => {
@@ -75,10 +133,10 @@ const Contact = () => {
         if (checkbox.checked) set.add(checkbox.value); else set.delete(checkbox.value);
         return { ...prev, biggestChallenges: Array.from(set) };
       });
+      setTouched((prev) => ({ ...prev, biggestChallenges: true }));
       return;
     }
 
-    // Enforce character limits
     let limitedValue = value;
     if (name in CHAR_LIMITS) {
       const limit = CHAR_LIMITS[name as keyof typeof CHAR_LIMITS];
@@ -92,7 +150,6 @@ const Contact = () => {
       }
     }
 
-    // Adjust width for select inputs based on visible text length
     if (name === "stage" || name === "investmentLevel") {
       const selectEl = e.target as HTMLSelectElement;
       const selectedText = selectEl.options[selectEl.selectedIndex]?.text || limitedValue;
@@ -101,9 +158,13 @@ const Contact = () => {
     setValues((prev) => ({ ...prev, [name]: limitedValue }));
   };
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
   const whyNowRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (challengesRef.current && !challengesRef.current.contains(event.target as Node)) {
@@ -114,7 +175,6 @@ const Contact = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Ensure initial select widths match visible default labels on mount
   useEffect(() => {
     const stageDefault = 'STAGE';
     const investmentDefault = 'LEVEL OF INVESTMENT';
@@ -130,10 +190,9 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Spam prevention: Check if user is submitting too quickly
     const now = Date.now();
     const timeSinceLastSubmit = now - lastSubmitTime;
-    if (timeSinceLastSubmit < 10000) { // 10 seconds cooldown
+    if (timeSinceLastSubmit < 10000) { 
       toast({
         title: "Please wait",
         description: "You're submitting too quickly. Please wait a moment.",
@@ -142,53 +201,38 @@ const Contact = () => {
       return;
     }
 
-    // Prevent double submission
     if (isSubmitting) {
+      return;
+    }
+
+    const currentErrors = getErrors(values);
+    const hasErrors = Object.keys(currentErrors).length > 0;
+    if (hasErrors) {
+      setErrors(currentErrors);
+      setTouched({
+        name: true,
+        email: true,
+        projectName: true,
+        projectLink: true,
+        stage: true,
+        investmentLevel: true,
+        whyNow: true,
+        biggestChallenges: true,
+      });
       return;
     }
 
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    const nameValue = (formData.get("name") as string).trim();
-    const emailValue = (formData.get("email") as string).trim();
-    const projectNameValue = (formData.get("projectName") as string).trim();
-    const projectLinkValue = (formData.get("projectLink") as string).trim();
-    const stageValue = formData.get("stage") as string;
-    const investmentLevelValue = formData.get("investmentLevel") as string;
-    const whyNowValue = (formData.get("whyNow") as string).trim();
-    const biggestChallengesValues = formData.getAll("biggestChallenges") as string[];
+    const nameValue = values.name.trim();
+    const emailValue = values.email.trim();
+    const projectNameValue = values.projectName.trim();
+    const projectLinkValue = values.projectLink.trim();
+    const stageValue = values.stage;
+    const investmentLevelValue = values.investmentLevel;
+    const whyNowValue = values.whyNow.trim();
+    const biggestChallengesValues = values.biggestChallenges;
 
-    // Validate all required fields
-    if (!nameValue || !emailValue || !projectNameValue || !projectLinkValue || !stageValue || !investmentLevelValue || !whyNowValue || biggestChallengesValues.length === 0) {
-      toast({
-        title: "Missing required fields",
-        description: "Please complete all fields and select at least one challenge.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate email format
-    if (!validateEmail(emailValue)) {
-      toast({
-        title: "Invalid email address",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate URL format
-    try {
-      new URL(projectLinkValue);
-    } catch {
-      toast({
-        title: "Invalid URL",
-        description: "Please enter a valid website URL (e.g., https://example.com)",
-        variant: "destructive",
-      });
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -278,149 +322,160 @@ const Contact = () => {
       <div
         className="
           relative z-10 w-full min-h-screen
-          px-6 pr-12 pt-24 pb-0 md:pt-28 md:pb-0 text-[#9EA5AD]
+          px-6 pt-20 pb-24 md:pt-24 md:pb-20 text-[#9EA5AD]
           /* Desktop grid mimics reference */
           md:grid md:grid-cols-12 md:auto-rows-min md:gap-x-10
         "
       >
-        <div className="w-full md:col-span-12">
-          <div className="font-subheading pr-12 text-right text-[13px] opacity-80">
-            <div>CONTACT@SKULPTBRAND.COM</div>
-            <div>2025 / ALL RIGHTS RESERVED</div>
-          </div>
+        {/* Email and copyright - bottom right */}
+        <div className="fixed bottom-6 right-6 md:bottom-14 md:right-24 z-20 font-subheading text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px] opacity-80 leading-tight space-y-0.5">
+          <div>CONTACT@SKULPTBRAND.COM</div>
+          <div>2025 / ALL RIGHTS RESERVED</div>
         </div>
 
-
-        <div className="md:hidden pl-6">
-          <div className=" text-left">
-            <p className="font-subheading text-[12px] leading-tight whitespace-pre-line">
+        <div className="md:hidden px-4">
+          <div className="text-left">
+            <p className="font-subheading text-[12px] leading-tight whitespace-pre-line mb-6">
               {`Drop a note using the form below.
 Tell us where you are on your journey
 and what you're building.
 We'll take it from there.`}
             </p>
 
-            <form id="contactForm" onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4 w-full pb-0">
-              {/* NAME and EMAIL side by side */}
-              <div className="w-full flex gap-4">
-                {/* NAME */}
-                <div className="flex-1">
-                  <div className="group inline-flex items-center max-w-full">
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="NAME"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
-                      value={values.name}
-                      onChange={handleInputChange}
-                      required
-                      maxLength={CHAR_LIMITS.name}
-                      style={{ textTransform: "none", width: "120px", maxWidth: "100%" }}
-                    />
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                  </div>
-                </div>
-
-                {/* EMAIL */}
-                <div className="flex-1">
-                  <div className="group inline-flex items-center max-w-full">
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="EMAIL"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
-                      value={values.email}
-                      onChange={handleInputChange}
-                      maxLength={CHAR_LIMITS.email}
-                      style={{ textTransform: "none", width: "120px", maxWidth: "100%" }}
-                    />
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* PROJECT NAME and URL side by side */}
-              <div className="w-full flex gap-4">
-                {/* PROJECT NAME */}
-                <div className="flex-1">
-                  <div className="group inline-flex items-center max-w-full">
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                    <input
-                      id="projectName"
-                      name="projectName"
-                      type="text"
-                      placeholder="PROJECT NAME"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
-                      value={values.projectName}
-                      onChange={handleInputChange}
-                      required
-                      maxLength={CHAR_LIMITS.projectName}
-                      style={{ textTransform: "none", width: "130px", maxWidth: "100%" }}
-                    />
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                  </div>
-                </div>
-
-                {/* PROJECT LINK */}
-                <div className="flex-1">
-                  <div className="group inline-flex items-center max-w-full">
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                    <input
-                      id="projectLink"
-                      name="projectLink"
-                      type="url"
-                      placeholder="URL"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
-                      value={values.projectLink}
-                      onChange={handleInputChange}
-                      required
-                      maxLength={CHAR_LIMITS.projectLink}
-                      style={{ textTransform: "none", width: "80px", maxWidth: "100%" }}
-                    />
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* STAGE and BIGGEST CHALLENGE side by side */}
-              <div className="w-full flex gap-4">
-                {/* STAGE (select) */}
-                <div className="flex-1">
-                  <div className="group inline-flex items-center max-w-full">
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                    <select
-                      id="stage"
-                      name="stage"
-                      className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
-                      value={values.stage}
-                      onChange={handleInputChange}
-                      style={{ width: selectWidths.stage, fontWeight: 400 }}
-                      required
-                    >
-                      <option value="" className="bg-black">STAGE</option>
-                      <option value="idea" className="bg-black">Just an idea</option>
-                      <option value="mvp" className="bg-black">MVP launched / early users</option>
-                      <option value="funded" className="bg-black">Funded and growing / scaling</option>
-                      <option value="pivoting" className="bg-black">Pivoting or repositioning</option>
-                    </select>
-                    <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                  </div>
-                </div>
-
-                {/* BIGGEST CHALLENGE (dropdown with checkboxes) */}
-                <div className="flex-1" ref={challengesRef}>
+            <form id="contactForm" onSubmit={handleSubmit} className="flex flex-col gap-3 w-full max-w-md">
+              {/* NAME */}
+              <div className="w-full">
                 <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <span className={`${fieldInvalid('name') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="NAME"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block"
+                    value={values.name}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    required
+                    maxLength={CHAR_LIMITS.name}
+                    style={{ textTransform: "none", width: "120px", maxWidth: "100%" }}
+                  />
+                  <span className={`${fieldInvalid('name') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+                </div>
+                {fieldInvalid('name') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('name')}</p>
+                )}
+              </div>
+
+              {/* EMAIL */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className={`${fieldInvalid('email') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="EMAIL"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block"
+                    value={values.email}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    maxLength={CHAR_LIMITS.email}
+                    style={{ textTransform: "none", width: "140px", maxWidth: "100%" }}
+                  />
+                  <span className={`${fieldInvalid('email') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+                </div>
+                {fieldInvalid('email') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('email')}</p>
+                )}
+              </div>
+
+              {/* PROJECT NAME */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className={`${fieldInvalid('projectName') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                  <input
+                    id="projectName"
+                    name="projectName"
+                    type="text"
+                    placeholder="PROJECT NAME"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block"
+                    value={values.projectName}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    required
+                    maxLength={CHAR_LIMITS.projectName}
+                    style={{ textTransform: "none", width: "160px", maxWidth: "100%" }}
+                  />
+                  <span className={`${fieldInvalid('projectName') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+                </div>
+                {fieldInvalid('projectName') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('projectName')}</p>
+                )}
+              </div>
+
+              {/* PROJECT LINK */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className={`${fieldInvalid('projectLink') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                  <input
+                    id="projectLink"
+                    name="projectLink"
+                    type="url"
+                    placeholder="URL"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block"
+                    value={values.projectLink}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    required
+                    maxLength={CHAR_LIMITS.projectLink}
+                    style={{ textTransform: "none", width: "100px", maxWidth: "100%" }}
+                  />
+                  <span className={`${fieldInvalid('projectLink') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+                </div>
+                {fieldInvalid('projectLink') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('projectLink')}</p>
+                )}
+              </div>
+
+              {/* STAGE (select) */}
+              <div className="w-full">
+                <div className="group inline-flex items-center max-w-full">
+                  <span className={`${fieldInvalid('stage') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                  <select
+                    id="stage"
+                    name="stage"
+                    className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
+                    value={values.stage}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    style={{ width: selectWidths.stage, fontWeight: 400 }}
+                    required
+                  >
+                    <option value="" className="bg-black">STAGE</option>
+                    <option value="idea" className="bg-black">Just an idea</option>
+                    <option value="mvp" className="bg-black">MVP launched / early users</option>
+                    <option value="funded" className="bg-black">Funded and growing / scaling</option>
+                    <option value="pivoting" className="bg-black">Pivoting or repositioning</option>
+                  </select>
+                  <span className={`${fieldInvalid('stage') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+                </div>
+                {fieldInvalid('stage') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('stage')}</p>
+                )}
+              </div>
+
+              {/* BIGGEST CHALLENGE (dropdown with checkboxes) */}
+              <div className="w-full" ref={challengesRef}>
+                <div className="group inline-flex items-center max-w-full">
+                  <span className={`${fieldInvalid('biggestChallenges') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setIsChallengesOpen(!isChallengesOpen)}
-                      className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-normal"
+                      onBlur={() => setTouched((prev) => ({ ...prev, biggestChallenges: true }))}
+                      className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-normal"
                       style={{ fontWeight: 400 }}
                     >
                       {values.biggestChallenges.length === 0 ? 'BIGGEST CHALLENGE' : `${values.biggestChallenges.length} SELECTED`}
@@ -462,21 +517,24 @@ We'll take it from there.`}
                       </div>
                     )}
                   </div>
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                  <span className={`${fieldInvalid('biggestChallenges') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
                 </div>
-                </div>
+                {fieldInvalid('biggestChallenges') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('biggestChallenges')}</p>
+                )}
               </div>
 
               {/* LEVEL OF INVESTMENT (select) */}
               <div className="w-full">
                 <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                  <span className={`${fieldInvalid('investmentLevel') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
                   <select
                     id="investmentLevel"
                     name="investmentLevel"
-                    className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
+                    className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
                     value={values.investmentLevel}
                     onChange={handleInputChange}
+                    onBlur={handleBlur}
                     style={{ width: selectWidths.investmentLevel, fontWeight: 400 }}
                     required
                   >
@@ -486,38 +544,44 @@ We'll take it from there.`}
                     <option value="light" className="bg-black">Light: comparing options before deciding</option>
                     <option value="later" className="bg-black">Later: Not ready to invest</option>
                   </select>
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                  <span className={`${fieldInvalid('investmentLevel') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
                 </div>
+                {fieldInvalid('investmentLevel') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('investmentLevel')}</p>
+                )}
               </div>
 
               {/* WHY NOW? (glass text box, no brackets) */}
-              <div className="w-full">
-                <div className="group pr-4 flex items-stretch max-w-full align-top">
-                  <div className="flex-1 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md shadow-md px-4 py-4 min-h-[96px]">
-                    <textarea
-                      id="whyNow"
-                      name="whyNow"
-                      placeholder="WHY NOW?"
-                      rows={4}
-                      className="w-full h-full bg-transparent border-0 text-white placeholder:text-[#9EA5AD]/60 focus:outline-none text-base tracking-wide resize-none"
-                      value={values.whyNow}
-                      onChange={handleInputChange}
-                      required
-                      maxLength={CHAR_LIMITS.whyNow}
-                      style={{ textTransform: "none" }}
-                    />
-                  </div>
+              <div className="w-full max-w-xs">
+                <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-md shadow-md px-3 py-3 min-h-[100px]">
+                  <textarea
+                    id="whyNow"
+                    name="whyNow"
+                    placeholder="WHY NOW?"
+                    rows={5}
+                    className="w-full h-full bg-transparent border-0 text-white placeholder:text-[#9EA5AD]/60 focus:outline-none text-xs tracking-wide resize-none leading-relaxed"
+                    value={values.whyNow}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    required
+                    maxLength={CHAR_LIMITS.whyNow}
+                    style={{ textTransform: "none" }}
+                  />
                 </div>
+                {fieldInvalid('whyNow') && (
+                  <p className="mt-0.5 text-xs text-red-400">{fieldError('whyNow')}</p>
+                )}
               </div>
-              <div className="mt-4">
+              
+              <div className="mt-4 mb-6">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative text-[22px] font-light text-[#B8C1CB] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative text-lg font-light text-[#B8C1CB] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="text-[#A0A9B4]">{isSubmitting ? 'submitting...' : 'submit to see if we\'re a fit'}</span>
                   <span
-                    className="block h-[2px] bg-[#B8C1CB] mt-1 w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
+                    className="block h-[1.5px] bg-[#B8C1CB] mt-1 w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
                     aria-hidden="true"
                   />
                 </button>
@@ -532,11 +596,11 @@ We'll take it from there.`}
             md:col-start-8 md:col-span-5
             lg:col-start-8 lg:col-span-5
             xl:col-start-8 xl:col-span-5
-            mt-10
+            mt-6
           "
         >
 
-          <p className="font-subheading mt-4 text-[16px] leading-tight max-w-[520px]">
+          <p className="font-subheading text-[15px] leading-tight max-w-[420px] mb-6">
             Drop a note using the form below. Tell us where you are on your journey and what you&apos;re
             building. We&apos;ll take it from there.
           </p>
@@ -544,127 +608,140 @@ We'll take it from there.`}
           <form
             id="contactForm"
             onSubmit={handleSubmit}
-            className="mt-4 flex flex-col gap-4 w-full max-w-[520px] text-left pb-0"
+            className="flex flex-col gap-3 w-full max-w-[420px] text-left"
           >
-            {/* NAME and EMAIL side by side */}
-            <div className="w-full flex gap-5">
-              {/* NAME */}
-              <div className="flex-1">
-                <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    placeholder="NAME"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
-                    value={values.name}
-                    onChange={handleInputChange}
-                    required
-                    maxLength={CHAR_LIMITS.name}
-                    style={{ textTransform: "none", width: "150px", maxWidth: "100%" }}
-                  />
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                </div>
-              </div>
-
-              {/* EMAIL */}
-              <div className="flex-1">
-                <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="EMAIL"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
-                    value={values.email}
-                    onChange={handleInputChange}
-                    maxLength={CHAR_LIMITS.email}
-                    style={{ textTransform: "none", width: "150px", maxWidth: "100%" }}
-                  />
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                </div>
-              </div>
-            </div>
-
-            {/* PROJECT NAME and URL side by side */}
-            <div className="w-full flex gap-5">
-              {/* PROJECT NAME */}
-              <div className="flex-1">
-                <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                  <input
-                    id="projectName"
-                    name="projectName"
-                    type="text"
-                    placeholder="PROJECT NAME"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
-                    value={values.projectName}
-                    onChange={handleInputChange}
-                    required
-                    maxLength={CHAR_LIMITS.projectName}
-                    style={{ textTransform: "none", width: "180px", maxWidth: "100%" }}
-                  />
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                </div>
-              </div>
-
-              {/* PROJECT LINK */}
-              <div className="flex-1">
-                <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                  <input
-                    id="projectLink"
-                    name="projectLink"
-                    type="url"
-                    placeholder="URL"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
-                    value={values.projectLink}
-                    onChange={handleInputChange}
-                    required
-                    maxLength={CHAR_LIMITS.projectLink}
-                    style={{ textTransform: "none", width: "100px", maxWidth: "100%" }}
-                  />
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                </div>
-              </div>
-            </div>
-
-            {/* STAGE and BIGGEST CHALLENGE side by side */}
-            <div className="w-full flex gap-5">
-              {/* STAGE (select) */}
-              <div className="flex-1">
-                <div className="group inline-flex items-center max-w-full">
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
-                  <select
-                    id="stage"
-                    name="stage"
-                    className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
-                    value={values.stage}
-                    onChange={handleInputChange}
-                    style={{ width: selectWidths.stage, fontWeight: 400 }}
-                  >
-                    <option value="" className="bg-black">STAGE</option>
-                    <option value="idea" className="bg-black">Just an idea</option>
-                    <option value="mvp" className="bg-black">MVP launched / early users</option>
-                    <option value="funded" className="bg-black">Funded and growing / scaling</option>
-                    <option value="pivoting" className="bg-black">Pivoting or repositioning</option>
-                  </select>
-                  <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
-                </div>
-              </div>
-
-              {/* BIGGEST CHALLENGE (dropdown with checkboxes) */}
-              <div className="flex-1" ref={challengesRef}>
+            {/* NAME */}
+            <div className="w-full">
               <div className="group inline-flex items-center max-w-full">
-                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <span className={`${fieldInvalid('name') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="NAME"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
+                  value={values.name}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  required
+                  maxLength={CHAR_LIMITS.name}
+                  style={{ textTransform: "none", width: "130px", maxWidth: "100%" }}
+                />
+                <span className={`${fieldInvalid('name') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+              </div>
+              {fieldInvalid('name') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('name')}</p>
+              )}
+            </div>
+
+            {/* EMAIL */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className={`${fieldInvalid('email') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="EMAIL"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
+                  value={values.email}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  maxLength={CHAR_LIMITS.email}
+                  style={{ textTransform: "none", width: "150px", maxWidth: "100%" }}
+                />
+                <span className={`${fieldInvalid('email') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+              </div>
+              {fieldInvalid('email') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('email')}</p>
+              )}
+            </div>
+
+            {/* PROJECT NAME */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className={`${fieldInvalid('projectName') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                <input
+                  id="projectName"
+                  name="projectName"
+                  type="text"
+                  placeholder="PROJECT NAME"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
+                  value={values.projectName}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  required
+                  maxLength={CHAR_LIMITS.projectName}
+                  style={{ textTransform: "none", width: "180px", maxWidth: "100%" }}
+                />
+                <span className={`${fieldInvalid('projectName') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+              </div>
+              {fieldInvalid('projectName') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('projectName')}</p>
+              )}
+            </div>
+
+            {/* PROJECT LINK */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className={`${fieldInvalid('projectLink') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                <input
+                  id="projectLink"
+                  name="projectLink"
+                  type="url"
+                  placeholder="URL"
+                  className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
+                  value={values.projectLink}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  required
+                  maxLength={CHAR_LIMITS.projectLink}
+                  style={{ textTransform: "none", width: "120px", maxWidth: "100%" }}
+                />
+                <span className={`${fieldInvalid('projectLink') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+              </div>
+              {fieldInvalid('projectLink') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('projectLink')}</p>
+              )}
+            </div>
+
+            {/* STAGE (select) */}
+            <div className="w-full">
+              <div className="group inline-flex items-center max-w-full">
+                <span className={`${fieldInvalid('stage') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
+                <select
+                  id="stage"
+                  name="stage"
+                  className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
+                  value={values.stage}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  style={{ width: selectWidths.stage, fontWeight: 400 }}
+                >
+                  <option value="" className="bg-black">STAGE</option>
+                  <option value="idea" className="bg-black">Just an idea</option>
+                  <option value="mvp" className="bg-black">MVP launched / early users</option>
+                  <option value="funded" className="bg-black">Funded and growing / scaling</option>
+                  <option value="pivoting" className="bg-black">Pivoting or repositioning</option>
+                </select>
+                <span className={`${fieldInvalid('stage') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
+              </div>
+              {fieldInvalid('stage') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('stage')}</p>
+              )}
+            </div>
+
+            {/* BIGGEST CHALLENGE (dropdown with checkboxes) */}
+            <div className="w-full" ref={challengesRef}>
+              <div className="group inline-flex items-center max-w-full">
+                <span className={`${fieldInvalid('biggestChallenges') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setIsChallengesOpen(!isChallengesOpen)}
-                    className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-normal"
+                    onBlur={() => setTouched((prev) => ({ ...prev, biggestChallenges: true }))}
+                    className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-normal"
                     style={{ fontWeight: 400 }}
                   >
                     {values.biggestChallenges.length === 0 ? 'BIGGEST CHALLENGE' : `${values.biggestChallenges.length} SELECTED`}
@@ -706,21 +783,24 @@ We'll take it from there.`}
                     </div>
                   )}
                 </div>
-                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                <span className={`${fieldInvalid('biggestChallenges') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
               </div>
-              </div>
+              {fieldInvalid('biggestChallenges') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('biggestChallenges')}</p>
+              )}
             </div>
 
             {/* LEVEL OF INVESTMENT (select) */}
             <div className="w-full">
               <div className="group inline-flex items-center max-w-full">
-                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">[</span>
+                <span className={`${fieldInvalid('investmentLevel') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
                 <select
                   id="investmentLevel"
                   name="investmentLevel"
-                  className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
+                  className="bg-transparent border-0 text-[#9EA5AD]/60 placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none font-normal"
                   value={values.investmentLevel}
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                   style={{ width: selectWidths.investmentLevel, fontWeight: 400 }}
                   required
                 >
@@ -730,39 +810,45 @@ We'll take it from there.`}
                   <option value="light" className="bg-black">Light: comparing options before deciding</option>
                   <option value="later" className="bg-black">Later: Not ready to invest</option>
                 </select>
-                <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
+                <span className={`${fieldInvalid('investmentLevel') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>]</span>
               </div>
+              {fieldInvalid('investmentLevel') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('investmentLevel')}</p>
+              )}
             </div>
 
             {/* WHY NOW? (glass text box, no brackets, last) */}
-            <div className="w-full">
-              <div className="group block w-full">
-                <div className="w-full rounded-xl border border-white/20 bg-white/10 backdrop-blur-md shadow-md px-6 py-5 min-h-[140px]">
-                  <textarea
-                    id="whyNow"
-                    name="whyNow"
-                    placeholder="WHY NOW?"
-                    rows={5}
-                    className="w-full h-full bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none text-lg lg:text-xl tracking-wide resize-none"
-                    value={values.whyNow}
-                    onChange={handleInputChange}
-                    required
-                    maxLength={CHAR_LIMITS.whyNow}
-                    style={{ textTransform: "none" }}
-                  />
-                </div>
+            <div className="w-full max-w-sm">
+              <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-md shadow-md px-4 py-4 min-h-[120px]">
+                <textarea
+                  id="whyNow"
+                  name="whyNow"
+                  placeholder="WHY NOW?"
+                  rows={6}
+                  className="w-full h-full bg-transparent border-0 text-white placeholder:text-[#9EA5AD]/60 focus:outline-none text-sm tracking-wide resize-none leading-relaxed"
+                  value={values.whyNow}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  required
+                  maxLength={CHAR_LIMITS.whyNow}
+                  style={{ textTransform: "none" }}
+                />
               </div>
+              {fieldInvalid('whyNow') && (
+                <p className="mt-0.5 text-xs text-red-400">{fieldError('whyNow')}</p>
+              )}
             </div>
-            <div className="hidden md:block mt-8">
+            
+            <div className="mt-5 mb-8">
               <button
                 type="submit"
                 form="contactForm"
                 disabled={isSubmitting}
-                className="group relative text-[28px] font-light text-[#B8C1CB] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative text-xl font-light text-[#B8C1CB] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="text-[#A0A9B4]">{isSubmitting ? 'submitting...' : 'submit to see if we\'re a fit'}</span>
                 <span
-                  className="block h-[2px] bg-[#B8C1CB] w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
+                  className="block h-[1.5px] bg-[#B8C1CB] mt-1 w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
                   aria-hidden="true"
                 />
               </button>
