@@ -11,8 +11,19 @@ import { useToast } from "@/components/ui/use-toast";
 import uncheckedUrl from "../assets/unchecked.svg";
 import checkedUrl from "../assets/checked.svg";
 
+// Character limits for form fields
+const CHAR_LIMITS = {
+  name: 100,
+  email: 150,
+  projectName: 150,
+  projectLink: 500,
+  whyNow: 1000,
+};
+
 const Contact = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastSubmitTime, setLastSubmitTime] = useState<number>(0);
 
   // Controlled values for auto-growing inputs
   const [values, setValues] = useState<{
@@ -40,6 +51,12 @@ const Contact = () => {
   // Dropdown state for biggest challenges
   const [isChallengesOpen, setIsChallengesOpen] = useState(false);
   const challengesRef = useRef<HTMLDivElement>(null);
+  
+  // Email validation
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   // Dynamic widths for select inputs
   const [selectWidths, setSelectWidths] = useState<{ stage: string; investmentLevel: string }>({
@@ -61,23 +78,27 @@ const Contact = () => {
       return;
     }
 
+    // Enforce character limits
+    let limitedValue = value;
+    if (name in CHAR_LIMITS) {
+      const limit = CHAR_LIMITS[name as keyof typeof CHAR_LIMITS];
+      if (value.length > limit) {
+        limitedValue = value.slice(0, limit);
+        toast({
+          title: "Character limit reached",
+          description: `Maximum ${limit} characters allowed for this field.`,
+          variant: "destructive",
+        });
+      }
+    }
+
     // Adjust width for select inputs based on visible text length
     if (name === "stage" || name === "investmentLevel") {
       const selectEl = e.target as HTMLSelectElement;
-      const selectedText = selectEl.options[selectEl.selectedIndex]?.text || value;
+      const selectedText = selectEl.options[selectEl.selectedIndex]?.text || limitedValue;
       setSelectWidths((prev) => ({ ...prev, [name]: `${selectedText.length + 2}ch` }));
     }
-    setValues((prev) => ({ ...prev, [name]: value }));
-
-    // Dynamic width for mobile whyNow textarea
-    if (name === "whyNow" && whyNowRef.current) {
-      const ch = value.length + 1;
-      if (ch < 32) {
-        whyNowRef.current.style.width = `${ch}ch`;
-      } else {
-        whyNowRef.current.style.width = "100%";
-      }
-    }
+    setValues((prev) => ({ ...prev, [name]: limitedValue }));
   };
 
   const whyNowRef = useRef<HTMLTextAreaElement | null>(null);
@@ -108,18 +129,36 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Spam prevention: Check if user is submitting too quickly
+    const now = Date.now();
+    const timeSinceLastSubmit = now - lastSubmitTime;
+    if (timeSinceLastSubmit < 10000) { // 10 seconds cooldown
+      toast({
+        title: "Please wait",
+        description: "You're submitting too quickly. Please wait a moment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
+
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    const nameValue = formData.get("name") as string;
-    const emailValue = formData.get("email") as string;
-    const projectNameValue = formData.get("projectName") as string;
-    const projectLinkValue = formData.get("projectLink") as string;
+    const nameValue = (formData.get("name") as string).trim();
+    const emailValue = (formData.get("email") as string).trim();
+    const projectNameValue = (formData.get("projectName") as string).trim();
+    const projectLinkValue = (formData.get("projectLink") as string).trim();
     const stageValue = formData.get("stage") as string;
     const investmentLevelValue = formData.get("investmentLevel") as string;
-    const whyNowValue = formData.get("whyNow") as string;
+    const whyNowValue = (formData.get("whyNow") as string).trim();
     const biggestChallengesValues = formData.getAll("biggestChallenges") as string[];
 
-    // Basic validation for required fields (including at least one challenge)
+    // Validate all required fields
     if (!nameValue || !emailValue || !projectNameValue || !projectLinkValue || !stageValue || !investmentLevelValue || !whyNowValue || biggestChallengesValues.length === 0) {
       toast({
         title: "Missing required fields",
@@ -128,6 +167,30 @@ const Contact = () => {
       });
       return;
     }
+
+    // Validate email format
+    if (!validateEmail(emailValue)) {
+      toast({
+        title: "Invalid email address",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate URL format
+    try {
+      new URL(projectLinkValue);
+    } catch {
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid website URL (e.g., https://example.com)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("https://hook.us2.make.com/2bwc6n8rxrjij77cun2lnak6aej58nyx", {
@@ -145,23 +208,32 @@ const Contact = () => {
           timestamp: new Date().toISOString(),
         }),
       });
+      
       if (response.ok) {
-        toast({ title: "Thank you for reaching out!", description: "We'll get back to you soon." });
+        toast({ 
+          title: "✓ Submission successful!", 
+          description: "Thank you for reaching out! We'll review your information and get back to you soon.",
+          duration: 5000,
+        });
         form.reset();
         setValues({ name: "", email: "", projectName: "", projectLink: "", stage: "", investmentLevel: "", whyNow: "", biggestChallenges: [] });
+        setLastSubmitTime(now);
+        setIsChallengesOpen(false);
       } else {
         toast({
           title: "Submission failed",
-          description: "Please try again later.",
+          description: "Something went wrong. Please try again later.",
           variant: "destructive",
         });
       }
     } catch {
       toast({
         title: "Submission failed",
-        description: "Please try again later.",
+        description: "Unable to connect. Please check your internet connection and try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -240,12 +312,12 @@ We'll take it from there.`}
                       name="name"
                       type="text"
                       placeholder="NAME"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
                       value={values.name}
                       onChange={handleInputChange}
                       required
-                      size={Math.max(4, 'NAME'.length, values.name.length || 0)}
-                      style={{ textTransform: "none" }}
+                      maxLength={CHAR_LIMITS.name}
+                      style={{ textTransform: "none", width: "120px", maxWidth: "100%" }}
                     />
                     <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                   </div>
@@ -261,11 +333,11 @@ We'll take it from there.`}
                       type="email"
                       required
                       placeholder="EMAIL"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
                       value={values.email}
                       onChange={handleInputChange}
-                      size={Math.max(4, 'EMAIL'.length, values.email.length || 0)}
-                      style={{ textTransform: "none" }}
+                      maxLength={CHAR_LIMITS.email}
+                      style={{ textTransform: "none", width: "120px", maxWidth: "100%" }}
                     />
                     <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                   </div>
@@ -283,12 +355,12 @@ We'll take it from there.`}
                       name="projectName"
                       type="text"
                       placeholder="PROJECT NAME"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
                       value={values.projectName}
                       onChange={handleInputChange}
                       required
-                      size={Math.max(4, 'PROJECT NAME'.length, values.projectName.length || 0)}
-                      style={{ textTransform: "none" }}
+                      maxLength={CHAR_LIMITS.projectName}
+                      style={{ textTransform: "none", width: "130px", maxWidth: "100%" }}
                     />
                     <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                   </div>
@@ -303,12 +375,12 @@ We'll take it from there.`}
                       name="projectLink"
                       type="url"
                       placeholder="URL"
-                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                      className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
                       value={values.projectLink}
                       onChange={handleInputChange}
                       required
-                      size={Math.max(10, 'WEBSITE'.length, values.projectLink.length || 0)}
-                      style={{ textTransform: "none" }}
+                      maxLength={CHAR_LIMITS.projectLink}
+                      style={{ textTransform: "none", width: "80px", maxWidth: "100%" }}
                     />
                     <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                   </div>
@@ -431,6 +503,7 @@ We'll take it from there.`}
                       value={values.whyNow}
                       onChange={handleInputChange}
                       required
+                      maxLength={CHAR_LIMITS.whyNow}
                       style={{ textTransform: "none" }}
                     />
                   </div>
@@ -439,9 +512,10 @@ We'll take it from there.`}
               <div className="mt-4">
                 <button
                   type="submit"
-                  className="group relative text-[22px] font-light text-[#B8C1CB] transition-colors"
+                  disabled={isSubmitting}
+                  className="group relative text-[22px] font-light text-[#B8C1CB] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="text-[#A0A9B4]">submit to see if we’re a fit</span>
+                  <span className="text-[#A0A9B4]">{isSubmitting ? 'submitting...' : 'submit to see if we\'re a fit'}</span>
                   <span
                     className="block h-[2px] bg-[#B8C1CB] mt-1 w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
                     aria-hidden="true"
@@ -483,12 +557,12 @@ We'll take it from there.`}
                     name="name"
                     type="text"
                     placeholder="NAME"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
                     value={values.name}
                     onChange={handleInputChange}
                     required
-                    size={Math.max(Math.floor('NAME'.length * 1.3), (values.name?.length || 0) + 2)}
-                    style={{ textTransform: "none" }}
+                    maxLength={CHAR_LIMITS.name}
+                    style={{ textTransform: "none", width: "150px", maxWidth: "100%" }}
                   />
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
@@ -504,11 +578,11 @@ We'll take it from there.`}
                     type="email"
                     required
                     placeholder="EMAIL"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
                     value={values.email}
                     onChange={handleInputChange}
-                    size={Math.max(Math.floor('EMAIL'.length * 1.3), (values.email?.length || 0) + 2)}
-                    style={{ textTransform: "none" }}
+                    maxLength={CHAR_LIMITS.email}
+                    style={{ textTransform: "none", width: "150px", maxWidth: "100%" }}
                   />
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
@@ -526,12 +600,12 @@ We'll take it from there.`}
                     name="projectName"
                     type="text"
                     placeholder="PROJECT NAME"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
                     value={values.projectName}
                     onChange={handleInputChange}
                     required
-                    size={Math.max(Math.floor('PROJECT NAME'.length * 1.3), (values.projectName?.length || 0) + 2)}
-                    style={{ textTransform: "none" }}
+                    maxLength={CHAR_LIMITS.projectName}
+                    style={{ textTransform: "none", width: "180px", maxWidth: "100%" }}
                   />
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
@@ -546,12 +620,12 @@ We'll take it from there.`}
                     name="projectLink"
                     type="url"
                     placeholder="URL"
-                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block w-auto max-w-[calc(100%-16px)]"
+                    className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-lg lg:text-xl tracking-wide inline-block"
                     value={values.projectLink}
                     onChange={handleInputChange}
                     required
-                    size={Math.max(Math.floor('WEBSITE'.length * 1.0), (values.projectLink?.length || 0) + 2)}
-                    style={{ textTransform: "none" }}
+                    maxLength={CHAR_LIMITS.projectLink}
+                    style={{ textTransform: "none", width: "100px", maxWidth: "100%" }}
                   />
                   <span className="text-[#9EA5AD]/90 group-hover:text-white transition-colors text-2xl">]</span>
                 </div>
@@ -673,6 +747,7 @@ We'll take it from there.`}
                     value={values.whyNow}
                     onChange={handleInputChange}
                     required
+                    maxLength={CHAR_LIMITS.whyNow}
                     style={{ textTransform: "none" }}
                   />
                 </div>
@@ -682,9 +757,10 @@ We'll take it from there.`}
               <button
                 type="submit"
                 form="contactForm"
-                className="group relative text-[28px] font-light text-[#B8C1CB] transition-colors"
+                disabled={isSubmitting}
+                className="group relative text-[28px] font-light text-[#B8C1CB] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span className="text-[#A0A9B4]">submit to see if we’re a fit</span>
+                <span className="text-[#A0A9B4]">{isSubmitting ? 'submitting...' : 'submit to see if we\'re a fit'}</span>
                 <span
                   className="block h-[2px] bg-[#B8C1CB] w-full origin-left transform transition-transform duration-500 ease-out group-hover:translate-x-full group-hover:scale-x-0"
                   aria-hidden="true"
