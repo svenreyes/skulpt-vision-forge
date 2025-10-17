@@ -559,7 +559,7 @@ We'll take it from there.`}
                     name="whyNow"
                     placeholder="WHY NOW?"
                     rows={5}
-                    className="w-full h-full bg-transparent border-0 text-white placeholder:text-[#9EA5AD]/60 focus:outline-none text-xs tracking-wide resize-none leading-relaxed"
+                    className="w-full h-full bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none text-xs tracking-wide resize-none leading-relaxed"
                     value={values.whyNow}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
@@ -825,7 +825,7 @@ We'll take it from there.`}
                   name="whyNow"
                   placeholder="WHY NOW?"
                   rows={6}
-                  className="w-full h-full bg-transparent border-0 text-white placeholder:text-[#9EA5AD]/60 focus:outline-none text-sm tracking-wide resize-none leading-relaxed"
+                  className="w-full h-full bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none text-sm tracking-wide resize-none leading-relaxed"
                   value={values.whyNow}
                   onChange={handleInputChange}
                   onBlur={handleBlur}

@@ -551,10 +551,10 @@ const Skulpting: React.FC = () => {
                             setActiveAxis(axis);
                             setShowSwipeArrow(false);
                           }}
-                          className="text-[10px] tracking-[0.15em] font-subheading select-none transition-all duration-300 whitespace-nowrap cursor-pointer"
+                          className="text-[12px] tracking-[0.15em] font-subheading select-none transition-all duration-300 whitespace-nowrap cursor-pointer"
                           style={{ 
-                            color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.25)',
-                            fontWeight: isActive ? 600 : 400,
+                            color: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
+                            fontWeight: isActive ? 700 : 500,
                           }}
                         >
                           {axis.toUpperCase()}
@@ -562,7 +562,6 @@ const Skulpting: React.FC = () => {
                       </div>
                     );
                   })}
-                  {/* Animated circle that SLIDES between words */}
                   <span
                     className="absolute bg-white rounded-full transition-all duration-500 ease-out"
                     style={{ 
@@ -635,16 +634,18 @@ const Skulpting: React.FC = () => {
           style={{ marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' }}
         >
           <div
-            className="relative min-h-[95vh] sm:min-h-[120vh] overflow-hidden rounded-t-[799px]"
+            className="relative min-h-[75vh] sm:min-h-[120vh] overflow-visible sm:overflow-hidden sm:rounded-t-[799px]"
             style={{
-              WebkitClipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
-              clipPath: 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
+              WebkitClipPath: isMobile ? 'none' : 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
+              clipPath: isMobile ? 'none' : 'path("M 0 50% A 50% 50% 0 0 1 100% 50% L 100% 100% L 0 100% Z")',
               WebkitMaskImage: isMobile
-                ? 'radial-gradient(ellipse 120% 80% at center, black 85%, transparent 100%)'
+                ? 'radial-gradient(ellipse 100% 30% at 50% 0%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 80%, black 100%), linear-gradient(180deg, transparent 0%, black 15%, black 100%)'
                 : 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
               maskImage: isMobile
-                ? 'radial-gradient(ellipse 120% 80% at center, black 85%, transparent 100%)'
+                ? 'radial-gradient(ellipse 100% 30% at 50% 0%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 80%, black 100%), linear-gradient(180deg, transparent 0%, black 15%, black 100%)'
                 : 'radial-gradient(ellipse 50% 50% at center, black 70%, transparent 100%)',
+              WebkitMaskComposite: 'source-in',
+              maskComposite: 'intersect',
             }}
           >
           <div
