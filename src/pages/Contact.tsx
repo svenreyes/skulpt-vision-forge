@@ -80,6 +80,10 @@ const Contact = () => {
   const MOBILE_MAX_INPUT_PX = 300; // approximate width of mobile Why Now box minus paddings
   const DESKTOP_MAX_INPUT_PX = 380; // approximate width of desktop Why Now box minus paddings
 
+  // Unified bracket width so selects/buttons match text inputs (which use INVESTMENT_DEFAULT_CH as min)
+  const BRACKET_WIDTH_MOBILE_PX = Math.ceil(INVESTMENT_DEFAULT_CH * MOBILE_CHAR_PX);
+  const BRACKET_WIDTH_DESKTOP_PX = Math.ceil(INVESTMENT_DEFAULT_CH * DESKTOP_CHAR_PX);
+
   const calcWidthPx = (
     value: string,
     placeholder: string,
@@ -97,18 +101,21 @@ const Contact = () => {
     name: (v: string) => calcWidthPx(v, 'NAME', false),
     email: (v: string) => calcWidthPx(v, 'EMAIL', false),
     projectName: (v: string) => calcWidthPx(v, 'PROJECT NAME', false),
-    projectLink: (v: string) => calcWidthPx(v, 'URL or domain', false),
+    projectLink: (v: string) => calcWidthPx(v, 'URL OR DOMAIN ', false),
   } as const;
 
   const desktopWidth = {
     name: (v: string) => calcWidthPx(v, 'NAME', true),
     email: (v: string) => calcWidthPx(v, 'EMAIL', true),
     projectName: (v: string) => calcWidthPx(v, 'PROJECT NAME', true),
-    projectLink: (v: string) => calcWidthPx(v, 'URL or domain', true),
+    projectLink: (v: string) => calcWidthPx(v, 'URL OR DOMAIN ', true),
   } as const;
 
   const [isChallengesOpen, setIsChallengesOpen] = useState(false);
-  const challengesRef = useRef<HTMLDivElement>(null);
+  const challengesMobileContainerRef = useRef<HTMLDivElement>(null);
+  const challengesMobileDropdownRef = useRef<HTMLDivElement>(null);
+  const challengesDesktopContainerRef = useRef<HTMLDivElement>(null);
+  const challengesDesktopDropdownRef = useRef<HTMLDivElement>(null);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -155,10 +162,7 @@ const Contact = () => {
     return errors[field];
   };
 
-  const [selectWidths, setSelectWidths] = useState<{ stage: string; investmentLevel: string }>({
-    stage: "7ch",
-    investmentLevel: "21ch",
-  });
+  // Removed dynamic select width state to keep consistent placeholder width across fields
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -187,11 +191,6 @@ const Contact = () => {
       }
     }
 
-    if (name === "stage" || name === "investmentLevel") {
-      const selectEl = e.target as HTMLSelectElement;
-      const selectedText = selectEl.options[selectEl.selectedIndex]?.text || limitedValue;
-      setSelectWidths((prev) => ({ ...prev, [name]: `${selectedText.length + 2}ch` }));
-    }
     setValues((prev) => ({ ...prev, [name]: limitedValue }));
   };
 
@@ -204,19 +203,21 @@ const Contact = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (challengesRef.current && !challengesRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const insideMobileContainer = challengesMobileContainerRef.current?.contains(target) ?? false;
+      const insideMobileDropdown = challengesMobileDropdownRef.current?.contains(target) ?? false;
+      const insideDesktopContainer = challengesDesktopContainerRef.current?.contains(target) ?? false;
+      const insideDesktopDropdown = challengesDesktopDropdownRef.current?.contains(target) ?? false;
+      const isInside = insideMobileContainer || insideMobileDropdown || insideDesktopContainer || insideDesktopDropdown;
+      if (!isInside) {
         setIsChallengesOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside, true);
+    return () => document.removeEventListener('mousedown', handleClickOutside, true);
   }, []);
 
-  useEffect(() => {
-    const stageDefault = 'STAGE';
-    const investmentDefault = 'LEVEL OF INVESTMENT';
-    setSelectWidths({ stage: `${stageDefault.length + 2}ch`, investmentLevel: `${investmentDefault.length + 2}ch` });
-  }, []);
+  // Widths are fixed by BRACKET_WIDTH_* constants; no dynamic effect needed
 
   const autoResize = (el: HTMLTextAreaElement) => {
     if (!el) return;
@@ -463,7 +464,7 @@ We'll take it from there.`}
                       id="projectLink"
                       name="projectLink"
                     type="text"
-                    placeholder="URL or domain"
+                    placeholder="URL OR DOMAIN "
                     className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block"
                       value={values.projectLink}
                       onChange={handleInputChange}
@@ -490,7 +491,7 @@ We'll take it from there.`}
                       value={values.stage}
                       onChange={handleInputChange}
                     onBlur={handleBlur}
-                      style={{ width: selectWidths.investmentLevel, fontWeight: 400 }}
+                      style={{ width: `${BRACKET_WIDTH_MOBILE_PX}px`, fontWeight: 400 }}
                       required
                     >
                       <option value="" className="bg-black">STAGE</option>
@@ -507,7 +508,7 @@ We'll take it from there.`}
                 </div>
 
                 {/* BIGGEST CHALLENGE (dropdown with checkboxes) */}
-              <div className="w-full" ref={challengesRef}>
+              <div className="w-full" ref={challengesMobileContainerRef}>
                 <div className="group inline-flex items-center max-w-full">
                   <span className={`${fieldInvalid('biggestChallenges') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
                   <div className="relative">
@@ -515,13 +516,13 @@ We'll take it from there.`}
                       type="button"
                       onClick={() => setIsChallengesOpen(!isChallengesOpen)}
                       onBlur={() => setTouched((prev) => ({ ...prev, biggestChallenges: true }))}
-                      className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-normal"
-                      style={{ fontWeight: 400, width: selectWidths.investmentLevel }}
+                      className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-sm tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-body font-normal text-left"
+                      style={{ width: `${BRACKET_WIDTH_MOBILE_PX}px` }}
                     >
                       {values.biggestChallenges.length === 0 ? 'BIGGEST CHALLENGE' : `${values.biggestChallenges.length} SELECTED`}
                     </button>
                     {isChallengesOpen && (
-                      <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl z-50 min-w-[280px] p-3">
+                      <div ref={challengesMobileDropdownRef} className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl z-50 min-w-[280px] p-3">
                         <div className="flex flex-col gap-2 text-sm">
                           <label className="inline-flex items-center gap-2 cursor-pointer select-none hover:bg-white/10 p-2 rounded">
                             <input className="sr-only" type="checkbox" name="biggestChallenges" value="fundraising" onChange={handleInputChange} checked={values.biggestChallenges.includes('fundraising')} />
@@ -575,7 +576,7 @@ We'll take it from there.`}
                     value={values.investmentLevel}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
-                    style={{ width: selectWidths.investmentLevel, fontWeight: 400 }}
+                    style={{ width: `${BRACKET_WIDTH_MOBILE_PX}px`, fontWeight: 400 }}
                     required
                   >
                     <option value="" className="bg-black">LEVEL OF INVESTMENT</option>
@@ -730,7 +731,7 @@ We'll take it from there.`}
                     id="projectLink"
                     name="projectLink"
                   type="text"
-                  placeholder="URL or domain"
+                  placeholder="URL OR DOMAIN "
                   className="bg-transparent border-0 text-[#9EA5AD] placeholder:text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block"
                     value={values.projectLink}
                     onChange={handleInputChange}
@@ -757,7 +758,7 @@ We'll take it from there.`}
                     value={values.stage}
                     onChange={handleInputChange}
                   onBlur={handleBlur}
-                    style={{ width: selectWidths.investmentLevel, fontWeight: 400 }}
+                    style={{ width: `${BRACKET_WIDTH_DESKTOP_PX}px`, fontWeight: 400 }}
                   >
                     <option value="" className="bg-black">STAGE</option>
                     <option value="idea" className="bg-black">Just an idea</option>
@@ -773,7 +774,7 @@ We'll take it from there.`}
               </div>
 
               {/* BIGGEST CHALLENGE (dropdown with checkboxes) */}
-            <div className="w-full" ref={challengesRef}>
+            <div className="w-full" ref={challengesDesktopContainerRef}>
               <div className="group inline-flex items-center max-w-full">
                 <span className={`${fieldInvalid('biggestChallenges') ? 'text-red-500' : 'text-[#9EA5AD]/90 group-hover:text-white'} transition-colors text-2xl`}>[</span>
                 <div className="relative">
@@ -781,13 +782,13 @@ We'll take it from there.`}
                     type="button"
                     onClick={() => setIsChallengesOpen(!isChallengesOpen)}
                     onBlur={() => setTouched((prev) => ({ ...prev, biggestChallenges: true }))}
-                    className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-normal"
-                    style={{ fontWeight: 400, width: selectWidths.investmentLevel }}
+                    className="bg-transparent border-0 text-[#9EA5AD]/60 focus:outline-none px-1.5 text-base tracking-wide inline-block whitespace-nowrap appearance-none cursor-pointer font-body font-normal text-left"
+                    style={{ width: `${BRACKET_WIDTH_DESKTOP_PX}px` }}
                   >
                     {values.biggestChallenges.length === 0 ? 'BIGGEST CHALLENGE' : `${values.biggestChallenges.length} SELECTED`}
                   </button>
                   {isChallengesOpen && (
-                    <div className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl z-50 min-w-[320px] p-3">
+                    <div ref={challengesDesktopDropdownRef} className="absolute top-full left-0 mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl z-50 min-w-[320px] p-3">
                       <div className="flex flex-col gap-2 text-base">
                         <label className="inline-flex items-center gap-3 cursor-pointer select-none hover:bg-white/10 p-2 rounded">
                           <input className="sr-only" type="checkbox" name="biggestChallenges" value="fundraising" onChange={handleInputChange} checked={values.biggestChallenges.includes('fundraising')} />
@@ -841,7 +842,7 @@ We'll take it from there.`}
                   value={values.investmentLevel}
                   onChange={handleInputChange}
                   onBlur={handleBlur}
-                  style={{ width: selectWidths.investmentLevel, fontWeight: 400 }}
+                  style={{ width: `${BRACKET_WIDTH_DESKTOP_PX}px`, fontWeight: 400 }}
                   required
                 >
                   <option value="" className="bg-black">LEVEL OF INVESTMENT</option>
