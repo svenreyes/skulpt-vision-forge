@@ -7,6 +7,7 @@ const SkulptingPage = lazy(() => import("@pages/Skulpting/SkulptingPage"));
 const SkulptedPage = lazy(() => import("@pages/Skulpted/SkulptedPage"));
 const ContactPage = lazy(() => import("@pages/Contact/ContactPage"));
 const PrivacyPage = lazy(() => import("@pages/Privacy/PrivacyPage"));
+const GalleryPage = lazy(() => import("@pages/Gallery/GalleryPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFound/NotFoundPage"));
 
 // Loading fallback component
@@ -27,6 +28,7 @@ export function AppRoutes() {
         <Route path="/skulpted" element={<SkulptedPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
         {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
