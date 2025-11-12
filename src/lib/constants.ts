@@ -11,7 +11,7 @@ export const VALID_CHAR_REGEX = /^[a-zA-Z0-9 .,'-]+$/;
 
 // API endpoints
 export const API_ENDPOINTS = {
-  CONTACT_FORM: "https://hook.us2.make.com/2bwc6n8rxrjij77cun2lnak6aej58nyx",
+  CONTACT_FORM: "/api/contact",
 } as const;
 
 // Rate limiting
