@@ -1,10 +1,9 @@
-// src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRouteBlur } from "@/components/RouteBlurTransition";
-import SKULPTLogo from "../assets/SKULPT-wordmark.svg";
-import HamburgerIcon from "../assets/hamburger.svg";
-import CloseIcon from "../assets/ex.svg";
+import { useRouteBlur } from "@components/RouteBlurTransition";
+import SKULPTLogo from "@assets/SKULPT-wordmark.svg";
+import HamburgerIcon from "@assets/hamburger.svg";
+import CloseIcon from "@assets/ex.svg";
 
 type NavbarProps = { flat?: boolean };
 export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {

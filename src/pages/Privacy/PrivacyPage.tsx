@@ -1,7 +1,5 @@
 import React from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { Seo } from "@/components/Seo";
+import { Navbar, Footer, Seo } from "@components";
 
 const Privacy: React.FC = () => {
   return (

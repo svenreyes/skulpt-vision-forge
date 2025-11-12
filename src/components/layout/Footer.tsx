@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import InstagramIcon from "../assets/insta.svg";
-import LinkedInIcon from "../assets/linkedin.svg";
-import TikTokIcon from "../assets/tiktok.svg";
+import InstagramIcon from "@assets/insta.svg";
+import LinkedInIcon from "@assets/linkedin.svg";
+import TikTokIcon from "@assets/tiktok.svg";
 
 type FooterProps = {
   compact?: boolean;

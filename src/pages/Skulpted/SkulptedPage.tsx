@@ -1,21 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { Navbar, Footer, Seo } from "@components";
 import { Link } from "react-router-dom";
-import ridelinkImg from "@/assets/images/ridelink.png";
-import ridelink2Img from "@/assets/images/ridelink2.png";
-import ridelinkPfp from "@/assets/images/ridelinkpfp.png";
-import yourrideImg from "@/assets/images/yourride.png";
-import thefutureImg from "@/assets/images/thefuture.png";
-import process1Img from "@/assets/images/process1.png";
-import process2Img from "@/assets/images/process2.png";
-import process3Img from "@/assets/images/process3.png";
-import pitchdeckImg from "@/assets/images/pitchdeck.png";
-import playbookImg from "@/assets/images/playbook.png";
-import arrowSvg from "@/assets/arrow.svg";
-import workshopNotebookImg from "@/assets/images/workshop_notebook.png";
-import brandguidelinesImg from "@/assets/images/brandguidelines.png";
-import { Seo } from "../components/Seo";
+import ridelinkImg from "@assets/images/ridelink.png";
+import ridelink2Img from "@assets/images/ridelink2.png";
+import ridelinkPfp from "@assets/images/ridelinkpfp.png";
+import yourrideImg from "@assets/images/yourride.png";
+import thefutureImg from "@assets/images/thefuture.png";
+import process1Img from "@assets/images/process1.png";
+import process2Img from "@assets/images/process2.png";
+import process3Img from "@assets/images/process3.png";
+import pitchdeckImg from "@assets/images/pitchdeck.png";
+import playbookImg from "@assets/images/playbook.png";
+import arrowSvg from "@assets/arrow.svg";
+import workshopNotebookImg from "@assets/images/workshop_notebook.png";
+import brandguidelinesImg from "@assets/images/brandguidelines.png";
 
 function BlurSlideshow({
   images,
