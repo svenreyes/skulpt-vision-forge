@@ -16,7 +16,7 @@ const galleryImages = [
   {
     filename: "skulpt-stockholm-branding-agency-office-floor.png",
     alt: "SKULPT Stockholm branding agency office floor interior design",
-    caption: "Studio Floor Space",
+    caption: "Floor Space",
   },
   {
     filename: "skulpt-Stockholm-branding-agency-office-people.png",
@@ -31,42 +31,37 @@ const galleryImages = [
   {
     filename: "skulpt-stocklom-branding-agency-tea-bag.png",
     alt: "SKULPT Stockholm branding agency creative workspace detail",
-    caption: "Studio Details",
+    caption: "Details",
   },
   {
     filename: "skulpt-sweden-branding-agency-office-event.png",
     alt: "SKULPT Sweden branding agency hosting creative event in Stockholm",
-    caption: "Studio Events",
+    caption: "Events",
   },
   {
     filename: "skulpt-sweden-branding-agency-office-exterior.png",
     alt: "SKULPT Sweden branding agency office exterior in Stockholm",
-    caption: "Studio Exterior",
+    caption: "Exterior",
   },
   {
     filename: "skulpt-sweden-branding-agency-office-inside.png",
     alt: "SKULPT Sweden branding agency office interior workspace in Stockholm",
-    caption: "Creative Workspace",
-  },
-  {
-    filename: "skulpt-sweden-branding-chess-pitch-portfolio.png",
-    alt: "SKULPT branding portfolio showcasing brand strategy and pitch deck work",
-    caption: "Portfolio & Strategy Work",
+    caption: "workshop",
   },
   {
     filename: "skulpt-sweden-branding-flyer-misson-budget.png",
     alt: "SKULPT brand mission and budget planning materials at Sweden branding agency",
-    caption: "Mission & Planning",
+    caption: "pain points",
   },
   {
     filename: "skulpt-sweden-branding-partner-office-interior.png",
     alt: "SKULPT Sweden brand partner office interior design in Stockholm",
-    caption: "Partner Office Interior",
+    caption: "The Skulpting Process",
   },
   {
     filename: "skulpt-sweden-branding-pitch-deck-office-statue.png",
     alt: "SKULPT pitch deck design and brand development materials at Stockholm office",
-    caption: "Pitch Deck Development",
+    caption: "impact",
   },
 ];
 
@@ -140,8 +135,8 @@ export default function GalleryPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ImageGallery",
-    name: "SKULPT Studio & Work Gallery",
-    description: "A glimpse inside SKULPT — our branding partner in Stockholm where brand ideas take shape.",
+    name: "Inside SKULPT",
+    description: "Some snapshots of our spaces, work, and story.",
     publisher: {
       "@type": "Organization",
       name: "SKULPT",
@@ -164,8 +159,8 @@ export default function GalleryPage() {
   return (
     <>
       <Seo
-        title="Our Studio & Work Gallery | SKULPT"
-        description="A glimpse inside SKULPT — our branding partner in Stockholm where brand ideas take shape."
+        title="Inside SKULPT | SKULPT"
+        description="Some snapshots of our spaces, work, and story."
         path="/gallery"
         type="website"
       />
@@ -181,11 +176,11 @@ export default function GalleryPage() {
 
         <main className="flex-1 px-6 md:px-10 lg:px-20 py-16 md:py-24 mx-auto w-full max-w-7xl font-body">
           <h1 className="font-subheading pt-12 text-2xl sm:text-3xl md:text-4xl text-[#7A8289] tracking-tight mb-6">
-            Our Studio & Work Gallery
+            Inside SKULPT
           </h1>
 
           <p className="text-[#606A74] mb-12 max-w-3xl">
-            A glimpse inside SKULPT — our branding partner in Stockholm where brand ideas take shape.
+            Some snapshots of our spaces, work, and story.
           </p>
 
           {/* Responsive Grid */}
