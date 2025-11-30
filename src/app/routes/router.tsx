@@ -2,13 +2,14 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // Lazy load heavy pages (especially 3D scenes)
-const HomePage = lazy(() => import("@pages/Home/HomePage"));
+const HomePage = lazy(() => import("@pages/HomePage"));
 const SkulptingPage = lazy(() => import("@pages/Skulpting/SkulptingPage"));
 const SkulptedPage = lazy(() => import("@pages/Skulpted/SkulptedPage"));
-const ContactPage = lazy(() => import("@pages/Contact/ContactPage"));
-const PrivacyPage = lazy(() => import("@pages/Privacy/PrivacyPage"));
-const GalleryPage = lazy(() => import("@pages/Gallery/GalleryPage"));
-const NotFoundPage = lazy(() => import("@pages/NotFound/NotFoundPage"));
+const ContactPage = lazy(() => import("@pages/ContactPage"));
+const PrivacyPage = lazy(() => import("@pages/PrivacyPage"));
+const GalleryPage = lazy(() => import("@pages/GalleryPage"));
+const FAQPage = lazy(() => import("@pages/FAQPage"));
+const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 // Loading fallback component
 function PageLoader() {
@@ -29,6 +30,7 @@ export function AppRoutes() {
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/faq" element={<FAQPage />} />
         {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

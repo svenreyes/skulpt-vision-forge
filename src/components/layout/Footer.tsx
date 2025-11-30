@@ -40,6 +40,12 @@ export const Footer: React.FC<FooterProps> = ({ compact = false, mobileRowNav = 
             >
               Gallery
             </Link>
+            <Link
+              to="/faq"
+              className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
+            >
+              FAQ
+            </Link>
             <a
               href="mailto:contact@skulptbrand.com"
               className="hover:text-[#3F4851] transition-colors duration-200 py-2 sm:py-0 text-center sm:text-left"
