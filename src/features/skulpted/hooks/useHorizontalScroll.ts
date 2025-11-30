@@ -8,6 +8,7 @@ export function useHorizontalScroll(scrollerRef: RefObject<HTMLDivElement>) {
     if (!isDesktop) return;
 
     const onWheel = (e: WheelEvent) => {
+      // Convert vertical scroll to horizontal
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         const maxScrollLeft = el.scrollWidth - el.clientWidth;
         const prev = el.scrollLeft;
@@ -19,8 +20,9 @@ export function useHorizontalScroll(scrollerRef: RefObject<HTMLDivElement>) {
       }
     };
 
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+    // Listen on window to capture all scroll events
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => window.removeEventListener("wheel", onWheel);
   }, [scrollerRef]);
 }
 

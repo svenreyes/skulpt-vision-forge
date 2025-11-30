@@ -1,13 +1,11 @@
 import freyaImg from "@assets/skulpting/freya 1.png";
 import jaclynImg from "@assets/skulpting/jaclyn 1.png";
-import leaImg from "@assets/skulpting/lea 1.png";
 import luciaImg from "@assets/skulpting/lucia 1.png";
 import svenImg from "@assets/skulpting/sven 1.png";
 
 export const team = [
   { name: "JACLYN PHAM", src: jaclynImg },
   { name: "FREYA LINDQVIST", src: freyaImg },
-  { name: "LEA KIENLE", src: leaImg },
   { name: "SVEN REYES", src: svenImg },
   { name: "LUCIA JUEGUEN", src: luciaImg },
 ];

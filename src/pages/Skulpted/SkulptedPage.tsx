@@ -73,10 +73,10 @@ const Skulpted: React.FC = () => {
           {/* Panel 1 */}
           <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <div className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center py-8 sm:py-12 items-center">
+              <div className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center py-4 sm:py-6 items-center">
                 {/* Lead heading */}
-                <section className="mb-8 sm:mb-4 select-none w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
-                  <h1 className="font-body text-[clamp(18px,5vw,30px)] leading-[150%] tracking-[-0.6px] font-[300] text-[#CBD1D6]">
+                <section className="mb-4 sm:mb-3 select-none w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
+                  <h1 className="font-body text-[clamp(16px,4vw,26px)] leading-[150%] tracking-[-0.6px] font-[300] text-[#CBD1D6]">
                     Grounded in <span className="font-[400] text-[#B0BDC5]">innovation and impact</span>,
                     <br className="hidden sm:block" /> we partner with <span className="font-[400] text-[#B0BDC5]">next-gen entrepreneurs </span>
                     <br className="hidden sm:block" />
@@ -85,8 +85,8 @@ const Skulpted: React.FC = () => {
                 </section>
 
                 {/* Hero image card */}
-                <section className="pt-12 sm:pt-6 md:pt-6 mb-3">
-                  <div className="relative w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw] h-[40vh] sm:h-auto min-h-[280px] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.20)] border border-white/20 bg-white/20 backdrop-blur-md">
+                <section className="pt-4 sm:pt-4 md:pt-4 mb-3">
+                  <div className="relative w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw] h-[35vh] sm:h-[45vh] md:h-[50vh] max-h-[400px] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.20)] border border-white/20 bg-white/20 backdrop-blur-md">
                     <img
                       src={ridelinkImg}
                       alt="RIDELINK showcase"
@@ -98,15 +98,11 @@ const Skulpted: React.FC = () => {
                 </section>
 
                 {/* Title + description */}
-                <section className="mb-2 w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
-                  <h1 className="text-[23px] leading-[35px] font-display text-md text-[#9EA5AD]">RIDELINK</h1>
-                  <p className="mt-1 font-body text-lg text-[#B8C1CB]">
+                <section className="mb-0 w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
+                  <h1 className="text-[20px] sm:text-[23px] leading-[30px] sm:leading-[35px] font-display text-md text-[#9EA5AD]">RIDELINK</h1>
+                  <p className="mt-1 font-body text-base sm:text-lg text-[#B8C1CB]">
                     University ridesharing, reimagined from the inside out.
                   </p>
-                </section>
-
-                {/* Boxed tags row */}
-                <section className="mb-4">
                 </section>
 
               </div>
@@ -505,9 +501,10 @@ const Skulpted: React.FC = () => {
           </main>
 
           {/* Panel 10 - Brand Guidelines with Let's Connect */}
-          <main className="hidden sm:block w-[110vw] sm:w-[85vw] pr-[20vw]">
+          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
             <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
               <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
+                {/* Book image - same structure as other book panels */}
                 <div className="flex items-center justify-center w-full h-full">
                   <img
                     src={brandguidelinesImg}
@@ -517,23 +514,24 @@ const Skulpted: React.FC = () => {
                     decoding="async"
                   />
                 </div>
-
-                <div className="absolute bottom-[calc(var(--footer-h,56px)+16px)] left-[6vw] sm:left-[50vw]">
-                  <Link
-                    to="/contact"
-                    className="text-[22px] sm:text-[36px] md:text-[44px] group inline-flex items-center gap-2 text-[#B0BDC5] hover:text-[#9EA5AD] transition-colors"
-                  >
-                    <span className="font-subheading">Let's</span>
-                    <span className="font-subcursive text-[#C1CFD4] italic">Connect</span>
-                    <img
-                      src={arrowSvg}
-                      className="-rotate-45 w-6 h-6 md:w-8 md:h-8 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                      alt="→"
-                    />
-                  </Link>
-                </div>
               </section>
             </div>
+          </main>
+
+          {/* Panel 11 - Let's Connect (separate panel next to brand guidelines) */}
+          <main className="hidden sm:flex w-[30vw] sm:w-[25vw] items-end pb-[calc(var(--footer-h,56px)+32px)]">
+            <Link
+              to="/contact"
+              className="text-[22px] sm:text-[32px] md:text-[40px] lg:text-[48px] group inline-flex items-center gap-2 text-[#B0BDC5] hover:text-[#9EA5AD] transition-colors whitespace-nowrap"
+            >
+              <span className="font-subheading">Let's</span>
+              <span className="font-subcursive text-[#C1CFD4] italic">Connect</span>
+              <img
+                src={arrowSvg}
+                className="-rotate-45 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                alt="→"
+              />
+            </Link>
           </main>
 
         </div>

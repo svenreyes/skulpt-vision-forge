@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import logo3dGif from "@assets/logo3d.gif";
 
 // Lazy load heavy pages (especially 3D scenes)
 const HomePage = lazy(() => import("@pages/HomePage"));
@@ -15,7 +16,11 @@ const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0]">
-      <div className="text-[#9EA5AD] font-body text-lg">Loading...</div>
+      <img
+        src={logo3dGif}
+        alt="Loading"
+        className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
+      />
     </div>
   );
 }
