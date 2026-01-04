@@ -13,7 +13,7 @@ export function TeamSection({ isMobile }: TeamSectionProps) {
     () =>
       team.map((m) => ({
         ...m,
-        scale: +(0.95 + Math.random() * 0.3).toFixed(2),
+        scale: m.scale ? m.scale : +(0.95 + Math.random() * 0.3).toFixed(2),
         yOffset: Math.floor(-24 + Math.random() * 48),
         xOffset: Math.floor(-8 + Math.random() * 16),
       })),
