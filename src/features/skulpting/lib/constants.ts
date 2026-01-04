@@ -9,7 +9,7 @@ export const team = [
   { name: "FREYA LINDQVIST", src: freyaImg },
   { name: "SVEN REYES", src: svenImg },
   { name: "LUCIA JUEGUEN", src: luciaImg },
-  { name: "FABIANA REQUENA", src: fabiImg, scale: 1.35 },
+  { name: "FABIANA REQUENA", src: fabiImg, scale: 1.5 },
 ];
 
 export const axisOrder: ("strategy" | "alignment" | "external" | "internal")[] = [
