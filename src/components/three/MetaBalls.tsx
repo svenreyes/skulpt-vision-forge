@@ -172,8 +172,8 @@ export default function MetaBalls({
     let animationId: number;
     const animate = (time: number) => {
       if (!isMobile) {
-        mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.08;
-        mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.08;
+        mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.25;
+        mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.25;
         program.uniforms.uMouse.value = [mouseRef.current.x, mouseRef.current.y];
       }
 
