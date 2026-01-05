@@ -3,4 +3,5 @@ export { SShape } from "./SShape";
 export { SplineBlob } from "./SplineBlob";
 export { CloudyBackground } from "./CloudyBackground";
 export { NoiseCanvas } from "./NoiseCanvas";
+export { default as MetaBalls } from "./MetaBalls";
 

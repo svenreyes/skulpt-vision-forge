@@ -1,38 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Navbar, Footer, CloudyBackground, SplineBlob, Seo } from "@components";
+import { Navbar, Footer, CloudyBackground, MetaBalls, Seo } from "@components";
 import { StrategyCircle, TeamSection, useMobileDetect } from "@features/skulpting";
 import skulpting2Video from "@assets/videos/skulpting2.mp4";
 import arrowUrl from "@assets/arrow.svg";
 
 export default function SkulptingPage() {
-  const [shouldLoadBlob, setShouldLoadBlob] = useState(false);
   const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
-  const blobRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLDivElement>(null);
   const marqueeVideoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useMobileDetect();
 
-  // Intersection Observer for lazy loading the Spline blob
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoadBlob(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, rootMargin: "100px" }
-    );
-
-    if (blobRef.current) {
-      observer.observe(blobRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Video time synchronization for marquee
   useEffect(() => {
     const v = marqueeVideoRef.current;
     if (!v) return;
@@ -41,7 +19,6 @@ export default function SkulptingPage() {
       try {
         if (v.currentTime < 2.9 || v.currentTime > 3.1) v.currentTime = 3;
       } catch {
-        // Ignore errors setting currentTime
       }
     };
 
@@ -63,7 +40,6 @@ export default function SkulptingPage() {
     };
   }, [shouldLoadVideos]);
 
-  // Intersection Observer for lazy loading videos
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -101,32 +77,18 @@ export default function SkulptingPage() {
           <Navbar />
         </div>
 
-        {/* Hero section with blob */}
-        <section className="relative min-h-screen">
-          <div
-            ref={blobRef}
-            className="absolute inset-0 z-10 grid place-items-center"
-          >
-            <div
-              className="relative size-[min(175vw,175svh)] translate-x-[-26%] sm:size-[min(165vw,165svh)] scale-[2.75] sm:translate-x-[-4%] md:size-[160vmin] md:scale-[1.5] md:translate-x-0 md:translate-y-8 lg:size-[160vmin] lg:scale-[2] lg:-translate-y-[23%] lg:-translate-x-36 xl:size-[180vmin]"
-              style={{
-                filter: shouldLoadBlob ? "blur(3px)" : "blur(0px)",
-                transition: "filter 0.3s ease-in-out",
-                willChange: "transform, filter",
-              }}
-            >
-              {shouldLoadBlob ? (
-                <SplineBlob
-                  url="https://my.spline.design/untitled-joeso1Tv4ZyNsbizJR3r5kQz/?ui=0"
-                  className="absolute inset-0 w-full h-full"
-                />
-              ) : (
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#9EA5AD]/20 to-[#CBD1D6]/10 rounded-full animate-pulse" />
-              )}
-            </div>
+        {/* Hero section with MetaBalls */}
+        <section className="relative h-screen w-full overflow-hidden">
+          <div className="absolute inset-0 z-10">
+<MetaBalls
+               color="#FFFFFF"
+               cursorBallColor="#FFFFFF"
+               speed={0.4}
+               ballCount={15}
+             />
           </div>
 
-          <div className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center pointer-events-none select-none pt-16 md:pt-0">
+          <div className="absolute inset-0 z-20 flex items-center justify-center px-6 text-center pointer-events-none select-none pt-16 md:pt-0">
             <h1 className="font-subheading text-[#9EA5AD] text-[28.2px] leading-[190%] tracking-[-0.8px] font-normal">
               What are we skulpting today?
             </h1>
