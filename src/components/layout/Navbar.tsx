@@ -60,7 +60,6 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                   alt="SKULPT" 
                   className="h-7 w-auto"
                   style={{
-                    filter: 'brightness(0) invert(1)',
                     height: '28px',
                     width: 'auto',
                     objectFit: 'contain'
