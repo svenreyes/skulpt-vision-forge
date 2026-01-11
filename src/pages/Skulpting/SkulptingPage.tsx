@@ -69,7 +69,7 @@ export default function SkulptingPage() {
       <div className="relative scale-[1] min-h-screen w-full bg-[#E6EBEE] overflow-y-auto overflow-x-hidden">
         {/* Background clouds */}
         <div className="absolute inset-0 z-0 min-h-[300vh]">
-          <CloudyBackground zIndex={0} height="300vh" />
+          <CloudyBackground zIndex={0} />
         </div>
 
         {/* Navbar */}
