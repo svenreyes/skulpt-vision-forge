@@ -5,8 +5,8 @@ import SKULPTLogo from "@assets/SKULPT-wordmark.svg";
 import HamburgerIcon from "@assets/hamburger.svg";
 import CloseIcon from "@assets/ex.svg";
 
-type NavbarProps = { flat?: boolean };
-export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
+type NavbarProps = { flat?: boolean; light?: boolean };
+export const Navbar: React.FC<NavbarProps> = ({ flat = false, light = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobile, setMobile] = useState(false);
   const navigate = useNavigate();
@@ -32,6 +32,10 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
     "/circle": "Circle — Log in",
     "/contact": "Contact us",
   };
+
+  const navTextClass = light
+    ? "text-white/80 hover:text-white focus:text-white"
+    : "text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD]";
 
   return (
     <nav
@@ -75,7 +79,8 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                 style={{
                   height: '28px',
                   width: 'auto',
-                  objectFit: 'contain'
+                  objectFit: 'contain',
+                  ...(light ? { filter: 'brightness(0) invert(1)', opacity: 0.85 } : {}),
                 }}
                 aria-hidden="true"
               />
@@ -93,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                   <button
                     key={item.to}
                     onClick={async () => { await trigger({ before: 180, after: 180 }); navigate(item.to); }}
-                    className="relative font-subheading text-[0.99rem] tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]"
+                    className={`relative font-subheading text-[0.99rem] tracking-wider ${navTextClass} transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]`}
                     aria-label={`${item.label} — ${ariaByTo[item.to] || 'Navigate'}`}
                   >
                     {item.label}
@@ -102,7 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                   <a
                     key={item.href}
                     href={item.href}
-                    className="relative font-subheading text-[0.99rem] tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]"
+                    className={`relative font-subheading text-[0.99rem] tracking-wider ${navTextClass} transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]`}
                     aria-label={`${item.label} — External link`}
                   >
                     {item.label}
@@ -118,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
             {('to' in navItems[3]) ? (
               <button
                 onClick={async () => { await trigger({ before: 180, after: 180 }); navigate((navItems[3] as { to: string }).to); }}
-                className="relative font-subheading text-[0.99rem] tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]"
+                className={`relative font-subheading text-[0.99rem] tracking-wider ${navTextClass} transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]`}
                 aria-label={`${navItems[3].label} — ${ariaByTo[(navItems[3] as { to: string }).to] || 'Navigate'}`}
               >
                 {navItems[3].label}
@@ -126,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
             ) : (
               <a
                 href={(navItems[3] as { href: string }).href}
-                className="relative font-subheading text-[0.99rem] tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]"
+                className={`relative font-subheading text-[0.99rem] tracking-wider ${navTextClass} transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]`}
                 aria-label={`${navItems[3].label} — External link`}
               >
                 {navItems[3].label}
@@ -160,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                   onClick={async () => { setMobile(false); await trigger({ before: 180, after: 180 }); navigate(item.to); }}
                   className="w-full text-left rounded-xl border border-white/30 bg-white/20 backdrop-blur-lg px-4 py-3"
                 >
-                  <span className="font-subheading text-[#9EA5AD]">{item.label}</span>
+                  <span className={`font-subheading ${light ? "text-white/80" : "text-[#9EA5AD]"}`}>{item.label}</span>
                 </button>
               ) : (
                 <a
@@ -169,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
                   onClick={() => setMobile(false)}
                   className="block w-full rounded-xl border border-white/30 bg-white/20 backdrop-blur-lg px-4 py-3"
                 >
-                  <span className="font-subheading text-[#9EA5AD]">{item.label}</span>
+                  <span className={`font-subheading ${light ? "text-white/80" : "text-[#9EA5AD]"}`}>{item.label}</span>
                 </a>
               )
             ))}

@@ -2,25 +2,13 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const MAX_BODY_SIZE = 2000;
 
+// Temporary: accept any login for preview. Replace with real validation later.
 const validateInput = (
   body: Record<string, unknown>
 ): { valid: boolean; error?: string } => {
   if (!body || typeof body !== "object") {
     return { valid: false, error: "Invalid request body" };
   }
-
-  if (
-    typeof body.email !== "string" ||
-    body.email.length > 150 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)
-  ) {
-    return { valid: false, error: "Invalid email" };
-  }
-
-  if (typeof body.password !== "string" || body.password.length < 1 || body.password.length > 256) {
-    return { valid: false, error: "Invalid password" };
-  }
-
   return { valid: true };
 };
 
