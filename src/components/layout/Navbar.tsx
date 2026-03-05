@@ -23,11 +23,13 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
   const navItems: Array<NavItemTo | NavItemHref> = [
     { label: "[skulpting]", to: "/skulpting" },
     { label: "[skulpted]", to: "/skulpted" },
+    { label: "[circle]", to: "/circle" },
     { label: "[next]", to: "/contact" }
   ];
   const ariaByTo: Record<string, string> = {
     "/skulpting": "About SKULPT",
     "/skulpted": "Portfolio: our work",
+    "/circle": "Circle — Log in",
     "/contact": "Contact us",
   };
 
@@ -85,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
         <div className="flex-1 flex justify-center">
           <div className="hidden lg:flex items-center space-x-8">
             {navItems
-              .slice(0, 2)
+              .slice(0, 3)
               .map((item) => (
                 'to' in item ? (
                   <button
@@ -113,21 +115,21 @@ export const Navbar: React.FC<NavbarProps> = ({ flat = false }) => {
         {/* Next Button - Right */}
         <div className="flex-1 flex justify-end">
           <div className="hidden lg:block">
-            {('to' in navItems[2]) ? (
+            {('to' in navItems[3]) ? (
               <button
-                onClick={async () => { await trigger({ before: 180, after: 180 }); navigate((navItems[2] as { to: string }).to); }}
+                onClick={async () => { await trigger({ before: 180, after: 180 }); navigate((navItems[3] as { to: string }).to); }}
                 className="relative font-subheading text-[0.99rem] tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]"
-                aria-label={`${navItems[2].label} — ${ariaByTo[(navItems[2] as { to: string }).to] || 'Navigate'}`}
+                aria-label={`${navItems[3].label} — ${ariaByTo[(navItems[3] as { to: string }).to] || 'Navigate'}`}
               >
-                {navItems[2].label}
+                {navItems[3].label}
               </button>
             ) : (
               <a
-                href={(navItems[2] as { href: string }).href}
+                href={(navItems[3] as { href: string }).href}
                 className="relative font-subheading text-[0.99rem] tracking-wider text-[#9EA5AD] hover:text-[#9EA5AD] focus:text-[#9EA5AD] transition-all duration-300 hover:blur-0 focus:blur-0.2 blur-[1px]"
-                aria-label={`${navItems[2].label} — External link`}
+                aria-label={`${navItems[3].label} — External link`}
               >
-                {navItems[2].label}
+                {navItems[3].label}
               </a>
             )}
           </div>

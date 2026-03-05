@@ -12,6 +12,7 @@ export const VALID_CHAR_REGEX = /^[a-zA-Z0-9 .,'-]+$/;
 // API endpoints
 export const API_ENDPOINTS = {
   CONTACT_FORM: "/api/contact",
+  CIRCLE_LOGIN: "/api/circle/login",
 } as const;
 
 // Rate limiting

@@ -6,6 +6,7 @@ import logo3dGif from "@assets/logo3d.gif";
 const HomePage = lazy(() => import("@pages/HomePage"));
 const SkulptingPage = lazy(() => import("@pages/Skulpting/SkulptingPage"));
 const SkulptedPage = lazy(() => import("@pages/Skulpted/SkulptedPage"));
+const CirclePage = lazy(() => import("@pages/Circle/CirclePage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
 const PrivacyPage = lazy(() => import("@pages/PrivacyPage"));
 const GalleryPage = lazy(() => import("@pages/GalleryPage"));
@@ -32,6 +33,7 @@ export function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/skulpting" element={<SkulptingPage />} />
         <Route path="/skulpted" element={<SkulptedPage />} />
+        <Route path="/circle" element={<CirclePage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
