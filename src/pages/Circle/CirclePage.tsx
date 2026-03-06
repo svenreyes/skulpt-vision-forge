@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense, type FormEvent } from "react";
+import { useState, useEffect, useRef, lazy, Suspense, type FormEvent } from "react";
 import { Navbar, Seo, CloudyBackground, Footer } from "@components";
 import { API_ENDPOINTS } from "@/lib/constants";
 import dropSvg from "@assets/drop.svg";
@@ -105,6 +105,8 @@ export default function CirclePage() {
   const [error, setError] = useState<string | null>(null);
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(null);
   const [phase, setPhase] = useState<Phase>("login");
+  const [scrollLocked, setScrollLocked] = useState(false);
+  const dashboardRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -135,6 +137,16 @@ export default function CirclePage() {
       const id = setTimeout(() => setPhase("landing"), 2000);
       return () => clearTimeout(id);
     }
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "landing") return;
+    const scrollId = setTimeout(() => {
+      dashboardRef.current?.scrollIntoView({ behavior: "smooth" });
+      const lockId = setTimeout(() => setScrollLocked(true), 1000);
+      return () => clearTimeout(lockId);
+    }, 2000);
+    return () => clearTimeout(scrollId);
   }, [phase]);
 
   const isInside = phase === "greeting" || phase === "landing";
@@ -168,12 +180,13 @@ export default function CirclePage() {
         .greeting-text {
           animation: greeting-in 2s ease-in-out forwards;
         }
-        @keyframes fade-in-up {
-          0%   { opacity: 0; transform: translateY(24px); }
+        @keyframes orbit-intro {
+          0%   { opacity: 0; transform: translateY(100vh); }
+          60%  { opacity: 1; }
           100% { opacity: 1; transform: translateY(0); }
         }
-        .fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
+        .orbit-intro {
+          animation: orbit-intro 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
       `}</style>
 
@@ -297,20 +310,89 @@ export default function CirclePage() {
               </div>
             </div>
 
-            {/* Scrollable content over the globe */}
-            <header className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
-              <h1 className="font-subheading text-white/85 text-3xl sm:text-4xl md:text-5xl tracking-wide fade-in-up">
-                Orbit around SKULPT Circle
-              </h1>
-              <p
-                className="mt-4 font-subheading text-white/60 text-base sm:text-lg tracking-wide fade-in-up"
-                style={{ animationDelay: "0.15s" }}
-              >
-                our exclusive founder ecosystem
-              </p>
-            </header>
+            {/* Intro header — hidden once scroll locks */}
+            {!scrollLocked && (
+              <header className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+                <h1 className="font-subheading text-white/85 text-3xl sm:text-4xl md:text-5xl tracking-wide orbit-intro">
+                  Orbit around SKULPT Circle
+                </h1>
+                <p
+                  className="mt-4 font-subheading text-white/60 text-base sm:text-lg tracking-wide orbit-intro"
+                  style={{ animationDelay: "0.15s" }}
+                >
+                  our exclusive founder ecosystem
+                </p>
+              </header>
+            )}
 
-            <div className="relative z-10 min-h-screen" />
+            {/* Dashboard screen */}
+            <section
+              ref={dashboardRef}
+              className="relative z-10 min-h-screen grid grid-cols-1 lg:grid-cols-[230px_1fr_1fr] items-stretch gap-0 overflow-hidden px-4 sm:px-8 lg:px-10 py-24 sm:py-28 lg:py-32"
+            >
+              {/* Left — two empty glass containers, narrow & tall */}
+              <div className="flex flex-col gap-5 py-2">
+                <div className="flex-1 rounded-2xl border border-white/35 bg-white/18 backdrop-blur-xl min-h-[34vh]" />
+                <div className="flex-1 rounded-2xl border border-white/35 bg-white/18 backdrop-blur-xl min-h-[34vh]" />
+              </div>
+
+              {/* Center — globe shows through, no content */}
+              <div />
+
+              {/* Right — raw stats, no containers, spread top to bottom */}
+              <div className="ml-auto flex w-full max-w-[32rem] min-h-[calc(100vh-16rem)] flex-col justify-between gap-10 py-4 pr-1 sm:pr-2 lg:pr-0 pl-4 lg:pl-0">
+                <div>
+                  <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Total of transactions</p>
+                  <p className="font-subheading text-white/90 text-6xl tracking-tight mt-1">142</p>
+                </div>
+
+                <div className="flex gap-12">
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Fastest transaction</p>
+                    <p className="font-subheading text-white/90 text-3xl tracking-tight mt-1">9s</p>
+                  </div>
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Retention</p>
+                    <p className="font-subheading text-white/90 text-3xl tracking-tight mt-1">94%</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-12">
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Brand Partners</p>
+                    <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">1,032</p>
+                  </div>
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Projects</p>
+                    <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">113</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-12">
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Countries reached</p>
+                    <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">33</p>
+                  </div>
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Top market</p>
+                    <p className="font-subheading text-white/80 text-lg tracking-wide mt-1">United States</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Assets delivered</p>
+                  <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">502,754</p>
+                </div>
+
+                <div className="flex items-end gap-6">
+                  <div>
+                    <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Circle Fee</p>
+                    <p className="font-subheading text-white/90 text-5xl tracking-tight mt-1">$0</p>
+                  </div>
+                  <p className="font-subheading text-white/40 text-xs tracking-wide pb-2">always $0 for partners</p>
+                </div>
+              </div>
+            </section>
           </article>
         )}
 

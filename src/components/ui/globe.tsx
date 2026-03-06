@@ -147,14 +147,15 @@ function GlobeScene({ globeConfig }: WorldProps) {
         <primitive key={`grid-${i}`} object={line} />
       ))}
 
-      <primitive object={surfacePoints} />
+      <primitive object={surfacePoints} renderOrder={0} />
 
-      <mesh>
+      <mesh renderOrder={1}>
         <sphereGeometry args={[2.16, 48, 48]} />
         <meshBasicMaterial
           color={new Color(atmosphereColor)}
           transparent
           opacity={0.06}
+          depthWrite={false}
           blending={AdditiveBlending}
         />
       </mesh>
