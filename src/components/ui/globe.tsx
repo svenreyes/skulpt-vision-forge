@@ -1,17 +1,17 @@
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { AdditiveBlending, Color, Vector3 } from "three";
-
-type Position = {
-  order: number;
-  startLat: number;
-  startLng: number;
-  endLat: number;
-  endLng: number;
-  arcAlt: number;
-  color: string;
-};
+import {
+  AdditiveBlending,
+  Color,
+  Vector3,
+  BufferGeometry,
+  Float32BufferAttribute,
+  LineBasicMaterial,
+  Line,
+  PointsMaterial,
+  Points,
+} from "three";
 
 export type GlobeConfig = {
   pointSize?: number;
@@ -41,57 +41,62 @@ export type GlobeConfig = {
 
 interface WorldProps {
   globeConfig: GlobeConfig;
-  data: Position[];
+  data: unknown[];
 }
 
-function latLngToVec3(lat: number, lng: number, radius = 2.02) {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lng + 180) * (Math.PI / 180);
-  return new Vector3(
-    -(radius * Math.sin(phi) * Math.cos(theta)),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta),
-  );
+function buildGridLines(radius: number, segments: number) {
+  const latLines: number[][] = [];
+  const lngLines: number[][] = [];
+
+  for (let lat = -60; lat <= 60; lat += 30) {
+    const ring: number[] = [];
+    const phi = (90 - lat) * (Math.PI / 180);
+    for (let i = 0; i <= segments; i++) {
+      const theta = (i / segments) * Math.PI * 2;
+      ring.push(
+        -(radius * Math.sin(phi) * Math.cos(theta)),
+        radius * Math.cos(phi),
+        radius * Math.sin(phi) * Math.sin(theta),
+      );
+    }
+    latLines.push(ring);
+  }
+
+  for (let lng = 0; lng < 360; lng += 30) {
+    const arc: number[] = [];
+    const theta = (lng + 180) * (Math.PI / 180);
+    for (let i = 0; i <= segments; i++) {
+      const phi = (i / segments) * Math.PI;
+      arc.push(
+        -(radius * Math.sin(phi) * Math.cos(theta)),
+        radius * Math.cos(phi),
+        radius * Math.sin(phi) * Math.sin(theta),
+      );
+    }
+    lngLines.push(arc);
+  }
+
+  return { latLines, lngLines };
 }
 
-function ArcMesh({
-  startLat,
-  startLng,
-  endLat,
-  endLng,
-  color,
-}: {
-  startLat: number;
-  startLng: number;
-  endLat: number;
-  endLng: number;
-  color: string;
-}) {
-  const points = useMemo(() => {
-    const a = latLngToVec3(startLat, startLng, 2.05);
-    const b = latLngToVec3(endLat, endLng, 2.05);
-    const mid = a.clone().add(b).multiplyScalar(0.5).normalize().multiplyScalar(2.45);
-    return [a, mid, b];
-  }, [startLat, startLng, endLat, endLng]);
-
-  return (
-    <line>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={points.length}
-          itemSize={3}
-          array={new Float32Array(points.flatMap((p) => [p.x, p.y, p.z]))}
-        />
-      </bufferGeometry>
-      <lineBasicMaterial color={color} transparent opacity={0.75} />
-    </line>
-  );
+function buildSurfaceParticles(count: number, radius: number) {
+  const verts: number[] = [];
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    verts.push(
+      -(radius * Math.sin(phi) * Math.cos(theta)),
+      radius * Math.cos(phi),
+      radius * Math.sin(phi) * Math.sin(theta),
+    );
+  }
+  return new Float32Array(verts);
 }
 
-function GlobeScene({ globeConfig, data }: WorldProps) {
+function GlobeScene({ globeConfig }: WorldProps) {
   const groupRef = useRef<any>(null);
-  const baseColor = globeConfig.globeColor ?? "#062056";
   const atmosphereColor = globeConfig.atmosphereColor ?? "#ffffff";
   const rotateSpeed = globeConfig.autoRotateSpeed ?? 0.5;
 
@@ -101,40 +106,58 @@ function GlobeScene({ globeConfig, data }: WorldProps) {
     groupRef.current.rotation.y += delta * rotateSpeed * 0.22;
   });
 
-  const sampledData = useMemo(() => data.slice(0, 28), [data]);
+  const gridLines = useMemo(() => {
+    const { latLines, lngLines } = buildGridLines(2.005, 96);
+    const mat = new LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.13 });
+    return [...latLines, ...lngLines].map((verts) => {
+      const geom = new BufferGeometry();
+      geom.setAttribute("position", new Float32BufferAttribute(verts, 3));
+      return new Line(geom, mat);
+    });
+  }, []);
+
+  const surfacePoints = useMemo(() => {
+    const positions = buildSurfaceParticles(3000, 2.01);
+    const geom = new BufferGeometry();
+    geom.setAttribute("position", new Float32BufferAttribute(positions, 3));
+    const mat = new PointsMaterial({
+      color: 0xffffff,
+      size: 0.05,
+      transparent: true,
+      opacity: 0.65,
+      sizeAttenuation: true,
+      depthWrite: false,
+    });
+    return new Points(geom, mat);
+  }, []);
 
   return (
     <group ref={groupRef}>
       <mesh>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          color={new Color(baseColor)}
-          emissive={new Color(globeConfig.emissive ?? "#062056")}
-          emissiveIntensity={globeConfig.emissiveIntensity ?? 0.12}
-          shininess={globeConfig.shininess ?? 1}
+          color={new Color("#000000")}
+          emissive={new Color("#000000")}
+          emissiveIntensity={0.05}
+          shininess={0.4}
         />
       </mesh>
+
+      {gridLines.map((line, i) => (
+        <primitive key={`grid-${i}`} object={line} />
+      ))}
+
+      <primitive object={surfacePoints} />
 
       <mesh>
         <sphereGeometry args={[2.16, 48, 48]} />
         <meshBasicMaterial
           color={new Color(atmosphereColor)}
           transparent
-          opacity={0.12}
+          opacity={0.06}
           blending={AdditiveBlending}
         />
       </mesh>
-
-      {sampledData.map((arc, idx) => (
-        <ArcMesh
-          key={`${arc.order}-${idx}`}
-          startLat={arc.startLat}
-          startLng={arc.startLng}
-          endLat={arc.endLat}
-          endLng={arc.endLng}
-          color={arc.color}
-        />
-      ))}
     </group>
   );
 }
@@ -145,7 +168,7 @@ export function World(props: WorldProps) {
     <Canvas
       gl={{ alpha: true, antialias: true }}
       style={{ background: "transparent" }}
-      camera={{ position: [0, 0.4, 6.5], fov: 45 }}
+      camera={{ position: [0, 0, 6.9], fov: 45 }}
     >
       <ambientLight color={globeConfig.ambientLight ?? "#38bdf8"} intensity={0.6} />
       <directionalLight
@@ -166,8 +189,8 @@ export function World(props: WorldProps) {
         enablePan={false}
         enableZoom={false}
         autoRotate={false}
-        minDistance={6.5}
-        maxDistance={6.5}
+        minDistance={6.9}
+        maxDistance={6.9}
         minPolarAngle={Math.PI / 2.6}
         maxPolarAngle={Math.PI / 1.8}
       />

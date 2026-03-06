@@ -29,13 +29,13 @@ const STEEL_BLUE = "#96A3AC";
 
 const GLOBE_CONFIG = {
   pointSize: 4,
-  globeColor: "#062056",
+  globeColor: "#000000",
   showAtmosphere: true,
   atmosphereColor: "#FFFFFF",
   atmosphereAltitude: 0.1,
-  emissive: "#062056",
-  emissiveIntensity: 0.1,
-  shininess: 0.9,
+  emissive: "#000000",
+  emissiveIntensity: 0.05,
+  shininess: 0.4,
   polygonColor: "rgba(255,255,255,0.7)",
   ambientLight: "#38bdf8",
   directionalLeftLight: "#ffffff",
@@ -288,27 +288,29 @@ export default function CirclePage() {
         {/* Landing sub-page — the actual inside */}
         {phase === "landing" && (
           <article className="relative z-10" aria-label="SKULPT Circle Dashboard">
-            <header className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center overflow-hidden">
-              <h1 className="relative z-10 font-subheading text-white/85 text-3xl sm:text-4xl md:text-5xl tracking-wide fade-in-up">
+            {/* Fixed globe background with blur */}
+            <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+              <div className="absolute inset-0" style={{ filter: "blur(5px)" }}>
+                <Suspense fallback={null}>
+                  <World data={SAMPLE_ARCS} globeConfig={GLOBE_CONFIG} />
+                </Suspense>
+              </div>
+            </div>
+
+            {/* Scrollable content over the globe */}
+            <header className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+              <h1 className="font-subheading text-white/85 text-3xl sm:text-4xl md:text-5xl tracking-wide fade-in-up">
                 Orbit around SKULPT Circle
               </h1>
               <p
-                className="relative z-10 mt-4 font-subheading text-white/60 text-base sm:text-lg tracking-wide fade-in-up"
+                className="mt-4 font-subheading text-white/60 text-base sm:text-lg tracking-wide fade-in-up"
                 style={{ animationDelay: "0.15s" }}
               >
                 our exclusive founder ecosystem
               </p>
-
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[80vh] md:h-[40rem] w-full pointer-events-none fade-in-up" style={{ animationDelay: "0.3s" }}>
-                <div className="absolute w-full h-full">
-                  <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#96A3AC] to-transparent z-20 pointer-events-none" />
-                  <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#96A3AC] to-transparent z-20 pointer-events-none" />
-                  <Suspense fallback={null}>
-                    <World data={SAMPLE_ARCS} globeConfig={GLOBE_CONFIG} />
-                  </Suspense>
-                </div>
-              </div>
             </header>
+
+            <div className="relative z-10 min-h-screen" />
           </article>
         )}
 
