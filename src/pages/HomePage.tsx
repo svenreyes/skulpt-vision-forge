@@ -13,20 +13,29 @@ const questions = [
   "What part of you do people not understand?",
 ];
 
+const HOME_VISITED_KEY = "skulpt_home_visited";
+
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const questionRefs = useRef<(HTMLLIElement | null)[]>([]);
   const taglineRef = useRef<HTMLElement | null>(null);
 
   const [focusedIdx, setFocusedIdx] = useState(0);
-  const [stackedMode, setStackedMode] = useState(false);
-  const [freezeScroll, setFreezeScroll] = useState(false);
+  const [stackedMode] = useState(
+    () => sessionStorage.getItem(HOME_VISITED_KEY) === "1",
+  );
   const [hasInteracted, setHasInteracted] = useState(false);
 
   const navigate = useNavigate();
   const { trigger } = useRouteBlur();
 
-  // Snap-focus logic
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem(HOME_VISITED_KEY, "1");
+    };
+  }, []);
+
+  // Snap-focus logic (only when not in stacked mode)
   useEffect(() => {
     if (stackedMode) return;
 
@@ -44,33 +53,6 @@ export default function HomePage() {
 
     questionRefs.current.forEach((node) => node && observer.observe(node));
     return () => observer.disconnect();
-  }, [stackedMode]);
-
-  // Convert to stacked mode on tagline
-  useEffect(() => {
-    if (!taglineRef.current || stackedMode) return;
-    const container = containerRef.current!;
-
-    const tagObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !stackedMode) {
-            const targetTop = taglineRef.current!.offsetTop;
-            container.scrollTo({ top: targetTop, behavior: "auto" });
-            setFreezeScroll(true);
-
-            setTimeout(() => {
-              setStackedMode(true);
-              setFreezeScroll(false);
-            }, 300);
-          }
-        });
-      },
-      { threshold: 0.6 }
-    );
-
-    tagObserver.observe(taglineRef.current);
-    return () => tagObserver.disconnect();
   }, [stackedMode]);
 
   // Smooth scroll
@@ -113,7 +95,7 @@ export default function HomePage() {
   return (
     <div
       ref={containerRef}
-      style={{ overflowY: freezeScroll ? "hidden" : "auto" }}
+      style={{ overflowY: "auto" }}
       className={`h-screen bg-gradient-to-b from-[#E6EBEE] to-[#D1D9E0] relative flex flex-col pt-8 ${
         stackedMode ? "" : "snap-y snap-mandatory"
       }`}
@@ -193,7 +175,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <footer>
+      <footer className="snap-start">
         <Footer />
       </footer>
     </div>
