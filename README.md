@@ -48,4 +48,12 @@ https://skulptbrand.com
 
 ## License
 
-© 2025 SKULPT. All rights reserved.
+This repository and its source code are the intellectual property of Sven Reyes.
+
+It is provided under a source-available license for review and evaluation only.
+Commercial use, production deployment, resale, or sublicensing is not permitted
+without prior written permission.
+
+See `LICENSE` for full terms.
+
+For commercial licensing inquiries: sven.s.reyes@gmail.com
