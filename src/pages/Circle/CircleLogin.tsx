@@ -21,7 +21,7 @@ const CIRCLE_FAQ = [
         Beyond that, a small number of applicants are considered each quarter.
         If you haven&apos;t worked with SKULPT yet, the best way is to start there.{" "}
         <Link to="/contact" className="underline hover:text-[#7A828A] transition-colors">
-          Let&apos;s talk.
+          [Let&apos;s talk.]
         </Link>
       </>
     ),
