@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { CloudyBackground, Footer } from "@components";
 import { API_ENDPOINTS } from "@/lib/constants";
 import dropSvg from "@assets/drop.svg";
@@ -7,19 +8,25 @@ const CIRCLE_FAQ = [
   {
     question: "What is SKULPT Circle?",
     answer:
-      "The exclusive hub for partners who have completed the Skulpting Process—with brand advisory, activation sessions, and curated resources.",
+      "The SKULPT Circle is where our Partners go after the Skulpting Process is done. Monthly insights on brand and culture. Private events and sessions you won't find anywhere else. Access to the SKULPT team when a major decision is on the table. And a network of founders, investors, and builders who are all, in some way, in the middle of building something that matters.",
   },
   {
-    question: "How do i join the Circle?",
-    answer:
-      "Complete the Skulpting Process and become a brand partner. The Circle is for founders who have finished that journey.",
+    question: "How Do I Join The Circle?",
+    answer: (
+      <>
+        You get invited.
+        <br />
+        <br />
+        Every founder who completes the Skulpting Process is automatically invited.
+        Beyond that, a small number of applicants are considered each quarter.
+        If you haven&apos;t worked with SKULPT yet, the best way is to start there.{" "}
+        <Link to="/contact" className="underline hover:text-[#7A828A] transition-colors">
+          Let&apos;s talk.
+        </Link>
+      </>
+    ),
   },
-  {
-    question: "Who is in the Circle?",
-    answer:
-      "Partners who have completed the Skulpting Process, plus the broader founder ecosystem: sweat-equity portfolio, accelerators, and creative communities globally.",
-  },
-];
+] as Array<{ question: string; answer: ReactNode }>;
 
 const inputClass =
   "w-full rounded-xl border border-white/40 bg-white/25 backdrop-blur-md px-5 py-3 font-subheading text-[13px] text-white/80 tracking-wide placeholder:text-white/70 focus:outline-none focus:ring-1 focus:ring-white/50 transition-colors hover:bg-white/35";
@@ -158,9 +165,9 @@ export default function CircleLogin({ onLogin }: CircleLoginProps) {
                   faqOpenIndex === index ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                 }`}
               >
-                <p className="mt-3 font-subheading text-[#9EA5AD] text-sm sm:text-base text-center max-w-lg mx-auto leading-relaxed">
+                <div className="mt-3 font-subheading text-[#9EA5AD] text-sm sm:text-base text-center max-w-lg mx-auto leading-relaxed">
                   {answer}
-                </p>
+                </div>
               </div>
               <hr className="mt-4 mx-auto w-1/2 border-t border-[#D8DDE4]/80" />
             </li>

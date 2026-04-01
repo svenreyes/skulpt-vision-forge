@@ -62,7 +62,7 @@ export default function CirclePage() {
       <div
         className={`relative w-full overflow-x-hidden ${phase === "landing" ? "h-screen overflow-hidden" : "min-h-screen overflow-y-auto"}`}
         style={{
-          background: isInside ? STEEL_BLUE : "#EBE6F0",
+          background: isInside ? STEEL_BLUE : "#B0BDC5",
           transition: phase === "animating" ? "background 1.2s ease-out" : "none",
         }}
       >

@@ -9,13 +9,13 @@ const World = lazy(() =>
 
 const GLOBE_CONFIG = {
   pointSize: 4,
-  globeColor: "#000000",
+  globeColor: "#6B7884",
   showAtmosphere: true,
   atmosphereColor: "#FFFFFF",
   atmosphereAltitude: 0.1,
-  emissive: "#000000",
-  emissiveIntensity: 0.05,
-  shininess: 0.4,
+  emissive: "#4A5560",
+  emissiveIntensity: 0.15,
+  shininess: 0.5,
   polygonColor: "rgba(255,255,255,0.7)",
   ambientLight: "#38bdf8",
   directionalLeftLight: "#ffffff",
@@ -173,117 +173,8 @@ export default function CircleDashboard() {
         </header>
       )}
 
-      {/* Screen 1 — stats */}
-      <section
-        ref={dashboardRef}
-        className="relative z-10 h-screen snap-start grid grid-cols-1 lg:grid-cols-[300px_1fr_1fr] items-stretch gap-0 overflow-hidden px-4 sm:px-8 lg:px-10 pt-20 sm:pt-24 lg:pt-24 pb-10 sm:pb-12 lg:pb-14"
-      >
-        <div className="flex flex-col gap-5 py-2">
-          <div
-            className={`${GLASS} flex-1 min-h-[40vh] p-5 flex flex-col justify-between`}
-            style={GLASS_SHADOW}
-          >
-            <div>
-              <p className="font-subheading text-white/40 text-[9px] tracking-widest uppercase">Recent activity</p>
-              <div className="mt-3 space-y-3">
-                <div className="flex items-center justify-between">
-                  <p className="font-subheading text-white/70 text-xs">Brand onboarding</p>
-                  <p className="font-subheading text-white/40 text-[10px]">2m ago</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="font-subheading text-white/70 text-xs">Asset delivery — Lumino</p>
-                  <p className="font-subheading text-white/40 text-[10px]">18m ago</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="font-subheading text-white/70 text-xs">Advisory session booked</p>
-                  <p className="font-subheading text-white/40 text-[10px]">1h ago</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="font-subheading text-white/70 text-xs">New partner — Aether Co.</p>
-                  <p className="font-subheading text-white/40 text-[10px]">3h ago</p>
-                </div>
-              </div>
-            </div>
-            <p className="font-subheading text-white/30 text-[9px] tracking-wide">Live feed</p>
-          </div>
-          <div
-            className={`${GLASS} flex-1 min-h-[40vh] p-5 flex flex-col justify-between`}
-            style={GLASS_SHADOW}
-          >
-            <div>
-              <p className="font-subheading text-white/40 text-[9px] tracking-widest uppercase">Upcoming</p>
-              <div className="mt-3 space-y-3">
-                <div>
-                  <p className="font-subheading text-white/70 text-xs">Activation call — Veyra</p>
-                  <p className="font-subheading text-white/35 text-[10px] mt-0.5">Tomorrow, 11:00 AM</p>
-                </div>
-                <div>
-                  <p className="font-subheading text-white/70 text-xs">Brand review — Orun Studio</p>
-                  <p className="font-subheading text-white/35 text-[10px] mt-0.5">Mar 8, 2:00 PM</p>
-                </div>
-                <div>
-                  <p className="font-subheading text-white/70 text-xs">Circle monthly sync</p>
-                  <p className="font-subheading text-white/35 text-[10px] mt-0.5">Mar 12, 4:00 PM</p>
-                </div>
-              </div>
-            </div>
-            <p className="font-subheading text-white/30 text-[9px] tracking-wide">3 events this week</p>
-          </div>
-        </div>
-
-        <div />
-
-        <div className="ml-auto flex w-full max-w-[21rem] min-h-[calc(100vh-16rem)] flex-col justify-between gap-10 py-4 pr-1 pl-4 lg:pl-0">
-          <div>
-            <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Total of transactions</p>
-            <p className="font-subheading text-white/90 text-6xl tracking-tight mt-1">142</p>
-          </div>
-          <div className="flex gap-12">
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Fastest transaction</p>
-              <p className="font-subheading text-white/90 text-3xl tracking-tight mt-1">9s</p>
-            </div>
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Retention</p>
-              <p className="font-subheading text-white/90 text-3xl tracking-tight mt-1">94%</p>
-            </div>
-          </div>
-          <div className="flex gap-12">
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Brand Partners</p>
-              <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">1,032</p>
-            </div>
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Projects</p>
-              <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">113</p>
-            </div>
-          </div>
-          <div className="flex gap-12">
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Countries reached</p>
-              <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">33</p>
-            </div>
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Top market</p>
-              <p className="font-subheading text-white/80 text-lg tracking-wide mt-1">United States</p>
-            </div>
-          </div>
-          <div>
-            <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Assets delivered</p>
-            <p className="font-subheading text-white/90 text-4xl tracking-tight mt-1">502,754</p>
-          </div>
-          <div className="flex items-end gap-6">
-            <div>
-              <p className="font-subheading text-white/40 text-[10px] tracking-widest uppercase">Circle Fee</p>
-              <p className="font-subheading text-white/90 text-5xl tracking-tight mt-1">$0</p>
-            </div>
-            <p className="font-subheading text-white/40 text-xs tracking-wide pb-2">always $0 for partners</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Screen 2 — announcements + member cards */}
-      <section className="relative z-10 h-screen snap-start grid grid-cols-1 lg:grid-cols-[300px_1fr_1fr] items-stretch gap-0 overflow-hidden px-4 sm:px-8 lg:px-10 pt-20 sm:pt-24 lg:pt-24 pb-10 sm:pb-12 lg:pb-14">
+      {/* Dashboard — announcements + member cards */}
+      <section ref={dashboardRef} className="relative z-10 h-screen snap-start grid grid-cols-1 lg:grid-cols-[300px_1fr_1fr] items-stretch gap-0 overflow-hidden px-4 sm:px-8 lg:px-10 pt-20 sm:pt-24 lg:pt-24 pb-10 sm:pb-12 lg:pb-14">
         {/* Left — Dashboard announcements with expandable detail */}
         <div className="py-2 flex flex-col gap-3 transition-all duration-500">
           {/* Main dashboard container */}

@@ -136,10 +136,10 @@ function GlobeScene({ globeConfig }: WorldProps) {
       <mesh>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          color={new Color("#000000")}
-          emissive={new Color("#000000")}
-          emissiveIntensity={0.05}
-          shininess={0.4}
+          color={new Color(globeConfig.globeColor ?? "#000000")}
+          emissive={new Color(globeConfig.emissive ?? "#000000")}
+          emissiveIntensity={globeConfig.emissiveIntensity ?? 0.05}
+          shininess={globeConfig.shininess ?? 0.4}
         />
       </mesh>
 
