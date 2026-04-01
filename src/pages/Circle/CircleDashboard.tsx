@@ -125,6 +125,24 @@ function MemberCard({ idx }: { idx: number }) {
   );
 }
 
+const SHOWCASE_MAILTO = (() => {
+  const to = "CONTACT@SKULPTBRAND.COM";
+  const subject = encodeURIComponent("Priority: Showcase Request — Circle Member");
+  const body = encodeURIComponent(
+    `Hi SKULPT Team,\n\nI'm a Circle member and I'd love to be showcased across the SKULPT ecosystem.\n\nI believe my brand story is ready to be featured and I'd like to schedule a call to discuss the best way to bring it to your audience.\n\nPlease let me know your availability.\n\nBest,`,
+  );
+  return `mailto:${to}?subject=${subject}&body=${body}`;
+})();
+
+const BRANDING_HELP_MAILTO = (() => {
+  const to = "CONTACT@SKULPTBRAND.COM";
+  const subject = encodeURIComponent("Priority: Branding Help Request — Circle Member");
+  const body = encodeURIComponent(
+    `Hi SKULPT Team,\n\nI'm a Circle member and I'd like to get more branding help.\n\nI'd love to book a brand advisory session to review my current identity, refine my positioning, and identify next steps.\n\nPlease let me know your availability.\n\nBest,`,
+  );
+  return `mailto:${to}?subject=${subject}&body=${body}`;
+})();
+
 export default function CircleDashboard() {
   const [scrollLocked, setScrollLocked] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
@@ -193,7 +211,7 @@ export default function CircleDashboard() {
                 onClick={handleBack}
                 className="flex items-center gap-2 font-subheading text-white/60 text-xs tracking-wide hover:text-white/90 transition-colors"
               >
-                <img src={arrowSvg} alt="" className="w-3.5 h-3.5 rotate-180 opacity-60 invert" />
+                <img src={arrowSvg} alt="" className="w-3.5 h-3.5 rotate-180 brightness-0 invert" />
                 Back to Dashboard
               </button>
             ) : (
@@ -206,7 +224,7 @@ export default function CircleDashboard() {
                       className="hover:opacity-90 transition-opacity"
                       aria-label="Close detail panel"
                     >
-                      <img src={exSvg} alt="" className="w-3.5 h-3.5 opacity-50 invert" />
+                      <img src={exSvg} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
                     </button>
                   )}
                 </div>
@@ -215,6 +233,14 @@ export default function CircleDashboard() {
                     <button
                       key={i}
                       onClick={() => {
+                        if (i === 0) {
+                          window.location.href = BRANDING_HELP_MAILTO;
+                          return;
+                        }
+                        if (i === 2) {
+                          window.location.href = SHOWCASE_MAILTO;
+                          return;
+                        }
                         setActiveAnnouncement(i);
                         setExpanded(false);
                       }}
@@ -253,12 +279,12 @@ export default function CircleDashboard() {
                   >
                     {expanded ? (
                       <>
-                        <img src={dropSvg} alt="" className="w-2.5 h-2.5 rotate-180 opacity-50 invert" />
+                        <img src={dropSvg} alt="" className="w-2.5 h-2.5 rotate-180 brightness-0 invert" />
                         Collapse
                       </>
                     ) : (
                       <>
-                        <img src={arrowSvg} alt="" className="w-2.5 h-2.5 opacity-50 invert" />
+                        <img src={dropSvg} alt="" className="w-2.5 h-2.5 brightness-0 invert" />
                         Expand
                       </>
                     )}
