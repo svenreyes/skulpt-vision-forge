@@ -1,46 +1,43 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Navbar, Footer, Seo } from "@components";
-import { Link } from "react-router-dom";
-import { BlurSlideshow } from "@features/skulpted";
-import {
-  useHorizontalScroll,
-  useHorizontalTouchScroll,
-  useFooterWheelScroll,
-} from "@features/skulpted/hooks";
-import ridelinkImg from "@assets/images/ridelink.png";
-import ridelink2Img from "@assets/images/ridelink2.png";
-import ridelinkPfp from "@assets/images/ridelinkpfp.png";
-import yourrideImg from "@assets/images/yourride.png";
-import thefutureImg from "@assets/images/thefuture.png";
-import process1Img from "@assets/images/process1.png";
-import process2Img from "@assets/images/process2.png";
-import process3Img from "@assets/images/process3.png";
-import pitchdeckImg from "@assets/images/pitchdeck.png";
-import playbookImg from "@assets/images/playbook.png";
+import { EufolioLogo, FinexaLogo } from "@features/skulpted";
+import ridelinkImg from "@assets/ridelinklogo.png";
+import eufolioPdf from "@assets/Eufolio_Case.pdf";
+import finexaPdf from "@assets/Finexa Case Study- SKULPT.pdf";
+import ridelinkPdf from "@assets/RideLink_Case.pdf";
 import arrowSvg from "@assets/arrow.svg";
-import workshopNotebookImg from "@assets/images/workshop_notebook.png";
-import brandguidelinesImg from "@assets/images/brandguidelines.png";
+import exSvg from "@assets/ex.svg";
 
+/* ─── Reusable tag pill ─────────────────────────────────────── */
+const Tag: React.FC<{ label: string }> = ({ label }) => (
+  <span className="inline-flex px-[10px] py-[5px] rounded-[4px] bg-[#CBD1D6]/35 font-subheading text-[9px] sm:text-[10px] tracking-[0.06em] uppercase text-[#8A9AA8]">
+    {label}
+  </span>
+);
+
+/* ─── Case study arrow CTA ──────────────────────────────────── */
+const CaseCta: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="group inline-flex items-center gap-[6px] text-[#B0BDC5] hover:text-[#8A9AA8] transition-colors duration-300 w-fit"
+  >
+    <span className="font-subheading text-[12px] sm:text-[13px] tracking-[0.04em]">
+      Case Study
+    </span>
+    <img
+      src={arrowSvg}
+      alt="→"
+      className="-rotate-45 w-[14px] h-[14px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+    />
+  </button>
+);
+
+/* ─── Page ──────────────────────────────────────────────────── */
 const Skulpted: React.FC = () => {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const footerRef = useRef<HTMLDivElement>(null);
-
-  // Use extracted scroll hooks
-  useHorizontalScroll(scrollerRef);
-  useHorizontalTouchScroll(scrollerRef);
-  useFooterWheelScroll(footerRef, scrollerRef);
-
-  // Update footer height CSS variable
-  useEffect(() => {
-    const updateFooterHeight = () => {
-      const h = footerRef.current?.offsetHeight || 0;
-      if (rootRef.current) rootRef.current.style.setProperty("--footer-h", `${h}px`);
-    };
-    updateFooterHeight();
-    window.addEventListener("resize", updateFooterHeight);
-    return () => window.removeEventListener("resize", updateFooterHeight);
-  }, []);
+  const [finexaHovered, setFinexaHovered] = useState(false);
+  const [eufolioHovered, setEufolioHovered] = useState(false);
+  const [ridelinkHovered, setRidelinkHovered] = useState(false);
 
   return (
     <>
@@ -50,503 +47,180 @@ const Skulpted: React.FC = () => {
         path="/skulpted"
         type="website"
       />
-    <div ref={rootRef} className="relative min-h-screen w-full bg-[#E6EBEE] overflow-x-hidden sm:overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute -top-10 -left-10 w-[60vw] h-[60vw] rounded-full"
-          style={{ background: "#FFFFFF", opacity: 0.4, filter: "blur(80px)" }}
-        />
-        <div
-          className="absolute bottom-[15vh] right-[-10vw] w-[70vw] h-[30vw] rounded-full"
-          style={{ background: "#C1CFD4", opacity: 0.35, filter: "blur(80px)" }}
-        />
-      </div>
 
-      {/* Navbar */}
-      <div className="relative z-50">
-        <Navbar flat />
-      </div>
+      <div className="relative min-h-screen w-full bg-[#E6EBEE] overflow-x-hidden">
 
-      {/* Content */}
-      <div ref={scrollerRef} className=" relative z-10 overflow-x-hidden sm:overflow-x-auto sm:overflow-y-hidden sm:touch-pan-x sm:overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <div className=" block sm:inline-flex pl-0 sm:pl-0">
-          {/* Panel 1 */}
-          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <div className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center py-4 sm:py-6 items-center">
-                {/* Lead heading */}
-                <section className="mb-4 sm:mb-3 select-none w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
-                  <h1 className="font-body text-[clamp(16px,4vw,26px)] leading-[150%] tracking-[-0.6px] font-[300] text-[#CBD1D6]">
-                    Grounded in <span className="font-[400] text-[#B0BDC5]">innovation and impact</span>,
-                    <br className="hidden sm:block" /> we partner with <span className="font-[400] text-[#B0BDC5]">next-gen entrepreneurs </span>
-                    <br className="hidden sm:block" />
-                    with ideas <span className="block sm:inline">to elevate the collective</span>
-                  </h1>
-                </section>
-
-                {/* Hero image card */}
-                <section className="pt-4 sm:pt-4 md:pt-4 mb-3">
-                  <div className="relative w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw] h-[35vh] sm:h-[45vh] md:h-[50vh] max-h-[400px] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.20)] border border-white/20 bg-white/20 backdrop-blur-md">
-                    <img
-                      src={ridelinkImg}
-                      alt="RIDELINK showcase"
-                      className="block w-full h-full object-cover object-left"
-                      loading="eager"
-                      decoding="async"
-                    />
-                  </div>
-                </section>
-
-                {/* Title + description */}
-                <section className="mb-0 w-full sm:w-[78vw] md:w-[60vw] lg:w-[52vw]">
-                  <h1 className="text-[20px] sm:text-[23px] leading-[30px] sm:leading-[35px] font-display text-md text-[#9EA5AD]">RIDELINK</h1>
-                  <p className="mt-1 font-body text-base sm:text-lg text-[#B8C1CB]">
-                    University ridesharing, reimagined from the inside out.
-                  </p>
-                </section>
-
-              </div>
-            </div>
-          </main>
- 
-
-          {/* Panel 2 */}
-          <main className=" w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
-            <div className=" mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center grid-cols-1 lg:grid-cols-[420px_1fr] gap-5 sm:gap-8">
-              <div>
-                <p className=" font-subheading text-[12px] sm:text-[14px] leading-[16.8px] font-semibold text-[#B0BDC5] uppercase">Technology</p>
-                <h3 className="mt-2 font-display text-[24px] sm:text-[32px] md:text-[40px] text-[#9EA5AD] tracking-[-0.02em]">RIDE-LINK</h3>
-                <p className="mt-3 sm:mt-4 font-body text-[15px] sm:text-[17px] leading-relaxed text-[#9EA5AD]">
-                  Ride-Link is a ride-sharing platform for college students, connecting them with affordable,
-                  accessible, and reliable transportation. By fostering a trusted community network, Ride-Link makes
-                  student travel seamless, secure, and community driven.
-                </p>
-                <p className="mt-3 sm:mt-4 font-body text-[15px] sm:text-[17px] leading-relaxed text-[#9EA5AD]">
-                  As Ride-Link branding partner, SKULPT helped the start-up find internal alignment through workshops,
-                  delivering brand assets, styleguide and pitch-ready decks for fundraising.
-                </p>
-
-                <div className="mt-6">
-                  <p className="font-subheading text-[10px] tracking-[0.14em] uppercase text-[#9EA5AD]">Key Deliverables</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {[
-                      "Brand Positioning",
-                      "Branding Design",
-                      "Tone of Voice",
-                      "Creative Workshops",
-                      "Styleguide",
-                      "Pitch Deck",
-                    ].map((item) => (
-                      <span
-                        key={item}
-                        className="inline-flex px-3 py-[6px] rounded-[3.484px] bg-[#CBD1D6] text-[10px] text-white"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="pb-8 flex items-center justify-center">
-                <div className="w-full h-[100%] sm:h-[300px] md:h-[380px] rounded-[28px] border border-[#C9D0D4]/50 bg-[#ECEAE8] flex items-center justify-center">
-                  <img
-                    src={ridelink2Img}
-                    alt="Ridelink mark"
-                    className="rounded-[inherit] w-full object-contain"
-                    style={{ maxWidth: "100%" }}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 3 */}
-          <main className=" w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
-            <div className="mx-auto max-w-[1126px] px-12 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="pb-8 sm:pb-16 sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] flex flex-col justify-center">
-                {/* Header */}
-                <div className="mb-0">
-                  <h2 className=" pt-4 font-subcursive italic text-[28px] sm:text-[36px] leading-tight text-[#B8C1CB]">
-                    Riley Link<span className="not-italic font-body text-[#CBD1D6]">, 21</span>
-                  </h2>
-                  <p className="mt-2 font-body text-[14px] sm:text-[24px] md:text-[28px] text-[#B0BDC5]">
-                    University of North Carolina at Chapel Hill<span className="opacity-60"> .</span>
-                  </p>
-                </div>
-
-                {/* Content grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-8">
-                  {/* Left avatar */}
-                  <div className="p-4 flex items-start justify-center lg:justify-start">
-                    <div className="rounded-full bg-white/90 border border-white/40 w-[120px] h-[120px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] overflow-hidden flex items-center justify-center">
-                      <img
-                        src={ridelinkPfp}
-                        alt="Riley Link"
-                        className="w-full h-full object-contain p-5 sm:p-8 md:p-10"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Right text */}
-                  <div className="max-w-[640px]">
-                    <div className="grid grid-cols-[120px_1fr] sm:grid-cols-[150px_1fr] gap-x-4 gap-y-2 mb-6">
-                      <span className="font-eyebrow uppercase text-[8px] tracking-[0.14em] text-[#CBD1D6]">Key Personality Traits</span>
-                      <span className="font-subheading text-[10px] sm:text-[13px] md:text-sm text-[#808890]">Charismatic, Innovative, Empathetic, Curious, Dependable.</span>
-                      <span className="font-eyebrow uppercase text-[8px] tracking-[0.14em] text-[#CBD1D6]">Core Values</span>
-                      <span className="font-subheading text-[10px] sm:text-[13px] md:text-sm text-[#808890]">Compassion, Reliability, Trust</span>
-                    </div>
-
-                    <p className="font-subheading text-[13px] sm:text-[15px] md:text-[16px] leading-5 text-[#9EA5AD]">
-                      Riley is a natural networker—one of those friends who seems to get along with everyone and always knows someone in a group. He is also an entrepreneur at heart. Riley is always looking for ways to simplify and innovate, whether it’s coming up with a new system to organize his homework or creating a beta product for a self-charging toothbrush. He is the type of person who seizes opportunities as soon as he spots them and loves seeing his ideas come to life through hard work and creative thinking.
-                    </p>
-                    <p className="mt-4 font-subheading text-[13px] sm:text-[15px] md:text-[16px] leading-5 text-[#9EA5AD]">
-                      Riley is also dependable and deeply values his relationships. If you’re ever in a sticky situation, whether he has class at 8 a.m. the next morning or not, Riley will always be there to help a friend in need. He’s a helping hand and a shoulder to lean on, drawing energy from supporting others and seeing them succeed.
-                    </p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 4 */}
-          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start">
-                <div className="mt-4 sm:mt-10">
-                  <h2 className=" pt-10 sm:pt-20 font-subcursive italic text-[30px] sm:text-[48px] md:text-[64px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
-                    University Ridesharing,
-                  </h2>
-                  <p className="mt-1 font-body text-[24px] sm:text-[40px] md:text-[52px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
-                    reimagine from the inside out.
-                  </p>
-
-                  {/* Eyebrow line */}
-                  <p className="mt-6 sm:mt-10 font-display uppercase text-[16px] sm:text-[24px] tracking-[-0.018em] text-[#B0BDC5]" style={{ letterSpacing: '-1.086px' }}>
-                    YOUR RIDE<span className="text-[#CBD1D6]">, YOUR WAY.</span>
-                  </p>
-
-                  {/* Body copy */}
-                  <div className="mt-3 sm:mt-4 max-w-[640px]">
-                    <p className="font-subheading text-[16px] sm:text-[18px] leading-[1.7] text-[#B0BDC5]">
-                      Ride-Link set out to solve one of the biggest problems for college students: getting
-                      home during university holidays. The idea: that students could ride share through an
-                      app—cutting costs, reducing environmental impact, and building a stronger campus community.
-                    </p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 5 */}
-          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
-            <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
-                {/* Left text column */}
-                <div className=" max-w-[720px]">
-                  <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
-                    On the skulpting process,
-                  </h2>
-                  <p className="pb-4 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
-                    reimagine from the inside out.
-                  </p>
-
-                  <p className="mt-4 sm:mt-8 font-subheading text-[15px] sm:text-[18px] leading-[1.7] text-[#B0BDC5] max-w-[560px]">
-                    Skulpting Ride-Link was especially meaningful to us because as college students at the time, we
-                    knew firsthand the problem it aimed to solve. That personal connection to Ride-Link’s mission
-                    made the skulpting process even more rewarding.
-                  </p>
-
-                  {/* Quote */}
-                  <div className="pt-6 sm:pt-12 mt-6 sm:mt-10 flex items-start gap-4">
-                    <div className="w-[45px] h-[45px] flex-shrink-0 rounded-full bg-white/90 border border-white/40 overflow-hidden flex items-center justify-center">
-                      <img
-                        src={ridelinkPfp}
-                        alt="Ride-Link"
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-subheading text-[13px] sm:text-[15px] leading-5 text-[#9EA5AD]">
-                        “I was positively surprised by how quickly you guys pulled the deliverables together. I didn’t
-                        know you picked up on all that information that I threw at you in like one or two meetings, but
-                        you did.”
-                      </p>
-                      <p className="mt-2 text-[14px] font-subheading text-[#B0BDC5]">Shuban Gouru, Founder, Ride-Link</p>
-                    </div>
-                  </div>
-                </div>
-
-              <div className="lg:pl-4">
-                <div className="w-full max-w-[480px] lg:max-w-[420px] ml-auto">
-                  {/* Mobile: slideshow */}
-                  <div className="lg:hidden">
-                    <BlurSlideshow images={[yourrideImg, thefutureImg, ridelinkImg]} />
-                  </div>
-                  {/* Desktop: stacked images */}
-                  <div
-                    className="hidden lg:flex lg:flex-col lg:gap-6"
-                    style={{
-                      height:
-                        "calc(100vh - 4rem - env(safe-area-inset-top) - var(--footer-h,56px) - 80px)",
-                    }}
-                  >
-                    {[yourrideImg, thefutureImg, ridelinkImg].map((src, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 min-h-0 rounded-3xl overflow-hidden border border-white/25 bg-white/25 backdrop-blur-md"
-                      >
-                        <img
-                          src={src}
-                          alt=""
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 6 */}
-          <main className="w-full sm:w-screen mb-6 sm:mb-0 sm:mr-0">
-            <div className="mx-auto max-w-[1226px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="sm:min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-start grid-cols-1 lg:grid-cols-[1fr_460px] gap-6 sm:gap-8 mt-6 sm:mt-14">
-                <div className=" max-w-[720px]">
-                  <h2 className=" pt-8 sm:pt-16 font-subcursive italic text-[28px] sm:text-[44px] md:text-[58px] leading-[1.08] tracking-[-0.02em] text-[#B8C1CB]">
-                    After the skulpting process,
-                  </h2>
-                  <p className="pb-4 sm:pb-12 mt-1 font-body text-[22px] sm:text-[32px] md:text-[44px] leading-[1.05] font-[300] tracking-[-0.01em] text-[#CBD1D6]">
-                    a partnership were born.
-                  </p>
-
-                  <p className="mt-4 sm:mt-8 font-subheading text-[15px] sm:text-[18px] leading-[1.7] text-[#B0BDC5] max-w-[560px]">
-                    After Skulpting, the transformation of Ride-Link was deep and meant to last for generations of
-                    college students needing to use its services.
-                  </p>
-
-                  {/* Quote */}
-                  <div className="pt-6 sm:pt-12 mt-6 sm:mt-10 flex items-start gap-4">
-                    <div className="w-[45px] h-[45px] flex-shrink-0 rounded-full bg-white/90 border border-white/40 overflow-hidden flex items-center justify-center">
-                      <img
-                        src={ridelinkPfp}
-                        alt="Ride-Link"
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-subheading text-[13px] sm:text-[15px] leading-5 text-[#9EA5AD]">
-                        “Riley was perfect. That one persona embodied the tone, the voice, the values—everything of
-                        this organization. I didn’t even know you needed something like that.”
-                      </p>
-                      <p className="mt-2 text-[14px] font-subheading text-[#B0BDC5]">Shuban Gouru, Founder, Ride-Link</p>
-                    </div>
-                  </div>
-                </div>
-
-              <div className="lg:pl-4">
-                <div className="pt-8 lg:pt-0 lg:mt-0 w-full max-w-[480px] lg:max-w-[420px] ml-auto">
-                  {/* Mobile: slideshow */}
-                  <div className="lg:hidden">
-                    <BlurSlideshow images={[process1Img, process2Img, process3Img]} />
-                  </div>
-                  {/* Desktop: stacked images */}
-                  <div
-                    className="hidden lg:flex lg:flex-col lg:gap-6"
-                    style={{
-                      height:
-                        "calc(100vh - 4rem - env(safe-area-inset-top) - var(--footer-h,56px) - 80px)",
-                    }}
-                  >
-                    {[process1Img, process2Img, process3Img].map((src, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 min-h-0 rounded-3xl overflow-hidden border border-white/25 bg-white/25 backdrop-blur-md"
-                      >
-                        <img
-                          src={src}
-                          alt=""
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Mobile: Stacked Books Panel */}
-          <main className="w-full sm:hidden">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top))] flex flex-col justify-center py-8">
-                <div className="space-y-6">
-                  <img
-                    src={pitchdeckImg}
-                    alt="Pitch Deck"
-                    className="w-full max-w-[280px] mx-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <img
-                    src={playbookImg}
-                    alt="Playbook"
-                    className="w-full max-w-[280px] mx-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <img
-                    src={workshopNotebookImg}
-                    alt="Workshop Notebook"
-                    className="w-full max-w-[280px] mx-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <img
-                    src={brandguidelinesImg}
-                    alt="Brand Guidelines"
-                    className="w-full max-w-[280px] mx-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                
-                {/* Let's Connect underneath */}
-                <div className="mt-12 text-center">
-                  <Link
-                    to="/contact"
-                    className="text-[22px] group inline-flex items-center gap-2 text-[#B0BDC5] hover:text-[#9EA5AD] transition-colors"
-                  >
-                    <span className="font-subheading">Let's</span>
-                    <span className="font-subcursive text-[#C1CFD4] italic">Connect</span>
-                    <img
-                      src={arrowSvg}
-                      className="-rotate-45 w-6 h-6 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                      alt="→"
-                    />
-                  </Link>
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Desktop: Individual Book Panels */}
-          {/* Panel 7 - Pitch Deck */}
-          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
-                <div className="flex items-center justify-center w-full h-full">
-                  <img
-                    src={pitchdeckImg}
-                    alt="Pitch Deck"
-                    className="max-h-[70vh] sm:max-h-[75vh] md:max-h-[80vh] w-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 8 - Playbook */}
-          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
-                <div className="flex items-center justify-center w-full h-full">
-                  <img
-                    src={playbookImg}
-                    alt="Playbook"
-                    className="max-h-[70vh] sm:max-h-[75vh] md:max-h-[80vh] w-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 9 - Workshop Notebook */}
-          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
-                <div className="flex items-center justify-center w-full h-full">
-                  <img
-                    src={workshopNotebookImg}
-                    alt="Workshop Notebook"
-                    className="max-h-[70vh] sm:max-h-[75vh] md:max-h-[80vh] w-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 10 - Brand Guidelines with Let's Connect */}
-          <main className="hidden sm:block w-[90vw] sm:w-[85vw]">
-            <div className="mx-auto max-w-[1126px] px-6 pt-[calc(4rem_+_env(safe-area-inset-top))]">
-              <section className="relative min-h-[calc(100vh_-_4rem_-_env(safe-area-inset-top)_-_var(--footer-h,56px))] grid content-center">
-                {/* Book image - same structure as other book panels */}
-                <div className="flex items-center justify-center w-full h-full">
-                  <img
-                    src={brandguidelinesImg}
-                    alt="Brand Guidelines"
-                    className="max-h-[70vh] sm:max-h-[75vh] md:max-h-[80vh] w-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </section>
-            </div>
-          </main>
-
-          {/* Panel 11 - Let's Connect (separate panel next to brand guidelines) */}
-          <main className="hidden sm:flex w-[30vw] sm:w-[25vw] items-end pb-[calc(var(--footer-h,56px)+32px)]">
-            <Link
-              to="/contact"
-              className="text-[22px] sm:text-[32px] md:text-[40px] lg:text-[48px] group inline-flex items-center gap-2 text-[#B0BDC5] hover:text-[#9EA5AD] transition-colors whitespace-nowrap"
-            >
-              <span className="font-subheading">Let's</span>
-              <span className="font-subcursive text-[#C1CFD4] italic">Connect</span>
-              <img
-                src={arrowSvg}
-                className="-rotate-45 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                alt="→"
-              />
-            </Link>
-          </main>
-
+        {/* ── Background blobs ── */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div
+            className="absolute -top-10 -left-10 w-[60vw] h-[60vw] rounded-full"
+            style={{ background: "#FFFFFF", opacity: 0.4, filter: "blur(80px)" }}
+          />
+          <div
+            className="absolute bottom-0 right-[-8vw] w-[65vw] h-[35vw] rounded-full"
+            style={{ background: "#C1CFD4", opacity: 0.3, filter: "blur(90px)" }}
+          />
+          <img
+            src={exSvg}
+            alt=""
+            aria-hidden="true"
+            className="absolute top-[-6vh] right-[-6vw] w-[40vw] max-w-[380px] opacity-[0.18] select-none pointer-events-none"
+            draggable={false}
+          />
         </div>
-      </div>
 
-      {/* Mobile Footer (non-fixed) */}
-      <div className="sm:hidden relative z-40">
-        <Footer compact mobileRowNav />
-      </div>
+        {/* ── Navbar ── */}
+        <div className="relative z-50">
+          <Navbar flat />
+        </div>
 
-      {/* Desktop Sticky Footer (compact) */}
-      <div ref={footerRef} className="hidden sm:block fixed inset-x-0 bottom-0 z-40">
-        <Footer compact mobileRowNav />
+        {/* ── Main content ── */}
+        <main className="relative z-10 mx-auto max-w-[960px] px-6 pt-[calc(4.5rem+env(safe-area-inset-top))] pb-28">
+
+          {/* Page header */}
+          <header className="mb-14 sm:mb-20">
+            <p className="font-eyebrow text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-[#C0CBD3] mb-3">
+              Portfolio
+            </p>
+            <h1 className="font-display text-[38px] sm:text-[56px] text-[#9EA5AD] tracking-[-0.025em] leading-none">
+              Skulpted.
+            </h1>
+          </header>
+
+          {/* ── Case study cards ── */}
+          <div className="flex flex-col gap-5 sm:gap-6">
+
+            {/* ── Finexa ── */}
+            <article className="overflow-hidden rounded-[28px] bg-white/22 backdrop-blur-sm border border-white/35 shadow-[0_2px_24px_rgba(0,0,0,0.055)] grid grid-cols-1 sm:grid-cols-[1fr_360px] hover:shadow-[0_6px_36px_rgba(0,0,0,0.09)] transition-shadow duration-300">
+              <div className="p-8 sm:p-10 flex flex-col justify-between gap-8 min-h-[260px] sm:min-h-[300px]">
+                <div className="flex flex-col gap-4">
+                  <p className="font-eyebrow text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#C0CBD3]">
+                    2026 · Yucatan, Mexico
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Tag label="Growth" />
+                    <Tag label="Fintech" />
+                  </div>
+                  <h2 className="font-display text-[36px] sm:text-[52px] text-[#9EA5AD] tracking-[-0.025em] leading-none">
+                    Finexa
+                  </h2>
+                  <p className="font-body text-[12px] sm:text-[13px] text-[#C0CBD3] leading-relaxed tracking-[0.01em]">
+                    Playbook &nbsp;·&nbsp; Style Guide &nbsp;·&nbsp; Pitch Deck
+                  </p>
+                </div>
+                <CaseCta onClick={() => window.open(finexaPdf, "_blank")} />
+              </div>
+              {/* Visual – gold logo on dark, PDF preview on hover */}
+              <div
+                className="relative overflow-hidden min-h-[200px] sm:min-h-0 cursor-pointer bg-[#111B27]"
+                onMouseEnter={() => setFinexaHovered(true)}
+                onMouseLeave={() => setFinexaHovered(false)}
+              >
+                <div className={`absolute inset-0 flex items-center justify-center p-10 transition-opacity duration-500 ${finexaHovered ? "opacity-0" : "opacity-100"}`}>
+                  <FinexaLogo style={{ width: "100%", maxWidth: "210px", color: "#B0A52E" }} />
+                </div>
+                <iframe
+                  src={`${finexaPdf}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                  title="Finexa Case Study Preview"
+                  className={`absolute inset-0 w-full h-full border-0 bg-white transition-opacity duration-500 ${finexaHovered ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                />
+              </div>
+            </article>
+
+            {/* ── Eufolio ── */}
+            <article className="overflow-hidden rounded-[28px] bg-white/22 backdrop-blur-sm border border-white/35 shadow-[0_2px_24px_rgba(0,0,0,0.055)] grid grid-cols-1 sm:grid-cols-[360px_1fr] hover:shadow-[0_6px_36px_rgba(0,0,0,0.09)] transition-shadow duration-300">
+              {/* Visual – navy logo on misty bg, PDF preview on hover */}
+              <div
+                className="order-last sm:order-first relative overflow-hidden min-h-[200px] sm:min-h-0 cursor-pointer bg-[#D4DCE4]"
+                onMouseEnter={() => setEufolioHovered(true)}
+                onMouseLeave={() => setEufolioHovered(false)}
+              >
+                <div className={`absolute inset-0 flex items-center justify-center p-10 transition-opacity duration-500 ${eufolioHovered ? "opacity-0" : "opacity-100"}`}>
+                  <EufolioLogo style={{ width: "100%", maxWidth: "210px", color: "#00205B" }} />
+                </div>
+                <iframe
+                  src={`${eufolioPdf}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                  title="Eufolio Case Study Preview"
+                  className={`absolute inset-0 w-full h-full border-0 bg-white transition-opacity duration-500 ${eufolioHovered ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                />
+              </div>
+              <div className="p-8 sm:p-10 flex flex-col justify-between gap-8 min-h-[260px] sm:min-h-[300px]">
+                <div className="flex flex-col gap-4">
+                  <p className="font-eyebrow text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#C0CBD3]">
+                    2026 · Stockholm, Sweden
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Tag label="Pre-Seed" />
+                    <Tag label="Capital Markets" />
+                    <Tag label="Investment Management" />
+                  </div>
+                  <h2 className="font-display text-[36px] sm:text-[52px] text-[#9EA5AD] tracking-[-0.025em] leading-none">
+                    Eufolio
+                  </h2>
+                  <p className="font-body text-[12px] sm:text-[13px] text-[#C0CBD3] leading-relaxed tracking-[0.01em]">
+                    Playbook &nbsp;·&nbsp; Style Guide &nbsp;·&nbsp; Custom Design
+                  </p>
+                </div>
+                <CaseCta onClick={() => window.open(eufolioPdf, "_blank")} />
+              </div>
+            </article>
+
+            {/* ── Ride-Link ── */}
+            <article className="overflow-hidden rounded-[28px] bg-white/22 backdrop-blur-sm border border-white/35 shadow-[0_2px_24px_rgba(0,0,0,0.055)] grid grid-cols-1 sm:grid-cols-[1fr_380px] hover:shadow-[0_6px_36px_rgba(0,0,0,0.09)] transition-shadow duration-300">
+              <div className="p-8 sm:p-10 flex flex-col justify-between gap-8 min-h-[260px] sm:min-h-[300px]">
+                <div className="flex flex-col gap-4">
+                  <p className="font-eyebrow text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#C0CBD3]">
+                    2024 · NC, USA
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Tag label="Pre-Seed" />
+                    <Tag label="Transportation" />
+                    <Tag label="Tech" />
+                  </div>
+                  <h2 className="font-display text-[36px] sm:text-[52px] text-[#9EA5AD] tracking-[-0.025em] leading-none">
+                    Ride-Link
+                  </h2>
+                  <p className="font-body text-[12px] sm:text-[13px] text-[#C0CBD3] leading-relaxed tracking-[0.01em]">
+                    Playbook &nbsp;·&nbsp; Style Guide &nbsp;·&nbsp; Pitch Deck
+                  </p>
+                </div>
+                <CaseCta onClick={() => window.open(ridelinkPdf, "_blank")} />
+              </div>
+
+              {/* Visual – photo with PDF preview on hover */}
+              <div
+                className="relative overflow-hidden min-h-[260px] sm:min-h-0 cursor-pointer bg-[#D4DCE4]"
+                onMouseEnter={() => setRidelinkHovered(true)}
+                onMouseLeave={() => setRidelinkHovered(false)}
+              >
+                {/* Logo — fades out on hover */}
+                <div className={`absolute inset-0 flex items-center justify-center p-10 transition-opacity duration-500 ${ridelinkHovered ? "opacity-0" : "opacity-100"}`}>
+                  <img
+                    src={ridelinkImg}
+                    alt="Ride-Link"
+                    className="w-full max-w-[210px] object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+
+                {/* PDF preview — fades in on hover (always mounted so it preloads) */}
+                <iframe
+                  src={`${ridelinkPdf}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                  title="Ride-Link Case Study Preview"
+                  className={`absolute inset-0 w-full h-full border-0 bg-white transition-opacity duration-500 ${ridelinkHovered ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                />
+
+              </div>
+            </article>
+
+          </div>
+        </main>
+
+        {/* ── Footer ── */}
+        <Footer />
+
       </div>
-    </div>
     </>
   );
 };
