@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Navbar, Footer, Seo } from "@components";
 import { EufolioLogo, FinexaLogo } from "@features/skulpted";
 import ridelinkImg from "@assets/ridelinklogo.png";
-import eufolioPdf from "@assets/Eufolio_Case.pdf";
-import finexaPdf from "@assets/Finexa Case Study- SKULPT.pdf";
-import ridelinkPdf from "@assets/RideLink_Case.pdf";
+const eufolioPdf = "/pdfs/eufolio.pdf";
+const finexaPdf = "/pdfs/finexa.pdf";
+const ridelinkPdf = "/pdfs/ridelink.pdf";
 import arrowSvg from "@assets/arrow.svg";
 import exSvg from "@assets/ex.svg";
 
