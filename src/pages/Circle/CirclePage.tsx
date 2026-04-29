@@ -1,14 +1,44 @@
 import { useState, useEffect } from "react";
 import { Navbar, Seo } from "@components";
+import { supabase } from "@/lib/supabase";
 import CircleLogin from "./CircleLogin";
 import CircleDashboard from "./CircleDashboard";
 
 const STEEL_BLUE = "#96A3AC";
 
-type Phase = "login" | "animating" | "greeting" | "landing";
+type Phase =
+  | "checking"
+  | "login"
+  | "animating"
+  | "greeting"
+  | "landing";
 
 export default function CirclePage() {
-  const [phase, setPhase] = useState<Phase>("login");
+  const [phase, setPhase] = useState<Phase>("checking");
+
+  // Resume an existing session so members don't need to sign in on every reload.
+  useEffect(() => {
+    let active = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      setPhase(data.session ? "landing" : "login");
+    });
+
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (!active) return;
+        if (event === "SIGNED_OUT" || !session) {
+          setPhase("login");
+        }
+      }
+    );
+
+    return () => {
+      active = false;
+      subscription.subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (phase === "animating") {
@@ -20,6 +50,11 @@ export default function CirclePage() {
       return () => clearTimeout(id);
     }
   }, [phase]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setPhase("login");
+  };
 
   const isInside = phase === "greeting" || phase === "landing";
 
@@ -70,6 +105,14 @@ export default function CirclePage() {
           <Navbar light={isInside} />
         </div>
 
+        {phase === "checking" && (
+          <section className="relative z-10 flex min-h-screen items-center justify-center">
+            <span className="font-subheading text-[#9EA5AD] text-sm tracking-widest uppercase opacity-60">
+              Loading…
+            </span>
+          </section>
+        )}
+
         {phase === "login" && (
           <CircleLogin onLogin={() => setPhase("animating")} />
         )}
@@ -95,7 +138,7 @@ export default function CirclePage() {
           </section>
         )}
 
-        {phase === "landing" && <CircleDashboard />}
+        {phase === "landing" && <CircleDashboard onSignOut={handleSignOut} />}
       </div>
     </>
   );

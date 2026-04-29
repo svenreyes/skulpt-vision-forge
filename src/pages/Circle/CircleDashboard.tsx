@@ -143,7 +143,11 @@ const BRANDING_HELP_MAILTO = (() => {
   return `mailto:${to}?subject=${subject}&body=${body}`;
 })();
 
-export default function CircleDashboard() {
+interface CircleDashboardProps {
+  onSignOut?: () => void;
+}
+
+export default function CircleDashboard({ onSignOut }: CircleDashboardProps = {}) {
   const [scrollLocked, setScrollLocked] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
   const [activeAnnouncement, setActiveAnnouncement] = useState<number | null>(null);
@@ -175,6 +179,17 @@ export default function CircleDashboard() {
           </Suspense>
         </div>
       </div>
+
+      {onSignOut && (
+        <button
+          type="button"
+          onClick={onSignOut}
+          className="fixed top-20 right-5 sm:right-8 z-30 font-subheading text-white/60 text-[11px] tracking-[0.18em] uppercase hover:text-white/90 transition-colors"
+          aria-label="Sign out of Circle"
+        >
+          Sign out
+        </button>
+      )}
 
       {/* Intro */}
       {!scrollLocked && (

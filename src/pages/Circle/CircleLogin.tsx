@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { CloudyBackground, Footer } from "@components";
-import { API_ENDPOINTS } from "@/lib/constants";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import dropSvg from "@assets/drop.svg";
 
 const CIRCLE_FAQ = [
@@ -45,18 +45,32 @@ export default function CircleLogin({ onLogin }: CircleLoginProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password) {
+      setError("Enter the email and password from your invite.");
+      return;
+    }
+
+    if (!isSupabaseConfigured) {
+      setError("Authentication is not configured. Please contact SKULPT.");
+      return;
+    }
+
     setLoading(true);
 
-    try {
-      await fetch(API_ENDPOINTS.CIRCLE_LOGIN, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email || "preview", password: password || "preview" }),
-      });
-    } catch {
-      // Temporary: any login works for preview
-    } finally {
-      setLoading(false);
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: trimmedEmail,
+      password,
+    });
+
+    setLoading(false);
+
+    if (signInError) {
+      // Surface a generic message; the Circle is invite-only so we don't want
+      // to leak whether an account exists.
+      setError("That doesn't match an active Circle invite.");
+      return;
     }
 
     onLogin();
