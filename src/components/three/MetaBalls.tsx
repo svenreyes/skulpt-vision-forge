@@ -6,6 +6,7 @@ interface MetaBallsProps {
   cursorBallColor?: string;
   speed?: number;
   ballCount?: number;
+  maxDpr?: number;
   className?: string;
 }
 
@@ -101,6 +102,7 @@ export default function MetaBalls({
   cursorBallColor = '#96a9bb',
   speed = 0.6,
   ballCount = 25,
+  maxDpr = 2,
   className = '',
 }: MetaBallsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -118,7 +120,7 @@ export default function MetaBalls({
     const renderer = new Renderer({
       alpha: true,
       antialias: true,
-      dpr: Math.min(window.devicePixelRatio, 2),
+      dpr: Math.min(window.devicePixelRatio, maxDpr),
     });
     const gl = renderer.gl;
     container.appendChild(gl.canvas);
@@ -195,7 +197,7 @@ export default function MetaBalls({
         gl.canvas.parentNode.removeChild(gl.canvas);
       }
     };
-  }, [color, cursorBallColor, speed, ballCount]);
+  }, [color, cursorBallColor, speed, ballCount, maxDpr]);
 
   return (
     <div
@@ -211,4 +213,3 @@ export default function MetaBalls({
     />
   );
 }
-

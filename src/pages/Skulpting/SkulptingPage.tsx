@@ -7,6 +7,7 @@ import arrowUrl from "@assets/arrow.svg";
 
 export default function SkulptingPage() {
   const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
+  const [isMarqueeInView, setIsMarqueeInView] = useState(false);
   const videoRef = useRef<HTMLDivElement>(null);
   const marqueeVideoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useMobileDetect();
@@ -19,6 +20,7 @@ export default function SkulptingPage() {
       try {
         if (v.currentTime < 2.9 || v.currentTime > 3.1) v.currentTime = 3;
       } catch {
+        // Some browsers can reject seeks before enough media is buffered.
       }
     };
 
@@ -43,12 +45,12 @@ export default function SkulptingPage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
+        setIsMarqueeInView(entry.isIntersecting);
         if (entry.isIntersecting) {
           setShouldLoadVideos(true);
-          observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: "200px" }
+      { threshold: 0.2, rootMargin: "120px" }
     );
 
     if (videoRef.current) {
@@ -57,6 +59,16 @@ export default function SkulptingPage() {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const video = marqueeVideoRef.current;
+    if (!video || !shouldLoadVideos) return;
+    if (isMarqueeInView) {
+      void video.play().catch(() => undefined);
+    } else {
+      video.pause();
+    }
+  }, [isMarqueeInView, shouldLoadVideos]);
 
   return (
     <>
@@ -69,7 +81,7 @@ export default function SkulptingPage() {
       <div className="relative scale-[1] min-h-screen w-full bg-[#E6EBEE] overflow-y-auto overflow-x-hidden">
         {/* Background clouds */}
         <div className="absolute inset-0 z-0 min-h-[300vh]">
-          <CloudyBackground zIndex={0} />
+          <CloudyBackground zIndex={0} dpr={isMobile ? 1 : [1, 1.25]} />
         </div>
 
         {/* Navbar */}
@@ -79,14 +91,17 @@ export default function SkulptingPage() {
 
         {/* Hero section with MetaBalls */}
         <section className="relative h-screen w-full overflow-hidden">
-          <div className="absolute inset-0 z-10">
-<MetaBalls
-               color="#FFFFFF"
-               cursorBallColor="#FFFFFF"
-               speed={0.4}
-               ballCount={15}
-             />
-          </div>
+          {!isMobile && (
+            <div className="absolute inset-0 z-10">
+              <MetaBalls
+                color="#FFFFFF"
+                cursorBallColor="#FFFFFF"
+                speed={0.4}
+                ballCount={12}
+                maxDpr={1.25}
+              />
+            </div>
+          )}
 
           <div className="absolute inset-0 z-20 flex items-center justify-center px-6 text-center pointer-events-none select-none pt-16 md:pt-0">
             <h1 className="font-subheading text-[#9EA5AD] text-[28.2px] leading-[190%] tracking-[-0.8px] font-normal">
@@ -158,15 +173,15 @@ export default function SkulptingPage() {
                   src={skulpting2Video}
                   className="w-full h-full object-cover opacity-80 transform-gpu"
                   style={{
-                    filter: isMobile ? "blur(18px)" : "blur(8px)",
+                    filter: isMobile ? "blur(8px)" : "blur(6px)",
                     willChange: "transform",
-                    transform: isMobile ? "scale(1.5)" : "scale(1.1)",
+                    transform: isMobile ? "scale(1.2)" : "scale(1.06)",
                   }}
                   autoPlay
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="none"
                 />
               ) : (
                 <div className="w-full h-48 sm:h-64 bg-gradient-to-br from-[#9EA5AD]/30 to-[#CBD1D6]/20 animate-pulse" />
@@ -260,4 +275,3 @@ export default function SkulptingPage() {
     </>
   );
 }
-

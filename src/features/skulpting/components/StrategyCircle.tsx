@@ -14,8 +14,10 @@ export function StrategyCircle({ isMobile, shouldLoadVideos }: StrategyCirclePro
   const [displayAxis, setDisplayAxis] = useState<AxisType>("strategy");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showSwipeArrow, setShowSwipeArrow] = useState(true);
+  const [isVideoInView, setIsVideoInView] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const circleRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;
@@ -51,6 +53,27 @@ export function StrategyCircle({ isMobile, shouldLoadVideos }: StrategyCirclePro
     }, 250);
     return () => clearTimeout(timer);
   }, [activeAxis]);
+
+  useEffect(() => {
+    const container = circleRef.current;
+    if (!container) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVideoInView(entry.isIntersecting),
+      { threshold: 0.2, rootMargin: "80px" }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !shouldLoadVideos) return;
+    if (isVideoInView) {
+      void video.play().catch(() => undefined);
+    } else {
+      video.pause();
+    }
+  }, [isVideoInView, shouldLoadVideos]);
 
   return (
     <section className="relative z-10 lg:py-64 sm:py-16 mt-24 flex items-center justify-center px-4 sm:px-6">
@@ -91,17 +114,18 @@ export function StrategyCircle({ isMobile, shouldLoadVideos }: StrategyCirclePro
           >
             {shouldLoadVideos ? (
               <video
+                ref={videoRef}
                 src={skulptVideo}
                 className="w-full h-full object-cover opacity-85 scale-110 transform-gpu"
                 style={{
-                  filter: "blur(8px)",
+                  filter: isMobile ? "blur(5px)" : "blur(6px)",
                   willChange: "transform",
                 }}
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="none"
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-[#9EA5AD]/30 to-[#CBD1D6]/20 animate-pulse rounded-full" />
@@ -320,4 +344,3 @@ export function StrategyCircle({ isMobile, shouldLoadVideos }: StrategyCirclePro
     </section>
   );
 }
-
