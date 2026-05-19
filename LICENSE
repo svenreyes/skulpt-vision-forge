@@ -1,0 +1,44 @@
+Sven Reyes Source-Available License v1.0
+
+Copyright (c) 2026 Sven Reyes
+All rights reserved.
+
+1. Grant of Rights
+Subject to the terms of this License, you are granted a limited, non-exclusive,
+non-transferable, revocable license to:
+  a) view, clone, and fork this repository for personal, non-commercial review;
+  b) run the software locally for evaluation and demonstration only;
+  c) reference portions of the code for educational discussion with attribution.
+
+2. Restrictions
+Without prior written permission from the copyright holder, you may NOT:
+  a) use the software or derivative works for any commercial purpose;
+  b) deploy the software or derivative works to production or public environments;
+  c) sublicense, sell, rent, lease, distribute, or otherwise provide the software
+     or derivative works as a hosted service (SaaS or similar);
+  d) remove, alter, or obscure copyright notices or license text;
+  e) represent the work as your own.
+
+3. Contributions
+By submitting a contribution, you grant the copyright holder a perpetual,
+worldwide, non-exclusive, royalty-free right to use, modify, and relicense your
+contribution as part of this project.
+
+4. No Warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+5. Limitation of Liability
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING
+FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+
+6. Termination
+Any use in violation of this License automatically terminates the rights granted
+under this License.
+
+7. Contact for Commercial Licensing
+For commercial use, production deployment, or partnership licensing, contact:
+sven.s.reyes@gmail.com
