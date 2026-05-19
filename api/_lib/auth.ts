@@ -1,6 +1,6 @@
 import type { VercelRequest } from '@vercel/node';
 import type { User } from '@supabase/supabase-js';
-import { getAdminClient } from './supabaseAdmin';
+import { getAdminClient } from './supabaseAdmin.js';
 
 export interface CircleProfile {
   id: string;

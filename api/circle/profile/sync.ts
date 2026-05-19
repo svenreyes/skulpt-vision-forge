@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getAdminClient } from '../../_lib/supabaseAdmin';
-import { AuthError, requireUser } from '../../_lib/auth';
+import { getAdminClient } from '../../_lib/supabaseAdmin.js';
+import { AuthError, requireUser } from '../../_lib/auth.js';
 
 // Returns the current user's Circle profile, creating it if missing (defensive
 // fallback for the auth.users trigger), and auto-promoting them to admin if

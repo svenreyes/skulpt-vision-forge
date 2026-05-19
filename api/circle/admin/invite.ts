@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getAdminClient } from '../../_lib/supabaseAdmin';
-import { AuthError, requireAdmin } from '../../_lib/auth';
+import { getAdminClient } from '../../_lib/supabaseAdmin.js';
+import { AuthError, requireAdmin } from '../../_lib/auth.js';
 
 // Admin-only endpoint to invite a new Circle member by email.
 //
