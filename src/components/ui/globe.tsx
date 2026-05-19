@@ -11,6 +11,7 @@ import {
   Line,
   PointsMaterial,
   Points,
+  Group,
 } from "three";
 
 export type GlobeConfig = {
@@ -96,7 +97,7 @@ function buildSurfaceParticles(count: number, radius: number) {
 }
 
 function GlobeScene({ globeConfig }: WorldProps) {
-  const groupRef = useRef<any>(null);
+  const groupRef = useRef<Group | null>(null);
   const atmosphereColor = globeConfig.atmosphereColor ?? "#ffffff";
   const rotateSpeed = globeConfig.autoRotateSpeed ?? 0.5;
 
