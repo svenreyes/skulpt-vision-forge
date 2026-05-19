@@ -37,6 +37,11 @@ export default defineConfig(({ mode }) => ({
       "@assets": path.resolve(__dirname, "./src/assets"),
     },
   },
+  optimizeDeps: {
+    // three-globe uses advanced three.js entry points that can trip Vite's dep pre-bundler
+    // in some environments; excluding it avoids esbuild pre-bundle resolution failures.
+    exclude: ["three-globe"],
+  },
   build: {
     rollupOptions: {
       output: {
