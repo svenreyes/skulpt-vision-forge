@@ -53,7 +53,7 @@ const faqData: FAQItem[] = [
     answer: (
       <>
         <p className="mb-4">
-          The Skulpting Process is our 8-week system for creating a complete brand ready for market credibility, customer trust, and investor funding.
+          The Skulpting Process is our 8-week long system for creating a complete brand ready for market credibility, customer trust, and investor funding.
         </p>
         <p>
           It's built around three founder-centric workshops, where we take scattered ideas and transform them into an aligned identity. The result comes to life through our five deliverables: brand SWOT analysis, brand playbook, brand guidelines, pitch deck, and the Alignment Indicator Report. Each piece informs everything you need to know about differentiation, identity strategy, market and audience research, storytelling, values, and visuals. The outcome is a complete brand system built to grow and evolve with your early-stage business.
