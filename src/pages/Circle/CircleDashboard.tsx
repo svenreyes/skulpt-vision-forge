@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import dropSvg from "@assets/drop.svg";
 import arrowSvg from "@assets/arrow.svg";
 import exSvg from "@assets/ex.svg";
+import type { CircleSyncResponse } from "@/lib/circle";
+import CircleAdminPanel from "./CircleAdminPanel";
 
 const World = lazy(() =>
   import("@/components/ui/globe").then((m) => ({ default: m.World })),
@@ -145,9 +147,11 @@ const BRANDING_HELP_MAILTO = (() => {
 
 interface CircleDashboardProps {
   onSignOut?: () => void;
+  profile?: CircleSyncResponse["profile"] | null;
 }
 
-export default function CircleDashboard({ onSignOut }: CircleDashboardProps = {}) {
+export default function CircleDashboard({ onSignOut, profile }: CircleDashboardProps = {}) {
+  const isAdmin = profile?.role === "admin";
   const [scrollLocked, setScrollLocked] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
   const [activeAnnouncement, setActiveAnnouncement] = useState<number | null>(null);
@@ -179,6 +183,19 @@ export default function CircleDashboard({ onSignOut }: CircleDashboardProps = {}
           </Suspense>
         </div>
       </div>
+
+      {profile?.email && (
+        <div
+          className="fixed top-20 left-5 sm:left-8 z-30 flex items-center gap-2 font-subheading text-white/55 text-[10px] tracking-[0.18em] uppercase"
+          aria-label="Current Circle session"
+        >
+          <span>{profile.email}</span>
+          <span className="opacity-40">·</span>
+          <span className={isAdmin ? "text-white/85" : "text-white/55"}>
+            {profile.role}
+          </span>
+        </div>
+      )}
 
       {onSignOut && (
         <button
@@ -324,6 +341,8 @@ export default function CircleDashboard({ onSignOut }: CircleDashboardProps = {}
           </div>
         </div>
       </section>
+
+      {isAdmin && <CircleAdminPanel />}
     </article>
   );
 }

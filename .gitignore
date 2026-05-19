@@ -28,3 +28,7 @@ dist-ssr
 .env.local
 .env.*.local
 .env.production
+
+# Vercel local link/cache (created by `vercel dev`)
+.vercel
+

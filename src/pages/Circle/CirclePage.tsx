@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Navbar, Seo } from "@components";
 import { supabase } from "@/lib/supabase";
+import { syncProfile, type CircleSyncResponse } from "@/lib/circle";
 import CircleLogin from "./CircleLogin";
 import CircleDashboard from "./CircleDashboard";
+import logo3dGif from "@assets/logo3d.gif";
 
 const STEEL_BLUE = "#96A3AC";
 
@@ -13,8 +15,23 @@ type Phase =
   | "greeting"
   | "landing";
 
+type SessionProfile = CircleSyncResponse["profile"];
+
 export default function CirclePage() {
   const [phase, setPhase] = useState<Phase>("checking");
+  const [profile, setProfile] = useState<SessionProfile | null>(null);
+
+  // Profile sync runs in the background — it must NEVER block the UI from
+  // rendering. If it fails or hangs, the dashboard still loads, the user just
+  // misses admin features until the next successful sync.
+  const loadProfile = useCallback(async () => {
+    try {
+      const { profile: loaded } = await syncProfile();
+      setProfile(loaded);
+    } catch (err) {
+      console.error("[circle] profile sync failed", err);
+    }
+  }, []);
 
   // Resume an existing session so members don't need to sign in on every reload.
   useEffect(() => {
@@ -22,14 +39,24 @@ export default function CirclePage() {
 
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
-      setPhase(data.session ? "landing" : "login");
+      if (data.session) {
+        // Show the dashboard immediately. Sync profile in the background so the
+        // UI never hangs waiting on the API (cold starts, network, etc.).
+        setPhase("landing");
+        void loadProfile();
+      } else {
+        setPhase("login");
+      }
     });
 
     const { data: subscription } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!active) return;
         if (event === "SIGNED_OUT" || !session) {
+          setProfile(null);
           setPhase("login");
+        } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+          void loadProfile();
         }
       }
     );
@@ -38,7 +65,7 @@ export default function CirclePage() {
       active = false;
       subscription.subscription.unsubscribe();
     };
-  }, []);
+  }, [loadProfile]);
 
   useEffect(() => {
     if (phase === "animating") {
@@ -53,7 +80,13 @@ export default function CirclePage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    setProfile(null);
     setPhase("login");
+  };
+
+  const handleLogin = () => {
+    void loadProfile();
+    setPhase("animating");
   };
 
   const isInside = phase === "greeting" || phase === "landing";
@@ -107,15 +140,15 @@ export default function CirclePage() {
 
         {phase === "checking" && (
           <section className="relative z-10 flex min-h-screen items-center justify-center">
-            <span className="font-subheading text-[#9EA5AD] text-sm tracking-widest uppercase opacity-60">
-              Loading…
-            </span>
+            <img
+              src={logo3dGif}
+              alt="Loading"
+              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+            />
           </section>
         )}
 
-        {phase === "login" && (
-          <CircleLogin onLogin={() => setPhase("animating")} />
-        )}
+        {phase === "login" && <CircleLogin onLogin={handleLogin} />}
 
         {phase === "animating" && (
           <section className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
@@ -138,7 +171,9 @@ export default function CirclePage() {
           </section>
         )}
 
-        {phase === "landing" && <CircleDashboard onSignOut={handleSignOut} />}
+        {phase === "landing" && (
+          <CircleDashboard onSignOut={handleSignOut} profile={profile} />
+        )}
       </div>
     </>
   );
