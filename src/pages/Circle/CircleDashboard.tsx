@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import dropSvg from "@assets/drop.svg";
 import arrowSvg from "@assets/arrow.svg";
 import exSvg from "@assets/ex.svg";
-import type { CircleSyncResponse } from "@/lib/circle";
+import type { CircleSyncResponse, CircleProfile } from "@/lib/circle";
+import { listProfiles } from "@/lib/circle";
 import CircleAdminPanel from "./CircleAdminPanel";
 
 const World = lazy(() =>
@@ -105,25 +106,153 @@ const ANNOUNCEMENTS = [
   },
 ];
 
-function MemberCard({ idx }: { idx: number }) {
+interface MemberCardProps {
+  member: CircleProfile | null;
+  idx: number;
+}
+
+function MemberCard({ member, idx }: MemberCardProps) {
+  const isEmpty = !member;
   return (
     <div
-      className={`${GLASS} p-5 flex flex-col justify-between min-h-[34vh]`}
+      className={`${GLASS} p-4 flex flex-col justify-between min-h-[34vw] sm:min-h-[160px] transition-opacity duration-500 ${isEmpty ? "opacity-20" : "opacity-100"}`}
       style={GLASS_SHADOW}
     >
-      <div className="space-y-3">
-        <p className="font-subheading text-white/75 text-sm">Name</p>
-        <p className="font-subheading text-white/75 text-sm">Location</p>
-        <p className="font-subheading text-white/75 text-sm">Email</p>
-        <p className="font-subheading text-white/75 text-sm">LinkedIn</p>
-        <p className="font-subheading text-white/75 text-sm">
-          Title and/or company
+      <div className="space-y-2 flex-1 min-h-0 overflow-hidden">
+        <p className="font-subheading text-white/90 text-sm leading-snug truncate">
+          {member?.full_name ?? "—"}
         </p>
+        {member?.title_company && (
+          <p className="font-subheading text-white/60 text-[11px] leading-snug truncate">
+            {member.title_company}
+          </p>
+        )}
+        {member?.location && (
+          <p className="font-subheading text-white/50 text-[11px] leading-snug truncate">
+            {member.location}
+          </p>
+        )}
+        {member?.email && (
+          <p className="font-subheading text-white/45 text-[10px] leading-snug truncate">
+            {member.email}
+          </p>
+        )}
+        {member?.linkedin_url && (
+          <a
+            href={member.linkedin_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block font-subheading text-white/40 text-[10px] leading-snug truncate hover:text-white/70 transition-colors"
+          >
+            LinkedIn ↗
+          </a>
+        )}
       </div>
-      <p className="font-subheading text-white/25 text-[9px] tracking-wide">
-        Member {idx + 1}
+      <p className="mt-3 font-subheading text-white/20 text-[9px] tracking-wide shrink-0">
+        {member ? (member.role === "admin" ? "Admin" : "Member") : `Slot ${idx + 1}`}
       </p>
     </div>
+  );
+}
+
+// Fills a page of 4 slots with real members or null placeholders.
+function buildPage(members: CircleProfile[], page: number): (CircleProfile | null)[] {
+  const start = page * 4;
+  return [0, 1, 2, 3].map((i) => members[start + i] ?? null);
+}
+
+interface MemberGridProps {
+  members: CircleProfile[];
+}
+
+function MemberGrid({ members }: MemberGridProps) {
+  const totalPages = Math.max(1, Math.ceil(members.length / 4));
+  const [page, setPage] = useState(0);
+
+  // Touch swipe state
+  const touchStartX = useRef<number | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (dx < -40 && page < totalPages - 1) setPage((p) => p + 1);
+    if (dx > 40 && page > 0) setPage((p) => p - 1);
+  };
+
+  // Desktop isolated wheel-scroll
+  const desktopRef = useRef<HTMLDivElement>(null);
+  const onWheel = useCallback((e: WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.deltaY > 30) setPage((p) => Math.min(p + 1, totalPages - 1));
+    if (e.deltaY < -30) setPage((p) => Math.max(p - 1, 0));
+  }, [totalPages]);
+
+  useEffect(() => {
+    const el = desktopRef.current;
+    if (!el) return;
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [onWheel]);
+
+  const slots = buildPage(members, page);
+
+  return (
+    <>
+      {/* Mobile: touch-swipeable single pane */}
+      <div
+        className="lg:hidden w-full"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <div className="grid grid-cols-2 gap-3 w-full">
+          {slots.map((m, i) => (
+            <MemberCard key={page * 4 + i} member={m} idx={page * 4 + i} />
+          ))}
+        </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-1.5 mt-3">
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i)}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === page ? "bg-white/70 w-3" : "bg-white/25"}`}
+                aria-label={`Page ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: wheel-scroll isolated */}
+      <div
+        ref={desktopRef}
+        className="hidden lg:block w-full max-w-[21rem] ml-auto select-none cursor-default"
+        style={{ touchAction: "none" }}
+      >
+        <div className="grid grid-cols-2 gap-5 w-full" style={{ gridTemplateRows: "1fr 1fr" }}>
+          {slots.map((m, i) => (
+            <MemberCard key={page * 4 + i} member={m} idx={page * 4 + i} />
+          ))}
+        </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-1.5 mt-3">
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i)}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === page ? "bg-white/70 w-3" : "bg-white/25"}`}
+                aria-label={`Page ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -156,6 +285,13 @@ export default function CircleDashboard({ onSignOut, profile }: CircleDashboardP
   const dashboardRef = useRef<HTMLDivElement>(null);
   const [activeAnnouncement, setActiveAnnouncement] = useState<number | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const [members, setMembers] = useState<CircleProfile[]>([]);
+
+  useEffect(() => {
+    listProfiles()
+      .then((all) => setMembers(all.filter((m) => !!m.accepted_at)))
+      .catch(() => setMembers([]));
+  }, []);
 
   useEffect(() => {
     const scrollId = setTimeout(() => {
@@ -184,33 +320,30 @@ export default function CircleDashboard({ onSignOut, profile }: CircleDashboardP
         </div>
       </div>
 
-      {profile?.email && (
-        <div
-          className="fixed top-20 left-5 sm:left-8 z-30 flex items-center gap-2 font-subheading text-white/55 text-[10px] tracking-[0.18em] uppercase"
-          aria-label="Current Circle session"
-        >
-          <span>{profile.email}</span>
-          <span className="opacity-40">·</span>
-          <span className={isAdmin ? "text-white/85" : "text-white/55"}>
-            {profile.role}
+      {/* Top bar — role pill + sign out */}
+      <div className="fixed top-[72px] inset-x-0 z-30 flex items-center justify-between px-5 sm:px-8 py-2 pointer-events-none">
+        {isAdmin && (
+          <span className="pointer-events-auto inline-flex items-center rounded-full border border-white/30 bg-white/10 backdrop-blur px-3 py-1 font-subheading text-[10px] tracking-[0.18em] uppercase text-white/75">
+            Admin
           </span>
-        </div>
-      )}
+        )}
+        {!isAdmin && <span />}
 
-      {onSignOut && (
-        <button
-          type="button"
-          onClick={onSignOut}
-          className="fixed top-20 right-5 sm:right-8 z-30 font-subheading text-white/60 text-[11px] tracking-[0.18em] uppercase hover:text-white/90 transition-colors"
-          aria-label="Sign out of Circle"
-        >
-          Sign out
-        </button>
-      )}
+        {onSignOut && (
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="pointer-events-auto inline-flex items-center rounded-full border border-white/30 bg-white/10 backdrop-blur px-3 py-1 font-subheading text-[10px] tracking-[0.18em] uppercase text-white/60 hover:bg-white/20 hover:text-white/90 transition-all"
+            aria-label="Sign out of Circle"
+          >
+            Sign out
+          </button>
+        )}
+      </div>
 
       {/* Intro */}
       {!scrollLocked && (
-        <header className="relative z-10 flex h-screen snap-start flex-col items-center justify-center px-6 text-center">
+        <header className="relative z-10 flex h-screen snap-start flex-col items-center justify-center px-6 pt-24 text-center">
           <h1 className="font-subheading text-white/85 text-3xl sm:text-4xl md:text-5xl tracking-wide orbit-intro">
             Orbit around SKULPT Circle
           </h1>
@@ -224,7 +357,7 @@ export default function CircleDashboard({ onSignOut, profile }: CircleDashboardP
       )}
 
       {/* Dashboard — announcements + member cards */}
-      <section ref={dashboardRef} className="relative z-10 h-screen snap-start grid grid-cols-1 lg:grid-cols-[300px_1fr_1fr] items-stretch gap-0 overflow-hidden px-4 sm:px-8 lg:px-10 pt-20 sm:pt-24 lg:pt-24 pb-10 sm:pb-12 lg:pb-14">
+      <section ref={dashboardRef} className="relative z-10 min-h-screen snap-start flex flex-col lg:grid lg:grid-cols-[300px_1fr_auto] items-stretch gap-4 lg:gap-0 overflow-y-auto lg:overflow-hidden px-4 sm:px-6 lg:px-10 pt-28 sm:pt-32 lg:pt-32 pb-10 sm:pb-12 lg:pb-14">
         {/* Left — Dashboard announcements with expandable detail */}
         <div className="py-2 flex flex-col gap-3 transition-all duration-500">
           {/* Main dashboard container */}
@@ -330,15 +463,15 @@ export default function CircleDashboard({ onSignOut, profile }: CircleDashboardP
           </div>
         </div>
 
-        <div />
+        {/* Spacer col — desktop only */}
+        <div className="hidden lg:block" />
 
-        {/* Right — 2x2 member cards */}
-        <div className="ml-auto flex w-full max-w-[21rem] py-2">
-          <div className="grid grid-cols-2 grid-rows-2 gap-5 w-full">
-            {[0, 1, 2, 3].map((i) => (
-              <MemberCard key={i} idx={i} />
-            ))}
-          </div>
+        {/* Right — member grid */}
+        <div className="w-full lg:py-2">
+          <p className="font-subheading text-white/40 text-[9px] tracking-widest uppercase mb-3">
+            Members
+          </p>
+          <MemberGrid members={members} />
         </div>
       </section>
 
